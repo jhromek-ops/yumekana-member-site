@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>夢カナ 会員サイト構築プロジェクト — 開発状況</title>
+<style>
+  :root{
+    --teal:#39b3a6; --teal-dark:#2f9b8f; --teal-soft:#e7f5f3;
+    --orange:#ef7a48; --orange-soft:#fdeee7; --navy:#1f2a44;
+    --ink:#2a3340; --sub:#7b8694; --line:#e7ebef; --bg:#eef1f4; --card:#fff;
+    --ok:#27ae60; --ok-soft:#eafaf0; --warn:#e0913a; --warn-soft:#fdf3e7; --danger:#c0392b;
+    --radius:16px; --shadow:0 6px 22px rgba(31,42,68,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.7}
+  :focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;animation:none !important} html{scroll-behavior:auto} }
+  .topstrip{height:8px;background:var(--navy)}
+
+  header{background:#fff;border-bottom:1px solid var(--line)}
+  .bar{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:16px 28px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo img{height:38px;width:auto;display:block}
+  .logo .pagesub{border-left:2px solid var(--line);margin-left:6px;padding-left:12px;color:var(--sub);font-weight:700;font-size:12px;letter-spacing:.5px}
+  .spacer{flex:1}
+  .langtoggle{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+  .langbtn{border:none;background:#fff;color:var(--sub);font-weight:800;font-size:12px;padding:8px 16px;cursor:pointer;letter-spacing:.5px}
+  .langbtn[aria-pressed="true"]{background:var(--teal);color:#fff}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 28px 60px}
+
+  .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+  .hero h1{font-size:24px;margin:0 0 6px;text-wrap:balance}
+  .hero .lead{color:var(--sub);font-size:14px;margin:0;max-width:560px}
+  .hero .updated{font-size:12px;color:var(--sub);font-weight:700;white-space:nowrap}
+
+  .panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:22px}
+  .sectit{font-size:17px;font-weight:800;margin:0 0 16px;padding-left:12px;position:relative}
+  .sectit::before{content:"";position:absolute;left:0;top:2px;width:5px;height:19px;background:var(--teal);border-radius:3px}
+
+  /* phase stepper */
+  .stepper{display:flex;gap:0;flex-wrap:wrap}
+  .step{flex:1;min-width:180px;position:relative;padding:0 18px 0 0;display:flex;flex-direction:column;gap:8px}
+  .step:not(:last-child)::after{content:"";position:absolute;top:15px;right:0;width:18px;height:2px;background:var(--line)}
+  .step-head{display:flex;align-items:center;gap:10px}
+  .step-num{width:30px;height:30px;border-radius:50%;background:var(--teal-soft);color:var(--teal-dark);
+    display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0}
+  .step.upcoming .step-num{background:#f1f3f5;color:var(--sub)}
+  .step-title{font-weight:800;font-size:14px}
+  .step-body{font-size:12.5px;color:var(--sub);padding-left:40px}
+
+  .tag{display:inline-flex;align-items:center;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;letter-spacing:.3px}
+  .tag.done{background:var(--ok-soft);color:var(--ok)}
+  .tag.progress{background:var(--teal-soft);color:var(--teal-dark)}
+  .tag.upcoming{background:#f1f3f5;color:var(--sub)}
+
+  .proto-card{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    background:var(--teal-soft);border-radius:12px;padding:18px 20px;margin-top:16px}
+  .proto-card .pt{font-weight:800;font-size:14px;margin:0 0 4px}
+  .proto-card .pd{font-size:12.5px;color:var(--ink);margin:0;max-width:480px}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-weight:800;
+    padding:11px 18px;border-radius:11px;font-size:13px;background:var(--teal);color:#fff;text-decoration:none;white-space:nowrap}
+  .btn:hover{background:var(--teal-dark)}
+  .btn.secondary{background:transparent;color:var(--teal-dark);border:1px solid var(--teal)}
+  .btn.secondary:hover{background:var(--teal-soft)}
+
+  .highlight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .highlight{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .highlight .ht{font-weight:800;font-size:13.5px;margin:0 0 6px}
+  .highlight .hd{font-size:12.5px;color:var(--sub);margin:0}
+  .icon-badge{width:40px;height:40px;border-radius:50%;background:var(--teal);display:grid;place-items:center;flex-shrink:0}
+
+  /* why-this-matters */
+  .why-text{font-size:13.5px;color:var(--ink);max-width:680px;margin:0 0 16px}
+  .why-compare{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .why-col{flex:1;min-width:220px;border-radius:12px;padding:14px 16px}
+  .why-col.before{background:var(--warn-soft)}
+  .why-col.after{background:var(--ok-soft)}
+  .why-col .wc-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:0 0 8px}
+  .why-col.before .wc-label{color:var(--warn)}
+  .why-col.after .wc-label{color:var(--ok)}
+  .why-col ul{margin:0;padding-left:18px;font-size:12.5px;color:var(--ink);display:flex;flex-direction:column;gap:4px}
+  .why-arrow{font-size:20px;color:var(--sub);flex-shrink:0}
+
+  /* subheadings within a panel */
+  .subhead{font-size:13px;font-weight:800;color:var(--ink);margin:24px 0 12px;padding-top:20px;border-top:1px dashed var(--line)}
+  .subhead:first-of-type{border-top:none;padding-top:0;margin-top:4px}
+
+  /* phase overview bar */
+  .phase-overview-scroll{overflow-x:auto}
+  .phase-overview-inner{min-width:560px}
+  .phase-overview{display:flex;height:56px;border-radius:10px;overflow:hidden;margin-top:4px}
+  .po-seg{flex:1 1 0;display:flex;flex-direction:column;justify-content:center;padding:0 14px;color:#fff}
+  .po-seg .po-name{font-weight:800;font-size:13px}
+  .po-seg .po-priority{font-size:11px;opacity:.85;margin-top:2px}
+  .po-p1{background:var(--teal)}
+  .po-p2{background:var(--navy)}
+  .po-p3{background:#c7ccd3;color:var(--ink)}
+  .po-dates{position:relative;height:20px;margin-top:8px}
+  .po-dates span{position:absolute;top:0;font-size:11px;color:var(--sub);font-weight:700;white-space:nowrap}
+
+  /* step deadline meta */
+  .step-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .step-deadline{font-size:11px;color:var(--sub);font-weight:600}
+
+  /* phase-based roadmap */
+  .phase-block{border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+  .phase-block:last-child{margin-bottom:0}
+  .phase-block.phase-1{border-color:var(--teal);background:var(--teal-soft)}
+  .phase-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  summary.phase-head{cursor:pointer;list-style:none}
+  summary.phase-head::-webkit-details-marker{display:none}
+  .phase-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--teal-dark);color:#fff;letter-spacing:.3px}
+  .phase-block:not(.phase-1) .phase-badge{background:var(--navy)}
+  .phase-head h3{font-size:15px;margin:0}
+  .phase-block:not(.phase-1) .phase-head h3{font-size:13.5px}
+  .phase-deadline{font-size:12px;color:var(--sub);font-weight:700}
+  .chev{margin-left:auto;color:var(--sub);font-size:12px;transition:transform .15s}
+  details[open] .chev{transform:rotate(180deg)}
+  .phase-body{margin-top:16px}
+  .phase-dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .phase-dept h4{font-size:12.5px;font-weight:800;margin:0 0 8px;color:var(--ink)}
+  .phase-dept ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .phase-dept li{font-size:12.5px;color:var(--ink)}
+  .phase-block:not(.phase-1) .phase-dept li{font-size:12px;color:var(--sub)}
+
+  /* tools */
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .tool-card{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .tool-name{font-weight:800;font-size:14px;margin:0 0 4px}
+  .tool-desc{font-size:12.5px;color:var(--sub);margin:0}
+  .tool-icon{width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0}
+  .tool-icon.notion{background:#000;border-color:#000}
+  .notion-mark{font-weight:800;font-size:19px;color:#fff;line-height:1;font-family:Georgia,serif}
+
+  .next-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+  .next-list li{display:flex;gap:12px;font-size:13px}
+  .next-list .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);margin-top:7px;flex-shrink:0}
+  .next-list b{display:block;font-size:13.5px;margin-bottom:2px}
+  .next-list span{color:var(--sub);font-size:12.5px}
+
+  /* gantt timeline */
+  .gantt-scroll{overflow-x:auto;margin-bottom:8px}
+  .gantt{min-width:640px;margin-bottom:8px}
+  .grow{display:flex;align-items:center}
+  .grow.ghead{margin-bottom:10px}
+  .glabel{width:180px;flex-shrink:0;padding-right:14px;font-size:12.5px;font-weight:700}
+  .glane{flex:1;position:relative;height:32px}
+  .glane.gtrack{
+    background-image:
+      linear-gradient(var(--line), var(--line)),
+      linear-gradient(var(--line), var(--line)),
+      repeating-linear-gradient(to bottom, var(--orange) 0 5px, transparent 5px 10px);
+    background-size:1px 100%,1px 100%,2px 100%;
+    background-position:32.3% 0,64.6% 0,95.8% 0;
+    background-repeat:no-repeat;
+  }
+  .gmonth{position:absolute;top:0;font-size:12px;font-weight:800;color:var(--sub);transform:translateX(-8px)}
+  .gmonth.gdeadline{color:var(--orange);left:95.8% !important;transform:translateX(-70%)}
+  .gbar{position:absolute;top:6px;height:20px;border-radius:5px;background:var(--teal)}
+  .gbar.gbuffer{background:#d7dbe0}
+  .gdiamond{position:absolute;top:16px;width:11px;height:11px;background:var(--orange);border-radius:2px;transform:translate(-50%,-50%) rotate(45deg)}
+  .gantt-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--sub)}
+  .gantt-legend span{display:inline-flex;align-items:center;gap:6px}
+  .gantt-legend .lg-swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .gantt-legend .lg-diamond{width:9px;height:9px;background:var(--orange);border-radius:2px;transform:rotate(45deg);display:inline-block}
+
+  /* decision gates */
+  .gates{display:flex;justify-content:space-between;margin-top:30px;padding-top:26px;position:relative}
+  .gates::before{content:"";position:absolute;top:35px;left:6%;right:6%;height:2px;background:var(--line)}
+  .gate{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
+  .gate-date{font-size:11.5px;font-weight:800;color:var(--teal-dark)}
+  .gate.final .gate-date{color:var(--orange)}
+  .gate-dot{width:14px;height:14px;border-radius:50%;background:var(--teal);border:3px solid var(--card);box-shadow:0 0 0 1px var(--teal)}
+  .gate.final .gate-dot{background:var(--orange);border-radius:2px;transform:rotate(45deg);box-shadow:0 0 0 1px var(--orange)}
+  .gate-label{font-size:12px;font-weight:700;text-align:center;max-width:120px}
+  .gate.final .gate-label{color:var(--orange)}
+  .gate-note{font-style:italic;color:var(--sub);font-size:12.5px;text-align:center;margin:22px 0 0}
+
+  /* team */
+  .team-group{margin-bottom:22px}
+  .team-group:last-child{margin-bottom:0}
+  .team-group-title{font-size:11.5px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;margin:0 0 12px}
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .member-card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .member-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:16px;flex-shrink:0;color:#fff}
+  .member-avatar.core{background:var(--teal)}
+  .member-avatar.exec{background:var(--navy)}
+  .member-avatar.ext{background:var(--orange)}
+  .member-name{font-weight:800;font-size:13.5px;margin:0 0 2px}
+  .member-native{color:var(--sub);font-weight:600}
+  .member-role{font-size:12px;color:var(--sub);margin:0}
+
+  footer{text-align:center;font-size:11.5px;color:var(--sub);padding:20px 0 40px}
+</style>
+</head>
+<body>
+  <div class="topstrip"></div>
+  <header>
+    <div class="bar">
+      <div class="logo">
+        <img src="data:image/webp;base64,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" alt="夢カナ留学 YUME-KANA">
+        <span class="pagesub" data-ja="会員サイト構築プロジェクト" data-en="Member Site Project">会員サイト構築プロジェクト</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="langtoggle" role="group" aria-label="Language / 言語">
+        <button class="langbtn" id="btnJa" aria-pressed="true">日本語</button>
+        <button class="langbtn" id="btnEn" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <div class="hero">
+      <div>
+        <h1 data-ja="部署横断プロジェクト管理：会員サイト開発" data-en="Cross-Divisional PM: Member Site Development">部署横断プロジェクト管理：会員サイト開発</h1>
+        <p class="lead" data-ja="CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。" data-en="We're building a student-facing member site around the priority features aligned with the CRM, Admin, and QM teams. This page is a shared status view for executives and other stakeholders.">CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。</p>
+      </div>
+      <div class="updated" data-ja="最終更新：2026年7月5日" data-en="Last updated: July 5, 2026">最終更新：2026年7月5日</div>
+    </div>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="なぜ必要か" data-en="Why This Matters">なぜ必要か</h2>
+      <p class="why-text" data-ja="現在、お客様は複数の分断されたツールや非効率なLINEでのやり取りを介してサービスを利用しています。会員サイトに統合することで、お客様の体験を向上させ、各チームの手作業を削減します。" data-en="Right now, members interact with our services through several disconnected tools and inefficient LINE exchanges. Bringing everything into one member site will improve the member experience and reduce manual work for every team.">現在、お客様は複数の分断されたツールや非効率なLINEでのやり取りを介してサービスを利用しています。会員サイトに統合することで、お客様の体験を向上させ、各チームの手作業を削減します。</p>
+      <div class="why-compare">
+        <div class="why-col before">
+          <p class="wc-label" data-ja="現状" data-en="Today">現状</p>
+          <ul>
+            <li data-ja="複数の分断されたツール" data-en="Several disconnected tools">複数の分断されたツール</li>
+            <li data-ja="非効率なLINEでのやり取り" data-en="Inefficient back-and-forth over LINE">非効率なLINEでのやり取り</li>
+          </ul>
+        </div>
+        <div class="why-arrow" aria-hidden="true">→</div>
+        <div class="why-col after">
+          <p class="wc-label" data-ja="会員サイト導入後" data-en="With the member site">会員サイト導入後</p>
+          <ul>
+            <li data-ja="情報を会員サイトに一元化" data-en="Everything unified in one member site">情報を会員サイトに一元化</li>
+            <li data-ja="お客様の体験向上・各チームの手作業削減" data-en="Better member experience, less manual work per team">お客様の体験向上・各チームの手作業削減</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="開発状況" data-en="Development Status">開発状況</h2>
+      <div class="stepper">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">1</div>
+            <div class="step-title" data-ja="優先機能の選定" data-en="Requirements Alignment">優先機能の選定</div>
+          </div>
+          <div class="step-body" data-ja="Michi・Chichiとのミーティングで、部署ごとの最優先機能を確定。Matt・Kojiとも内容を確認済みです。" data-en="Met with Michi and Chichi to lock in the top-priority features for each department. Also reviewed with Matt and Koji.">Michi・Chichiとのミーティングで、部署ごとの最優先機能を確定。Matt・Kojiとも内容を確認済みです。</div>
+          <div class="step-meta" style="padding-left:40px">
+            <span class="tag done" data-ja="完了" data-en="Done">完了</span>
+            <span class="step-deadline" data-ja="完了日：2026年7月5日" data-en="Completed: Jul 5, 2026">完了日：2026年7月5日</span>
+          </div>
+          <div style="padding-left:40px; margin-top:10px">
+            <a class="btn secondary" href="#phase1-block" data-ja="Phase 1（高）の変更点を見る →" data-en="See what's changing in Phase 1 →">Phase 1（高）の変更点を見る →</a>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <div class="step-num">2</div>
+            <div class="step-title" data-ja="プロトタイプ作成" data-en="Interactive Prototype">プロトタイプ作成</div>
+          </div>
+          <div class="step-body" data-ja="Michi・Chichiが会員サイトのプロトタイプをデザインしつつ、Matt・Kojiのフロントエンド・バックエンド連携に関する質問に回答。Matt・Kojiはプロトタイプの開発と解決策の検討に注力。" data-en="Michi and Chichi are designing the member site prototype while answering Matt and Koji's questions on connecting the frontend and backend. Matt and Koji are focused on building the prototype and working through the technical solutions.">Michi・Chichiが会員サイトのプロトタイプをデザインしつつ、Matt・Kojiのフロントエンド・バックエンド連携に関する質問に回答。Matt・Kojiはプロトタイプの開発と解決策の検討に注力。</div>
+          <div class="step-meta" style="padding-left:40px">
+            <span class="tag progress" data-ja="進行中" data-en="In Progress">進行中</span>
+            <span class="step-deadline" data-ja="期限：2026年8月1日" data-en="Due: Aug 1, 2026">期限：2026年8月1日</span>
+          </div>
+        </div>
+        <div class="step upcoming">
+          <div class="step-head">
+            <div class="step-num">3</div>
+            <div class="step-title" data-ja="本開発・データ連携" data-en="Build & Data Integration">本開発・データ連携</div>
+          </div>
+          <div class="step-body" data-ja="プロトタイプでの検証を踏まえ、Nasuさん（バックエンド・セキュリティ担当）とともにCRM／Zohoと接続し、高優先度の機能から本実装。" data-en="Building on what the prototype validates, we work with Nasu-san (backend & security) to connect to CRM/Zoho and implement the high-priority features for production.">プロトタイプでの検証を踏まえ、Nasuさん（バックエンド・セキュリティ担当）とともにCRM／Zohoと接続し、高優先度の機能から本実装。</div>
+          <div class="step-meta" style="padding-left:40px">
+            <span class="tag upcoming" data-ja="予定" data-en="Planned">予定</span>
+            <span class="step-deadline" data-ja="期限：2026年10月1日（Phase 1 完了）" data-en="Due: Oct 1, 2026 (Phase 1 complete)">期限：2026年10月1日（Phase 1 完了）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proto-card">
+        <div>
+          <p class="pt" data-ja="会員サイト プロトタイプを見る" data-en="View the Member Site Prototype">会員サイト プロトタイプを見る</p>
+          <p class="pd" data-ja="渡航国（UK／NZ／AU／CA／IE）ごとにビザ項目が切り替わり、学校・滞在先の情報は対象者（全体の約20%）のみに表示されます。" data-en="Visa fields switch depending on the destination country (UK/NZ/AU/CA/IE), and the school & accommodation section only appears for the ~20% of members who use those services.">渡航国（UK／NZ／AU／CA／IE）ごとにビザ項目が切り替わり、学校・滞在先の情報は対象者（全体の約20%）のみに表示されます。</p>
+        </div>
+        <a class="btn" href="https://claude.ai/code/artifact/4e273fb2-af1f-4503-99d3-a658d87cf8f3" target="_blank" rel="noopener" data-ja="プロトタイプを開く →" data-en="Open Prototype →">プロトタイプを開く →</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="タイムライン" data-en="Timeline">タイムライン</h2>
+      <p class="lead" style="margin-bottom:18px" data-ja="プロジェクトはスプレッドシートの優先度に対応する3つのフェーズで進みます。" data-en="The project moves through three phases that match the spreadsheet's priority tiers.">プロジェクトはスプレッドシートの優先度に対応する3つのフェーズで進みます。</p>
+
+      <h3 class="subhead" data-ja="全体スケジュール（フェーズ別）" data-en="Overall Schedule (by Phase)">全体スケジュール（フェーズ別）</h3>
+      <div class="phase-overview-scroll">
+      <div class="phase-overview-inner">
+      <div class="phase-overview">
+        <div class="po-seg po-p1" style="flex-grow:34">
+          <div class="po-name">Phase 1</div>
+          <div class="po-priority" data-ja="優先度：高 ／ 〜10月1日" data-en="Priority: High / through Oct 1">優先度：高 ／ 〜10月1日</div>
+        </div>
+        <div class="po-seg po-p2" style="flex-grow:38">
+          <div class="po-name">Phase 2</div>
+          <div class="po-priority" data-ja="優先度：中 ／ 〜2027年1月14日" data-en="Priority: Medium / through Jan 14, 2027">優先度：中 ／ 〜2027年1月14日</div>
+        </div>
+        <div class="po-seg po-p3" style="flex-grow:28">
+          <div class="po-name">Phase 3</div>
+          <div class="po-priority" data-ja="優先度：低・あればいい ／ 〜2027年3月31日" data-en="Priority: Low / Nice-to-have — through Mar 31, 2027">優先度：低・あればいい ／ 〜2027年3月31日</div>
+        </div>
+      </div>
+      <div class="po-dates">
+        <span style="left:0%" data-ja="2026年7月〜" data-en="Jul 2026 —">2026年7月〜</span>
+        <span style="left:34%;transform:translateX(-50%)" data-ja="10月1日" data-en="Oct 1">10月1日</span>
+        <span style="left:72%;transform:translateX(-50%)" data-ja="2027年1月14日" data-en="Jan 14, 2027">2027年1月14日</span>
+        <span style="right:0;left:auto" data-ja="〜2027年3月31日" data-en="— Mar 31, 2027">〜2027年3月31日</span>
+      </div>
+      </div>
+      </div>
+
+      <h3 class="subhead" data-ja="Phase 1 詳細スケジュール（〜10月1日）" data-en="Phase 1 Detail (through Oct 1)">Phase 1 詳細スケジュール（〜10月1日）</h3>
+
+      <div class="gantt-scroll">
+      <div class="gantt">
+        <div class="grow ghead">
+          <div class="glabel"></div>
+          <div class="glane">
+            <span class="gmonth" style="left:14%" data-ja="7月" data-en="July">7月</span>
+            <span class="gmonth" style="left:46%" data-ja="8月" data-en="August">8月</span>
+            <span class="gmonth" style="left:78%" data-ja="9月" data-en="September">9月</span>
+            <span class="gmonth gdeadline" data-ja="10月1日" data-en="Oct 1">10月1日</span>
+          </div>
+        </div>
+
+        <div class="grow">
+          <div class="glabel" data-ja="立上げ・要件" data-en="Kickoff & discovery">立上げ・要件</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:0%;width:8.3%"></div>
+            <div class="gdiamond" style="left:8.3%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="設計・構成" data-en="Design & architecture">設計・構成</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:8.3%;width:24%"></div>
+            <div class="gdiamond" style="left:32.3%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="開発" data-en="Core build (dev)">開発</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:32.3%;width:32.3%"></div>
+            <div class="gdiamond" style="left:64.6%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="連携・教材" data-en="Integration & content">連携・教材</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:64.6%;width:11.5%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="検証・テスト" data-en="QA & testing (QM)">検証・テスト</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:76%;width:7.3%"></div>
+            <div class="gdiamond" style="left:83.3%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="修正・準備" data-en="Fixes & launch prep">修正・準備</div>
+          <div class="glane gtrack">
+            <div class="gbar" style="left:83.3%;width:7.3%"></div>
+          </div>
+        </div>
+        <div class="grow">
+          <div class="glabel" data-ja="予備" data-en="Buffer">予備</div>
+          <div class="glane gtrack">
+            <div class="gbar gbuffer" style="left:90.6%;width:5.2%"></div>
+          </div>
+        </div>
+
+        <div class="gantt-legend">
+          <span><i class="lg-swatch" style="background:var(--teal)"></i><span data-ja="開発" data-en="Delivery">開発</span></span>
+          <span><i class="lg-swatch" style="background:#d7dbe0"></i><span data-ja="予備" data-en="Buffer">予備</span></span>
+          <span><i class="lg-diamond"></i><span data-ja="判断ポイント" data-en="Decision">判断ポイント</span></span>
+        </div>
+      </div>
+      </div>
+
+      <div class="gates">
+        <div class="gate">
+          <div class="gate-date" data-ja="7月9日" data-en="Jul 9">7月9日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="スコープ確定" data-en="Scope locked">スコープ確定</div>
+        </div>
+        <div class="gate">
+          <div class="gate-date" data-ja="8月1日" data-en="Aug 1">8月1日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="設計承認" data-en="Design approved">設計承認</div>
+        </div>
+        <div class="gate">
+          <div class="gate-date" data-ja="9月1日" data-en="Sep 1">9月1日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="機能確定" data-en="Feature freeze">機能確定</div>
+        </div>
+        <div class="gate">
+          <div class="gate-date" data-ja="9月19日" data-en="Sep 19">9月19日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="受入承認" data-en="UAT sign-off">受入承認</div>
+        </div>
+        <div class="gate">
+          <div class="gate-date" data-ja="9月26日" data-en="Sep 26">9月26日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="公開判断" data-en="Go / no-go">公開判断</div>
+        </div>
+        <div class="gate final">
+          <div class="gate-date" data-ja="10月1日" data-en="Oct 1">10月1日</div>
+          <div class="gate-dot"></div>
+          <div class="gate-label" data-ja="公開" data-en="Launch">公開</div>
+        </div>
+      </div>
+      <p class="gate-note" data-ja="9月1日の機能確定を守ることが、10月1日の公開日を守る鍵です。" data-en="Holding the Sep 1 feature freeze protects the Oct 1 launch date.">9月1日の機能確定を守ることが、10月1日の公開日を守る鍵です。</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="主要メンバー" data-en="Key Members">主要メンバー</h2>
+
+      <div class="team-group">
+        <p class="team-group-title" data-ja="コアチーム" data-en="Core Team">コアチーム</p>
+        <div class="team-grid">
+          <div class="member-card">
+            <div class="member-avatar core">ヤ</div>
+            <div>
+              <p class="member-name">ヤン <span class="member-native">Jan</span></p>
+              <p class="member-role" data-ja="プロジェクトマネージャー（QM）" data-en="Project Manager (QM)">プロジェクトマネージャー（QM）</p>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar core">み</div>
+            <div>
+              <p class="member-name">みっち <span class="member-native">Michi</span></p>
+              <p class="member-role" data-ja="副部長・CRM部門責任者" data-en="Vice Manager, CRM Lead">副部長・CRM部門責任者</p>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar core">ち</div>
+            <div>
+              <p class="member-name">ちち <span class="member-native">Chichi</span></p>
+              <p class="member-role" data-ja="副部長・Admin部門責任者" data-en="Vice Manager, Admin Lead">副部長・Admin部門責任者</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-group">
+        <p class="team-group-title" data-ja="経営層" data-en="Executives">経営層</p>
+        <div class="team-grid">
+          <div class="member-card">
+            <div class="member-avatar exec">翼</div>
+            <div>
+              <p class="member-name">翼飛さん <span class="member-native">Yifei-san</span></p>
+              <p class="member-role" data-ja="役員" data-en="Executive">役員</p>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar exec">中</div>
+            <div>
+              <p class="member-name">中村さん <span class="member-native">Nakamura-san</span></p>
+              <p class="member-role" data-ja="役員" data-en="Executive">役員</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-group">
+        <p class="team-group-title" data-ja="外部専門家・DX" data-en="External Experts & DX">外部専門家・DX</p>
+        <div class="team-grid">
+          <div class="member-card">
+            <div class="member-avatar ext">マ</div>
+            <div>
+              <p class="member-name">マット <span class="member-native">Matt</span></p>
+              <p class="member-role" data-ja="DX担当" data-en="DX Lead">DX担当</p>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar ext">伊</div>
+            <div>
+              <p class="member-name">伊藤 <span class="member-native">Koji</span></p>
+              <p class="member-role" data-ja="AIエキスパート（社外）" data-en="External AI Expert">AIエキスパート（社外）</p>
+            </div>
+          </div>
+          <div class="member-card">
+            <div class="member-avatar ext">那</div>
+            <div>
+              <p class="member-name">那須さん <span class="member-native">Nasu-san</span></p>
+              <p class="member-role" data-ja="バックエンド開発・セキュリティ担当（社外）" data-en="External Backend Developer & Security Expert">バックエンド開発・セキュリティ担当（社外）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="主要な設計方針" data-en="Key Design Decisions">主要な設計方針</h2>
+      <div class="highlight-grid">
+        <div class="highlight">
+          <div class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8.5"/>
+              <ellipse cx="12" cy="12" rx="3.6" ry="8.5"/>
+              <path d="M4 9.5h16M4 14.5h16"/>
+            </svg>
+          </div>
+          <div>
+            <p class="ht" data-ja="渡航国ごとにビザ項目を出し分け" data-en="Visa fields adapt to destination country">渡航国ごとにビザ項目を出し分け</p>
+            <p class="hd" data-ja="国によって必要な手続きが異なるため（例：UKはeVisa申請とビザセンター予約、カナダは健康診断と入国期限）、渡航先未定の学生には両方のイメージをプレビューできる切替を用意します。" data-en="Requirements differ by country (e.g. the UK needs an eVisa application and biometric center booking; Canada needs a medical exam and entry deadline). Students who haven't chosen a destination get a preview toggle to see either design.">国によって必要な手続きが異なるため（例：UKはeVisa申請とビザセンター予約、カナダは健康診断と入国期限）、渡航先未定の学生には両方のイメージをプレビューできる切替を用意します。</p>
+          </div>
+        </div>
+        <div class="highlight">
+          <div class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 5h16l-6.2 7.4V19l-3.6 1.8v-8.4z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="ht" data-ja="学校・滞在先情報は対象者のみに表示" data-en="School & accommodation shown only when relevant">学校・滞在先情報は対象者のみに表示</p>
+            <p class="hd" data-ja="学校・滞在先の手配を利用するのは全体の約20%のため、対象外の学生には表示せず、対象の学生にはホームステイ／寮／自己手配に応じて項目を切り替えます。" data-en="Only about 20% of members use school/accommodation arrangement, so the section is hidden for everyone else, and adapts to homestay / dormitory / self-arranged for those who use it.">学校・滞在先の手配を利用するのは全体の約20%のため、対象外の学生には表示せず、対象の学生にはホームステイ／寮／自己手配に応じて項目を切り替えます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="機能ロードマップ（フェーズ別）" data-en="Feature Roadmap (by Phase)">機能ロードマップ（フェーズ別）</h2>
+      <p class="lead" style="margin-bottom:18px" data-ja="スプレッドシートの優先度がそのままフェーズに対応します。Phase 1（高）が直近の開発対象です。Phase 2・3は折りたたんでいます — タップで詳細を確認できます。" data-en="Priority tiers from the spreadsheet map directly to phases. Phase 1 (High) is the immediate focus. Phase 2 and 3 are collapsed below — tap to see the detail.">スプレッドシートの優先度がそのままフェーズに対応します。Phase 1（高）が直近の開発対象です。Phase 2・3は折りたたんでいます — タップで詳細を確認できます。</p>
+
+      <div class="phase-block phase-1" id="phase1-block">
+        <div class="phase-head">
+          <span class="phase-badge">Phase 1</span>
+          <h3 data-ja="高優先度" data-en="High Priority">高優先度</h3>
+          <span class="phase-deadline" data-ja="〜2026年10月1日" data-en="Due Oct 1, 2026">〜2026年10月1日</span>
+        </div>
+        <div class="phase-body">
+          <div class="phase-dept-grid">
+            <div class="phase-dept">
+              <h4 data-ja="CRM" data-en="CRM">CRM</h4>
+              <ul>
+                <li data-ja="会員ID・契約書・請求書・約款を一元表示" data-en="Member ID, contracts, invoices & terms in one place">会員ID・契約書・請求書・約款を一元表示</li>
+                <li data-ja="ビザ番号・ステータス（審査待ち／発行済み）の確認" data-en="Visa number & status tracking (in review / issued)">ビザ番号・ステータス（審査待ち／発行済み）の確認</li>
+                <li data-ja="必要書類の提出フォーム（Zoho連携・自動保存）" data-en="Required-document submission form, auto-saved to Zoho">必要書類の提出フォーム（Zoho連携・自動保存）</li>
+                <li data-ja="学校リスト・各校ホームページの提示" data-en="School list with links to each school's site">学校リスト・各校ホームページの提示</li>
+                <li data-ja="イベント申込・面談予約URL・渡航前オリエンテーション案内" data-en="Event sign-up, counselor meeting links, pre-departure orientation">イベント申込・面談予約URL・渡航前オリエンテーション案内</li>
+                <li data-ja="航空券購入・海外保険加入の期日案内" data-en="Flight-ticket and travel-insurance deadline reminders">航空券購入・海外保険加入の期日案内</li>
+              </ul>
+            </div>
+            <div class="phase-dept">
+              <h4 data-ja="Admin" data-en="Admin">Admin</h4>
+              <ul>
+                <li data-ja="学校・滞在先の請求書・支払期限・入金確認日（対象者のみ表示・全体の約20%）" data-en="School & accommodation invoices, due dates & payment confirmation — shown only to the ~20% who use these services">学校・滞在先の請求書・支払期限・入金確認日（対象者のみ表示・全体の約20%）</li>
+                <li data-ja="ビザ請求書・支払期限と、渡航国別の必須項目（UK／カナダ／オーストラリア／ニュージーランド／アイルランド）" data-en="Visa invoices & payment deadlines, plus country-specific requirements (UK/Canada/Australia/New Zealand/Ireland)">ビザ請求書・支払期限と、渡航国別の必須項目（UK／カナダ／オーストラリア／ニュージーランド／アイルランド）</li>
+                <li data-ja="希望渡航先の優先順位" data-en="Preferred destination ranking">希望渡航先の優先順位</li>
+                <li data-ja="学校情報（都市・学校名・コース・開始／終了日・期間）" data-en="School details — city, name, course, start/end dates, duration">学校情報（都市・学校名・コース・開始／終了日・期間）</li>
+                <li data-ja="滞在先情報（ホームステイ／寮／自己手配で表示切替）" data-en="Accommodation details, adapting to homestay / dormitory / self-arranged">滞在先情報（ホームステイ／寮／自己手配で表示切替）</li>
+                <li data-ja="渡航前の航空券提出期限・JTB手配情報" data-en="Pre-departure flight submission deadline & JTB support info">渡航前の航空券提出期限・JTB手配情報</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <details class="phase-block phase-2">
+        <summary class="phase-head">
+          <span class="phase-badge">Phase 2</span>
+          <h3 data-ja="中優先度" data-en="Medium Priority">中優先度</h3>
+          <span class="phase-deadline" data-ja="〜2027年1月14日" data-en="Due Jan 14, 2027">〜2027年1月14日</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+        <div class="phase-body">
+          <div class="phase-dept-grid">
+            <div class="phase-dept">
+              <h4 data-ja="CRM" data-en="CRM">CRM</h4>
+              <ul>
+                <li data-ja="やることリスト（チェック式で進捗管理）" data-en="To-do checklist with visual progress">やることリスト（チェック式で進捗管理）</li>
+                <li data-ja="期日カウントダウン通知・発行済みビザ書類の確認" data-en="Deadline countdown reminders; view issued visa documents">期日カウントダウン通知・発行済みビザ書類の確認</li>
+                <li data-ja="サポート料金の入金状況・キャンセル料シミュレーション" data-en="Payment status & cancellation-fee simulator">サポート料金の入金状況・キャンセル料シミュレーション</li>
+                <li data-ja="自己解決用AIチャットボット" data-en="Self-service AI chatbot">自己解決用AIチャットボット</li>
+              </ul>
+            </div>
+            <div class="phase-dept">
+              <h4 data-ja="Admin" data-en="Admin">Admin</h4>
+              <ul>
+                <li data-ja="ビザ・学校関連書類のアップロード（お客様がご自身で確認可能に）" data-en="Document upload so members can view their own visa/school files">ビザ・学校関連書類のアップロード（お客様がご自身で確認可能に）</li>
+                <li data-ja="授業スケジュールの表示" data-en="Class schedule display">授業スケジュールの表示</li>
+              </ul>
+            </div>
+            <div class="phase-dept">
+              <h4 data-ja="QM" data-en="QM">QM</h4>
+              <ul>
+                <li data-ja="マンツーマン・グループレッスンの契約情報とスケジュール" data-en="One-on-one & group lesson contract info and schedule">マンツーマン・グループレッスンの契約情報とスケジュール</li>
+                <li data-ja="説明会・セミナー動画のアーカイブ" data-en="On-demand seminar/webinar recordings">説明会・セミナー動画のアーカイブ</li>
+                <li data-ja="課題・履歴書の提出ページ、面接対策リマインダー" data-en="Assignment & resume submission, interview-prep reminders">課題・履歴書の提出ページ、面接対策リマインダー</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="phase-block phase-3">
+        <summary class="phase-head">
+          <span class="phase-badge">Phase 3</span>
+          <h3 data-ja="低優先度・あればいい" data-en="Low / Nice-to-have">低優先度・あればいい</h3>
+          <span class="phase-deadline" data-ja="〜2027年3月31日" data-en="Due Mar 31, 2027">〜2027年3月31日</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+        <div class="phase-body">
+          <div class="phase-dept-grid">
+            <div class="phase-dept">
+              <h4 data-ja="CRM" data-en="CRM">CRM</h4>
+              <ul>
+                <li data-ja="担当者からのお知らせ欄・卒業生コミュニティ掲示板" data-en="Staff announcements; alumni community board">担当者からのお知らせ欄・卒業生コミュニティ掲示板</li>
+                <li data-ja="ビザ関連ニュース" data-en="Visa news">ビザ関連ニュース</li>
+              </ul>
+            </div>
+            <div class="phase-dept">
+              <h4 data-ja="Admin" data-en="Admin">Admin</h4>
+              <ul>
+                <li data-ja="ビザ一般情報、学校案内可能時期の目安表示" data-en="General visa info hub; indicative school-application timing">ビザ一般情報、学校案内可能時期の目安表示</li>
+                <li data-ja="ビザニュース" data-en="Visa news">ビザニュース</li>
+              </ul>
+            </div>
+            <div class="phase-dept">
+              <h4 data-ja="QM" data-en="QM">QM</h4>
+              <ul>
+                <li data-ja="イベント案内・掲示板、レッスン予約と出席の可視化" data-en="Event listings & boards; lesson booking and attendance dashboards">イベント案内・掲示板、レッスン予約と出席の可視化</li>
+                <li data-ja="学習モジュール・宿題管理、日々の学習アドバイス" data-en="Self-study modules, homework tracking, daily learning tips">学習モジュール・宿題管理、日々の学習アドバイス</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="進め方" data-en="How We'll Work Together">進め方</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path d="M4 6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H9.5L5 20.5V17H7a3 3 0 0 1-3-3z" fill="#4285F4"/>
+              <circle cx="9" cy="10.5" r="1.35" fill="#fff"/>
+              <circle cx="12.5" cy="10.5" r="1.35" fill="#fff"/>
+              <circle cx="16" cy="10.5" r="1.35" fill="#fff"/>
+            </svg>
+          </div>
+          <div>
+            <p class="tool-name">Google Chat</p>
+            <p class="tool-desc" data-ja="「会員サイト」スペースを、関係者間の主な連絡手段として使用します。" data-en="The “会員サイト” (Member Site) space is the main channel for day-to-day communication between everyone involved.">「会員サイト」スペースを、関係者間の主な連絡手段として使用します。</p>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon notion" aria-hidden="true">
+            <span class="notion-mark">N</span>
+          </div>
+          <div>
+            <p class="tool-name">Notion</p>
+            <p class="tool-desc" data-ja="会議の記録、タスクの割り振り、開発の進捗管理に使用します。" data-en="Used for meeting notes, task delegation, and tracking development progress.">会議の記録、タスクの割り振り、開発の進捗管理に使用します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="次のステップ・検討中の項目" data-en="Next Steps & Open Questions">次のステップ・検討中の項目</h2>
+      <ul class="next-list">
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="書類アップロード機能は段階導入" data-en="Document upload rolls out in two stages">書類アップロード機能は段階導入</b>
+            <span data-ja="金額など数値の表示のみであればすぐ実現可能。ボタンや申請フォームまで含める場合はサーバー・セキュリティ面の検討が必要なため、来年以降を想定。" data-en="Read-only numeric display is feasible soon. Adding buttons/application forms needs a hosting & security review first, so that part is targeted for next year.">金額など数値の表示のみであればすぐ実現可能。ボタンや申請フォームまで含める場合はサーバー・セキュリティ面の検討が必要なため、来年以降を想定。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="学校お申込み期限の自動判定ツール" data-en="Auto-lookup tool for school application deadlines">学校お申込み期限の自動判定ツール</b>
+            <span data-ja="国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。" data-en="A tool that shows application deadlines based on country, visa type, and arrangement — still being scoped with the CS team.">国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="Zoho連携の入金通知" data-en="In-portal payment notifications from Zoho">Zoho連携の入金通知</b>
+            <span data-ja="入金確認やロボペイ失敗・未入金を会員サイト内で自動通知したいという要望あり。実装方法は未着手。" data-en="Requested: auto-notify members in the portal on payment confirmation or a failed/missed payment. Implementation not yet started.">入金確認やロボペイ失敗・未入金を会員サイト内で自動通知したいという要望あり。実装方法は未着手。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="ビザセンター予約日の見せ方" data-en="How to present visa-center booking dates">ビザセンター予約日の見せ方</b>
+            <span data-ja="学校によってスケジュールが初日に決まる場合もあり、お客様が混乱しないような見せ方を検討中。" data-en="Some schools finalize the schedule on day one, so the team is working out a presentation that won't confuse members.">学校によってスケジュールが初日に決まる場合もあり、お客様が混乱しないような見せ方を検討中。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="LINEボタンを会員サイトに合わせて変更" data-en="LINE buttons will be updated to match the new site">LINEボタンを会員サイトに合わせて変更</b>
+            <span data-ja="会員サイトの内容に合わせてLINE公式アカウントのボタンを変更予定。担当：Carola（QM）、デザイン担当：Eripu（マーケティング部）。" data-en="The LINE official-account buttons will be updated to reflect the new site. Owner: Carola (QM); design: Eripu (Marketing).">会員サイトの内容に合わせてLINE公式アカウントのボタンを変更予定。担当：Carola（QM）、デザイン担当：Eripu（マーケティング部）。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="夢カナEnglish予約サイトとの連携" data-en="Linking the Yumekana English booking site">夢カナEnglish予約サイトとの連携</b>
+            <span data-ja="夢カナEnglishの予約サイトを、9月中旬に会員サイトとリンクさせる予定。" data-en="The Yumekana English booking site will be linked to the member site in mid-September.">夢カナEnglishの予約サイトを、9月中旬に会員サイトとリンクさせる予定。</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <footer data-ja="夢カナ 会員サイト構築プロジェクト — 社内共有用ページ" data-en="Yumekana Member Site Project — internal stakeholder page">夢カナ 会員サイト構築プロジェクト — 社内共有用ページ</footer>
+  </main>
+
+<script>
+  function setLang(lang){
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-ja]').forEach(function(el){
+      el.textContent = lang === 'en' ? (el.getAttribute('data-en') || el.getAttribute('data-ja')) : el.getAttribute('data-ja');
+    });
+    document.getElementById('btnJa').setAttribute('aria-pressed', lang === 'ja');
+    document.getElementById('btnEn').setAttribute('aria-pressed', lang === 'en');
+  }
+  document.getElementById('btnJa').addEventListener('click', function(){ setLang('ja'); });
+  document.getElementById('btnEn').addEventListener('click', function(){ setLang('en'); });
+</script>
+</body>
+</html>
