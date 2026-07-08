@@ -129,6 +129,10 @@
     transform:rotate(-6deg); display:inline-block; opacity:.85;
   }
   .stamp-mark.issued{border-color:var(--success); color:var(--success);}
+  .stamp-mark.lottery{border-color:var(--info); color:var(--info);}
+
+  .doc-list{margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px;}
+  .doc-list li{font-size:13px; color:var(--ink);}
 
   .perforation{
     height:1px; margin:22px 0;
@@ -225,6 +229,14 @@
           <div class="country-tabs" id="countryTabs" role="tablist"></div>
         </div>
 
+        <div class="control-group" id="visaHandlingGroup">
+          <span class="control-label">ビザ手続き</span>
+          <div class="toggle-row" id="visaHandlingToggle">
+            <button data-val="agency" aria-pressed="true">代行</button>
+            <button data-val="self" aria-pressed="false">ご自身で申請</button>
+          </div>
+        </div>
+
         <div class="control-group">
           <span class="control-label">学校・滞在先の手配</span>
           <div class="toggle-row" id="arrangementToggle">
@@ -247,20 +259,28 @@
 
     <main class="main">
 
-      <!-- 契約情報 -->
+      <!-- お知らせ -->
       <section class="card">
         <div class="card-head">
           <div>
-            <span class="head-eyebrow">Contract</span>
-            <h2>契約情報</h2>
+            <span class="head-eyebrow">Notices</span>
+            <h2>お知らせ</h2>
           </div>
         </div>
         <div class="card-body">
-          <div class="field-grid">
-            <div class="field"><span class="f-label">契約タイプ</span><span class="f-value">短期／ワーホリ</span></div>
-            <div class="field"><span class="f-label">学校・滞在先手配</span><span class="f-value" id="contractArrangementValue">あり</span></div>
-            <div class="field"><span class="f-label">サポート料金 支払状況</span><span class="f-value">¥420,000 ／ 残り ¥80,000</span></div>
-            <div class="field"><span class="f-label">契約書・約款</span><span class="f-value"><a href="#">PDFを確認する</a></span></div>
+          <div class="notice-list">
+            <div class="notice-item">
+              <time>07/08</time>
+              <div class="n-body"><span class="n-tag">リマインド</span><p>本日が必要書類のご提出期限です。まだの方は本日中にご提出ください。</p></div>
+            </div>
+            <div class="notice-item">
+              <time>07/02</time>
+              <div class="n-body"><span class="n-tag">担当者より</span><p>健康診断の提出期限が近づいています。まだの方はお早めにご提出ください。</p></div>
+            </div>
+            <div class="notice-item">
+              <time>06/24</time>
+              <div class="n-body"><span class="n-tag">お知らせ</span><p>夢カナEnglish 7月のグループレッスン日程を更新しました。</p></div>
+            </div>
           </div>
         </div>
       </section>
@@ -302,6 +322,9 @@
             <div class="progress-label" id="progressLabel">2 / 5 完了</div>
           </div>
           <div class="todo-list" id="todoList"></div>
+          <div class="perforation"></div>
+          <div class="subsection-title">国ごとの必要書類</div>
+          <div id="requiredDocs"></div>
         </div>
       </section>
 
@@ -329,35 +352,34 @@
               </div>
               <button class="btn secondary">申し込む</button>
             </div>
+            <div class="event-row">
+              <div>
+                <div class="e-title">国別相談会</div>
+                <div class="e-meta">UK・カナダ・オーストラリア 他</div>
+              </div>
+              <button class="btn secondary">申し込む（Google Form）</button>
+            </div>
           </div>
           <div class="perforation"></div>
           <div class="subsection-title">資料ダウンロード</div>
-          <div class="event-list">
-            <div class="event-row"><div class="e-title">渡航国ガイド資料</div><a href="#">開く →</a></div>
-            <div class="event-row"><div class="e-title">海外保険 資料一式</div><a href="#">開く →</a></div>
-            <div class="event-row"><div class="e-title">航空券・MCT案内資料</div><a href="#">開く →</a></div>
-          </div>
+          <div class="event-list" id="resourceList"></div>
         </div>
       </section>
 
-      <!-- お知らせ -->
+      <!-- 契約情報 -->
       <section class="card">
         <div class="card-head">
           <div>
-            <span class="head-eyebrow">Notices</span>
-            <h2>お知らせ</h2>
+            <span class="head-eyebrow">Contract</span>
+            <h2>契約情報</h2>
           </div>
         </div>
         <div class="card-body">
-          <div class="notice-list">
-            <div class="notice-item">
-              <time>07/02</time>
-              <div class="n-body"><span class="n-tag">担当者より</span><p>健康診断の提出期限が近づいています。まだの方はお早めにご提出ください。</p></div>
-            </div>
-            <div class="notice-item">
-              <time>06/24</time>
-              <div class="n-body"><span class="n-tag">お知らせ</span><p>夢カナEnglish 7月のグループレッスン日程を更新しました。</p></div>
-            </div>
+          <div class="field-grid">
+            <div class="field"><span class="f-label">契約タイプ</span><span class="f-value">短期／ワーホリ</span></div>
+            <div class="field"><span class="f-label">学校・滞在先手配</span><span class="f-value" id="contractArrangementValue">あり</span></div>
+            <div class="field"><span class="f-label">サポート料金 支払状況</span><span class="f-value">¥420,000 ／ 残り ¥80,000</span></div>
+            <div class="field"><span class="f-label">契約書・約款</span><span class="f-value"><a href="#">PDFを確認する</a></span></div>
           </div>
         </div>
       </section>
@@ -373,12 +395,17 @@
     { code:'AU', label:'オーストラリア' },
     { code:'CA', label:'カナダ' },
     { code:'IE', label:'アイルランド' },
+    { code:'PH', label:'フィリピン' },
+    { code:'US', label:'アメリカ' },
     { code:'undecided', label:'未定' }
   ];
+
+  var NO_VISA_SUPPORT_COUNTRIES = ['PH', 'US'];
 
   var state = {
     country: 'UK',
     undecidedPreview: 'UK',
+    visaHandling: 'agency', // agency | self
     arrangement: 'yes',
     stayType: 'homestay'
   };
@@ -387,9 +414,37 @@
     visaNumber: 'V-2026-88231',
     status: 'pending', // pending | issued
     docDeadline: '2026-08-10',
-    invoiceAmount: '¥58,000',
     invoiceDue: '2026-07-20',
     invoicePaid: null
+  };
+
+  function getDemoStatus(countryCode){
+    if(countryCode === 'CA' || countryCode === 'IE'){ return 'lottery'; }
+    return COMMON_VISA.status;
+  }
+
+  var CLASSROOM_LINKS = {
+    AU: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTg4/details',
+    CA: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTg2/details',
+    NZ: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTg0/details',
+    UK: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTgy/details',
+    IE: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTgw/details',
+    US: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTc4/details'
+  };
+
+  var UK_GUIDES = [
+    { title:'UK eVisa案内', url:'https://drive.google.com/file/d/1GPPJLVcYdT-k8Obqa1Cp4NhqTDgJEAil/view?usp=drive_link' },
+    { title:'UK パスポート提出ガイド', url:'https://drive.google.com/file/d/1EA7s8TrEIKpocEbf4z5nXSDGc8SYyfEq/view?usp=drive_link' }
+  ];
+
+  var REQUIRED_DOCS = {
+    UK: ['パスポート（全ページのスキャン）', '卒業証明書', '健康診断書', '犯罪証明書（ACRO）'],
+    CA: ['パスポート', '健康診断書', '犯罪証明書'],
+    AU: ['パスポート', '卒業証明書'],
+    NZ: ['パスポート', '卒業証明書'],
+    IE: ['パスポート', '卒業証明書'],
+    PH: ['パスポート'],
+    US: ['パスポート', 'DS-160 控え']
   };
 
   var COUNTRY_EXTRA = {
@@ -426,9 +481,9 @@
   };
 
   var SCHOOL = {
-    city:'ロンドン', name:'Language Link London', course:'ゼネラル英語コース',
+    city:'ロンドン', name:'Language Link London', course:'ジェネラル英語コース（General English）',
     start:'2026-09-07', end:'2026-11-27', weeks:'12週間',
-    homepage:'#', invoiceAmount:'¥312,000', invoiceDue:'2026-07-18', invoicePaid:'2026-07-10'
+    homepage:'#', invoiceDue:'2026-07-18', invoicePaid:'2026-07-10'
   };
 
   var STAY_FIELDS = {
@@ -475,14 +530,22 @@
 
   function renderVisaFor(countryCode){
     var extra = COUNTRY_EXTRA[countryCode];
-    var statusPill = COMMON_VISA.status === 'issued'
-      ? pill('発行済み','success')
+    var status = getDemoStatus(countryCode);
+    var statusPill = status === 'issued' ? pill('発行済み','success')
+      : status === 'lottery' ? pill('当選待ち','info')
       : pill('審査待ち','warning');
-    var stampHtml = COMMON_VISA.status === 'issued'
-      ? '<span class="stamp-mark issued">Issued</span>'
+    var stampHtml = status === 'issued' ? '<span class="stamp-mark issued">Issued</span>'
+      : status === 'lottery' ? '<span class="stamp-mark lottery">In Draw</span>'
       : '<span class="stamp-mark">Pending</span>';
 
     var out = '';
+    out += '<div class="subsection-title">ビザ 請求書・支払い状況</div>';
+    out += '<div class="field-grid">';
+    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + COMMON_VISA.invoiceDue + '</span></div>';
+    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + (COMMON_VISA.invoicePaid || '未確認') + '</span></div>';
+    out += '</div>';
+
+    out += '<div class="perforation"></div>';
     out += '<div class="field-grid">';
     out += '<div class="field"><span class="f-label">ビザ番号</span><span class="f-value">' + COMMON_VISA.visaNumber + '</span></div>';
     out += '<div class="field"><span class="f-label">ビザステータス</span><span class="f-value">' + statusPill + ' ' + stampHtml + '</span></div>';
@@ -496,14 +559,6 @@
     out += '</div>';
     out += '<div class="country-extra-note">' + extra.note + '</div>';
 
-    out += '<div class="perforation"></div>';
-    out += '<div class="subsection-title">ビザ 請求書・支払い状況</div>';
-    out += '<div class="field-grid">';
-    out += '<div class="field"><span class="f-label">請求金額</span><span class="f-value">' + COMMON_VISA.invoiceAmount + '</span></div>';
-    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + COMMON_VISA.invoiceDue + '</span></div>';
-    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + (COMMON_VISA.invoicePaid || '未確認') + '</span></div>';
-    out += '</div>';
-
     out += '<div class="btn-row"><button class="btn">必要書類を提出する</button><button class="btn secondary">請求書を確認する</button></div>';
     return out;
   }
@@ -516,6 +571,9 @@
   function renderVisaCard(){
     var body = document.getElementById('visaCardBody');
     var label = document.getElementById('countryLabel');
+    var visaHandlingGroup = document.getElementById('visaHandlingGroup');
+    var noVisaSupport = NO_VISA_SUPPORT_COUNTRIES.indexOf(state.country) !== -1;
+    visaHandlingGroup.style.display = noVisaSupport ? 'none' : 'block';
 
     if(state.country === 'undecided'){
       label.textContent = '渡航先 未定';
@@ -529,10 +587,58 @@
       '</div>';
       body.innerHTML = banner + renderVisaFor(previewCountry);
       bindPreviewToggle();
+    } else if(noVisaSupport){
+      label.textContent = COUNTRY_META_LABEL(state.country);
+      body.innerHTML = '<div class="empty-note"><span class="mark">—</span><div>' + COUNTRY_META_LABEL(state.country) + 'は現在ビザサポートの対象外です。学校・滞在先情報は引き続きご確認いただけます。</div></div>';
+    } else if(state.visaHandling === 'self'){
+      label.textContent = COUNTRY_META_LABEL(state.country);
+      body.innerHTML = '<div class="empty-note"><span class="mark">—</span><div>ビザ申請はお客様ご自身で行われています。進捗の管理・お問い合わせはお客様にてお願いしております。</div></div>';
     } else {
       label.textContent = COUNTRY_META_LABEL(state.country);
       body.innerHTML = renderVisaFor(state.country);
     }
+
+    renderRequiredDocs();
+    renderResources();
+  }
+
+  function bindVisaHandlingToggle(){
+    var wrap = document.getElementById('visaHandlingToggle');
+    wrap.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.visaHandling = btn.getAttribute('data-val');
+        wrap.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b === btn); });
+        renderVisaCard();
+      });
+    });
+  }
+
+  function renderRequiredDocs(){
+    var el = document.getElementById('requiredDocs');
+    var docs = REQUIRED_DOCS[state.country];
+    if(!docs){
+      el.innerHTML = '<p style="font-size:12.5px; color:var(--ink-soft); margin:0;">渡航先が決まり次第、必要書類の一覧が表示されます。</p>';
+      return;
+    }
+    el.innerHTML = '<ul class="doc-list">' + docs.map(function(d){ return '<li>' + d + '</li>'; }).join('') + '</ul>';
+  }
+
+  function renderResources(){
+    var el = document.getElementById('resourceList');
+    var out = '';
+    out += '<div class="event-row"><div class="e-title">渡航国ガイド資料</div><a href="#">開く →</a></div>';
+    out += '<div class="event-row"><div class="e-title">海外保険 資料一式</div><a href="#">開く →</a></div>';
+    out += '<div class="event-row"><div class="e-title">航空券・MTC案内資料</div><a href="#">開く →</a></div>';
+    var classroomUrl = CLASSROOM_LINKS[state.country];
+    if(classroomUrl){
+      out += '<div class="event-row"><div class="e-title">留学ハンドブック（' + COUNTRY_META_LABEL(state.country) + '）</div><a href="' + classroomUrl + '" target="_blank" rel="noopener">開く →</a></div>';
+    }
+    if(state.country === 'UK'){
+      UK_GUIDES.forEach(function(g){
+        out += '<div class="event-row"><div class="e-title">' + g.title + '</div><a href="' + g.url + '" target="_blank" rel="noopener">開く →</a></div>';
+      });
+    }
+    el.innerHTML = out;
   }
 
   function bindPreviewToggle(){
@@ -557,7 +663,14 @@
       return;
     }
 
-    var out = '<div class="subsection-title">学校情報</div>';
+    var out = '<div class="subsection-title">学校 請求書・支払い状況</div>';
+    out += '<div class="field-grid">';
+    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + SCHOOL.invoiceDue + '</span></div>';
+    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + SCHOOL.invoicePaid + '</span></div>';
+    out += '</div>';
+
+    out += '<div class="perforation"></div>';
+    out += '<div class="subsection-title">学校情報</div>';
     out += '<div class="field-grid">';
     out += '<div class="field"><span class="f-label">都市</span><span class="f-value">' + SCHOOL.city + '</span></div>';
     out += '<div class="field"><span class="f-label">学校名</span><span class="f-value">' + SCHOOL.name + '</span></div>';
@@ -566,14 +679,6 @@
     out += '<div class="field"><span class="f-label">終了日</span><span class="f-value">' + SCHOOL.end + '</span></div>';
     out += '<div class="field"><span class="f-label">期間</span><span class="f-value">' + SCHOOL.weeks + '</span></div>';
     out += '<div class="field"><span class="f-label">学校ホームページ</span><span class="f-value"><a href="' + SCHOOL.homepage + '">サイトを見る →</a></span></div>';
-    out += '</div>';
-
-    out += '<div class="perforation"></div>';
-    out += '<div class="subsection-title">学校 請求書・支払い状況</div>';
-    out += '<div class="field-grid">';
-    out += '<div class="field"><span class="f-label">請求金額</span><span class="f-value">' + SCHOOL.invoiceAmount + '</span></div>';
-    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + SCHOOL.invoiceDue + '</span></div>';
-    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + SCHOOL.invoicePaid + '</span></div>';
     out += '</div>';
 
     out += '<div class="perforation"></div>';
@@ -655,6 +760,7 @@
   renderTodos();
   bindArrangementToggle();
   bindStayTypeRadios();
+  bindVisaHandlingToggle();
 </script>
 </body>
 </html>
