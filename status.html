@@ -52,6 +52,14 @@
   .step-title{font-weight:800;font-size:14px}
   .step-body{font-size:12.5px;color:var(--sub);padding-left:40px}
 
+  /* role callout */
+  .role-callout{margin-top:22px;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:16px 20px;background:var(--teal-soft)}
+  .role-callout .rc-head{font-size:13px;font-weight:800;margin:0 0 12px}
+  .role-callout ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+  .role-callout li{font-size:12.5px;color:var(--ink)}
+  .role-callout li b{display:block;font-size:13px;margin-bottom:2px}
+  .role-callout li span{color:var(--sub)}
+
   .tag{display:inline-flex;align-items:center;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;letter-spacing:.3px}
   .tag.done{background:var(--ok-soft);color:var(--ok)}
   .tag.progress{background:var(--teal-soft);color:var(--teal-dark)}
@@ -142,6 +150,20 @@
   .next-list b{display:block;font-size:13.5px;margin-bottom:2px}
   .next-list span{color:var(--sub);font-size:12.5px}
 
+  /* obstacles (priority) */
+  .obstacle{border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:10px;padding:16px 18px;margin-bottom:14px;background:var(--orange-soft)}
+  .obstacle:last-child{margin-bottom:0}
+  .ob-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .ob-badge{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--orange);color:#fff;letter-spacing:.3px;white-space:nowrap}
+  .ob-head b{font-size:14px}
+  .obstacle > ul{margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+  .obstacle > ul li{font-size:12.5px;color:var(--ink)}
+  .ob-solution{margin:0;font-size:12.5px;color:var(--ink);background:var(--card);border-radius:8px;padding:10px 13px}
+  .ob-solution b{color:var(--teal-dark)}
+  .current-step{border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:16px 18px;background:var(--teal-soft)}
+  .current-step .cs-title{font-size:14px;font-weight:800;margin:0 0 4px}
+  .current-step .cs-body{font-size:12.5px;color:var(--ink);margin:0}
+
   /* gantt timeline */
   .gantt-scroll{overflow-x:auto;margin-bottom:8px}
   .gantt{min-width:640px;margin-bottom:8px}
@@ -220,7 +242,7 @@
         <h1 data-ja="部署横断プロジェクト管理：会員サイト開発" data-en="Cross-Divisional PM: Member Site Development">部署横断プロジェクト管理：会員サイト開発</h1>
         <p class="lead" data-ja="CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。" data-en="We're building a student-facing member site around the priority features aligned with the CRM, Admin, and QM teams. This page is a shared status view for executives and other stakeholders.">CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。</p>
       </div>
-      <div class="updated" data-ja="最終更新：2026年7月5日" data-en="Last updated: July 5, 2026">最終更新：2026年7月5日</div>
+      <div class="updated" data-ja="最終更新：2026年7月8日" data-en="Last updated: Jul 8, 2026">最終更新：2026年7月8日</div>
     </div>
 
     <section class="panel">
@@ -284,6 +306,20 @@
             <span class="step-deadline" data-ja="期限：2026年10月1日（Phase 1 完了）" data-en="Due: Oct 1, 2026 (Phase 1 complete)">期限：2026年10月1日（Phase 1 完了）</span>
           </div>
         </div>
+      </div>
+
+      <div class="role-callout">
+        <p class="rc-head" data-ja="Michi・Chichi の役割（全フェーズを通して）" data-en="Michi &amp; Chichi's role (throughout all phases)">Michi・Chichi の役割（全フェーズを通して）</p>
+        <ol>
+          <li>
+            <b data-ja="① 必要データの収集とシステムの橋渡し" data-en="① Gather the data & bridge the systems">① 必要データの収集とシステムの橋渡し</b>
+            <span data-ja="提案中の各機能について、現在どのチームがどこから・どのように情報を得ているか、どのツールや業務プロセスでその情報が使われているかを整理。Matt・Kojiが各システムを理解し、信頼性の高いサイトを構築できるよう支援します。" data-en="For each proposed feature, map out where each team currently gets its information, how they get it, and which tools/processes use it — and help Matt and Koji understand each system so they can build a reliable site.">提案中の各機能について、現在どのチームがどこから・どのように情報を得ているか、どのツールや業務プロセスでその情報が使われているかを整理。Matt・Kojiが各システムを理解し、信頼性の高いサイトを構築できるよう支援します。</span>
+          </li>
+          <li>
+            <b data-ja="② 進捗共有とフィードバックの集約" data-en="② Share progress & consolidate feedback">② 進捗共有とフィードバックの集約</b>
+            <span data-ja="各自の部署メンバーへ進捗を共有し、各チームの課題や解決策を継続的に収集。それらをMatt・Kojiへ連携します。" data-en="Keep their own team members updated on progress, continuously collect each team's issues and solutions, and relay them to Matt and Koji.">各自の部署メンバーへ進捗を共有し、各チームの課題や解決策を継続的に収集。それらをMatt・Kojiへ連携します。</span>
+          </li>
+        </ol>
       </div>
 
       <div class="proto-card">
@@ -678,26 +714,48 @@
 
     <section class="panel">
       <h2 class="sectit" data-ja="次のステップ・検討中の項目" data-en="Next Steps & Open Questions">次のステップ・検討中の項目</h2>
+
+      <h3 class="subhead" data-ja="現在の課題（優先対応が必要）" data-en="Current Obstacles (need priority attention)">現在の課題（優先対応が必要）</h3>
+
+      <div class="obstacle">
+        <div class="ob-head">
+          <span class="ob-badge" data-ja="要確認" data-en="To confirm">要確認</span>
+          <b data-ja="Nasuさんとの役割・進め方の確認" data-en="Confirm role &amp; way of working with Nasu-san">Nasuさんとの役割・進め方の確認</b>
+        </div>
+        <ul>
+          <li data-ja="役割と責任範囲（どこまでを担当いただくか）" data-en="His role and the extent of his responsibilities">役割と責任範囲（どこまでを担当いただくか）</li>
+          <li data-ja="全ステップの最終チェック担当をお願いしたい旨" data-en="We'd like him to be the final check on every step">全ステップの最終チェック担当をお願いしたい旨</li>
+          <li data-ja="対応・返信にかかる時間の目安" data-en="Expected turnaround time for his responses">対応・返信にかかる時間の目安</li>
+          <li data-ja="すでに作成済みのもの（今回のサイトで再利用できるか）" data-en="What he has already built (so we can reuse it)">すでに作成済みのもの（今回のサイトで再利用できるか）</li>
+        </ul>
+        <p class="ob-solution"><b data-ja="提案：" data-en="Proposed: ">提案：</b><span data-ja="直接連絡が取れるNakamuraさんから、Nasuさんに確認・相談していただく。" data-en="Have Nakamura-san — who can contact him directly — discuss and confirm these with Nasu-san.">直接連絡が取れるNakamuraさんから、Nasuさんに確認・相談していただく。</span></p>
+      </div>
+
+      <div class="obstacle">
+        <div class="ob-head">
+          <span class="ob-badge" data-ja="要判断" data-en="Needs decision">要判断</span>
+          <b data-ja="Zoho「ビザ商談」データ移行との優先順位" data-en="Priority vs. the Zoho “visa deals” data migration">Zoho「ビザ商談」データ移行との優先順位</b>
+        </div>
+        <ul>
+          <li data-ja="DXチーム（Hikaruさん他）が、Zohoの「ビザ商談」データを専用モジュールへ移行中（期限：2026年12月31日）。" data-en="Part of the DX team (Hikaru-san and others) is migrating the Zoho “visa deals” data into a dedicated module (deadline: Dec 31, 2026).">DXチーム（Hikaruさん他）が、Zohoの「ビザ商談」データを専用モジュールへ移行中（期限：2026年12月31日）。</li>
+          <li data-ja="会員サイトはこのZohoデータから情報を取得するため、開発に直接影響する可能性がある。" data-en="The member site needs to pull information from that same Zoho data, so this may directly affect its development.">会員サイトはこのZohoデータから情報を取得するため、開発に直接影響する可能性がある。</li>
+        </ul>
+        <p class="ob-solution"><b data-ja="提案：" data-en="Proposed: ">提案：</b><span data-ja="どちらのプロジェクトを優先するか、経営層にご判断いただく（もう一方は少し待つ形に）。" data-en="Ask the executives to decide which project takes priority, so the other can wait a little.">どちらのプロジェクトを優先するか、経営層にご判断いただく（もう一方は少し待つ形に）。</span></p>
+      </div>
+
+      <h3 class="subhead" data-ja="現在進行中のステップ" data-en="Current Step (in progress)">現在進行中のステップ</h3>
+      <div class="current-step">
+        <p class="cs-title" data-ja="Michi・Chichi による現場データの収集" data-en="Michi &amp; Chichi gathering on-the-ground data">Michi・Chichi による現場データの収集</p>
+        <p class="cs-body" data-ja="提案中の各機能について、各チームが現在どこから・どのように情報を得ているか、どのツールや業務プロセスを使っているかを収集・整理。Matt・Kojiが各システムを理解し、信頼性の高いサイトを構築できるよう支援しています。" data-en="For each proposed feature, collecting and organizing where each team currently gets its information, how, and which tools/processes they use — so Matt and Koji can understand each system and build a reliable site.">提案中の各機能について、各チームが現在どこから・どのように情報を得ているか、どのツールや業務プロセスを使っているかを収集・整理。Matt・Kojiが各システムを理解し、信頼性の高いサイトを構築できるよう支援しています。</p>
+      </div>
+
+      <h3 class="subhead" data-ja="今後対応する項目（後ほど検討）" data-en="To Be Addressed Later">今後対応する項目（後ほど検討）</h3>
       <ul class="next-list">
         <li>
           <div class="dot"></div>
           <div>
             <b data-ja="書類アップロード機能は段階導入" data-en="Document upload rolls out in two stages">書類アップロード機能は段階導入</b>
-            <span data-ja="金額など数値の表示のみであればすぐ実現可能。ボタンや申請フォームまで含め、学生がご自身で書類をアップロードできるようにする場合は、Nasuさん（セキュリティエンジニア）とサーバー・セキュリティ面をまず相談する必要があり、その結果次第でこの部分のタイムラインが変わる可能性があります。" data-en="Read-only numeric display is feasible soon. Letting students upload their own files (buttons, application forms) needs to be discussed with Nasu-san (our security engineer) first — server & security implications — and the timeline for this part may shift depending on that discussion.">金額など数値の表示のみであればすぐ実現可能。ボタンや申請フォームまで含め、学生がご自身で書類をアップロードできるようにする場合は、Nasuさん（セキュリティエンジニア）とサーバー・セキュリティ面をまず相談する必要があり、その結果次第でこの部分のタイムラインが変わる可能性があります。</span>
-          </div>
-        </li>
-        <li>
-          <div class="dot"></div>
-          <div>
-            <b data-ja="Nasuさんの既存サイトの調査" data-en="Reviewing Nasu-san's existing site">Nasuさんの既存サイトの調査</b>
-            <span data-ja="Nasuさんは以前にもWebサイトを開発された経験があるため、その内容を確認し、今回の会員サイトでどこまで再利用できそうか検討する予定です。" data-en="Nasu-san has previously built a website, so we plan to look into what he built and how much of it we can reuse for this member site.">Nasuさんは以前にもWebサイトを開発された経験があるため、その内容を確認し、今回の会員サイトでどこまで再利用できそうか検討する予定です。</span>
-          </div>
-        </li>
-        <li>
-          <div class="dot"></div>
-          <div>
-            <b data-ja="学校お申込み期限の自動判定ツール" data-en="Auto-lookup tool for school application deadlines">学校お申込み期限の自動判定ツール</b>
-            <span data-ja="国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。" data-en="A tool that shows application deadlines based on country, visa type, and arrangement — still being scoped with the CS team.">国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。</span>
+            <span data-ja="金額など数値の表示のみであればすぐ実現可能。学生がご自身で書類をアップロードできるようにする部分は、上記のNasuさんとの相談結果を踏まえて段階的に導入。" data-en="Read-only numeric display is feasible soon. Letting students upload their own files will be rolled out in a later stage, based on the outcome of the Nasu-san discussion above.">金額など数値の表示のみであればすぐ実現可能。学生がご自身で書類をアップロードできるようにする部分は、上記のNasuさんとの相談結果を踏まえて段階的に導入。</span>
           </div>
         </li>
         <li>
@@ -705,6 +763,13 @@
           <div>
             <b data-ja="Zoho連携の入金通知" data-en="In-portal payment notifications from Zoho">Zoho連携の入金通知</b>
             <span data-ja="入金確認やロボペイ失敗・未入金を会員サイト内で自動通知したいという要望あり。実装方法は未着手。" data-en="Requested: auto-notify members in the portal on payment confirmation or a failed/missed payment. Implementation not yet started.">入金確認やロボペイ失敗・未入金を会員サイト内で自動通知したいという要望あり。実装方法は未着手。</span>
+          </div>
+        </li>
+        <li>
+          <div class="dot"></div>
+          <div>
+            <b data-ja="学校お申込み期限の自動判定ツール" data-en="Auto-lookup tool for school application deadlines">学校お申込み期限の自動判定ツール</b>
+            <span data-ja="国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。" data-en="A tool that shows application deadlines based on country, visa type, and arrangement — still being scoped with the CS team.">国・ビザ種類・滞在先の有無を選ぶと申込期限が分かる仕組みを、CSチームと引き続き検討中。</span>
           </div>
         </li>
         <li>
