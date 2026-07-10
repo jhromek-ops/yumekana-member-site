@@ -432,51 +432,88 @@
     US: 'https://classroom.google.com/c/NzQyNzkxMjE3ODg4/m/NzQyNzkxNjk1MTc4/details'
   };
 
-  var UK_GUIDES = [
-    { title:'UK eVisa案内', url:'https://drive.google.com/file/d/1GPPJLVcYdT-k8Obqa1Cp4NhqTDgJEAil/view?usp=drive_link' },
-    { title:'UK パスポート提出ガイド', url:'https://drive.google.com/file/d/1EA7s8TrEIKpocEbf4z5nXSDGc8SYyfEq/view?usp=drive_link' }
-  ];
+  // 渡航国別の案内・ガイド資料（Adminチーム／Chichi 提供）
+  var COUNTRY_GUIDES = {
+    UK: [
+      { title:'eVisa案内', url:'https://drive.google.com/file/d/1GPPJLVcYdT-k8Obqa1Cp4NhqTDgJEAil/view?usp=drive_link' },
+      { title:'パスポート提出ガイド', url:'https://drive.google.com/file/d/1EA7s8TrEIKpocEbf4z5nXSDGc8SYyfEq/view?usp=drive_link' }
+    ],
+    AU: [
+      { title:'Form 956 見本', url:'https://drive.google.com/file/d/1hlZTPIcsEryrReWFZB18j7ROj6RYGXxx/view' },
+      { title:'ImmiAccount メールアドレス変更方法', url:'https://docs.google.com/presentation/d/197YPJuBicIcAz8XAL6z8KtrRFH_1LGr9kooltvk_BXo/edit?slide=id.gfbe00dc3b8_0_125#slide=id.gfbe00dc3b8_0_125' },
+      { title:'Client Declaration 日本語訳（健康診断が必要な場合）', url:'https://drive.google.com/file/d/1RN9JApLq3WR69Dqo906opIiNkfUH4-aV/view' },
+      { title:'指定病院リスト（健康診断が必要な場合）', url:'https://docs.google.com/presentation/d/19eTKwL43McWbeo8-vmSHwtLy9YWnyl9ZR1ZoHB_2Ejw/edit?slide=id.p1#slide=id.p1' },
+      { title:'薬持ち込みご案内', url:'https://drive.google.com/file/d/1n-29lJac_wpgvO7PwEy7hETVcJm4ytsn/view?usp=drive_link' }
+    ],
+    NZ: [
+      { title:'【見本】代行申請同意フォーム（INZ1225）', url:'https://drive.google.com/file/d/1mPEO1u3r_uGFZydvkUuukbc8F5afe2zM/view' },
+      { title:'【見本】INZ1007（健康診断が必要な場合）', url:'https://drive.google.com/file/d/1xvFECRcsAuRoFPTc5zisB01tmhwFtXfs/view' }
+    ],
+    CA: [
+      { title:'ビザセンター予約案内', url:'https://drive.google.com/file/d/1k8c55wX11RKXyLr1JqJocLWpDM96KStd/view' },
+      { title:'無犯罪証明書取得案内（海外・取得する国により内容が異なります）', url:'https://drive.google.com/drive/folders/1JWTrSU1gvZVmobfQtw7zoKLv5_meYaX8' },
+      { title:'カナダ移民局指定病院のご案内', url:'https://docs.google.com/presentation/d/1RC-qVF2eCQKbaPnsBKB7PTFvn76DSgFNUJthD-HY-Ec/edit?slide=id.p#slide=id.p' }
+    ]
+    // IE（アイルランド）：現時点で共有資料なし（N/A）
+  };
 
+  // 渡航国別の必要書類リスト（Adminチーム／Chichi 提供）
   var REQUIRED_DOCS = {
-    UK: ['パスポート（全ページのスキャン）', '卒業証明書', '健康診断書', '犯罪証明書（ACRO）'],
-    CA: ['パスポート', '健康診断書', '犯罪証明書'],
-    AU: ['パスポート', '卒業証明書'],
-    NZ: ['パスポート', '卒業証明書'],
-    IE: ['パスポート', '卒業証明書'],
+    UK: ['パスポート（全ページ）', '取引明細書原本', '公証英訳した取引明細書', '残高証明書原本（日本語か英語）', '公証英訳した残高証明書（場合による）', '結核診断書（場合による）'],
+    CA: ['パスポート（顔写真のページ）', '証明写真（デジタルデータ）', '健康診断証明書（場合による）', '無犯罪証明書（場合による）', '運転免許経歴証明書（場合による）'],
+    AU: ['パスポート（顔写真のページ）', '残高証明書', 'Form956（同意フォーム）', 'eMedical Questionnaire（場合による）', 'Client Declaration（場合による）', '診断書（場合による）', '無犯罪証明書（場合による）', '戸籍謄本（場合による）', '自衛隊・警察・武器訓練の経験証明（場合による）'],
+    NZ: ['パスポート（顔写真のページ）', '戸籍謄本か運転免許証', '診断書（場合による）', '無犯罪証明書（場合による）', 'INZ1225'],
+    IE: ['パスポートのコピー（顔写真のページ・スタンプのページ）', '履歴書', '片道航空券、もしくは復路航空券（e-チケット・予約確認書）', 'Visa document'],
     PH: ['パスポート'],
     US: ['パスポート', 'DS-160 控え']
   };
 
+  // 渡航国別の固有項目。国ごとに手続きが異なるため、各国の必要書類・プロセスに合わせて出し分けます。
   var COUNTRY_EXTRA = {
     UK: {
-      note: 'イギリスは eVisa のオンライン申請とビザセンターでの生体認証予約が必要です。',
+      note: 'イギリスは eVisa のオンライン申請とビザセンターでの生体認証予約に加え、財政証明（取引明細書・残高証明書）の提出が必要です。結核診断書は該当者のみ提出します。',
       fields: [
         { label:'ビザ申請番号', value:'GWF-0294831' },
         { label:'eVisa申請', value:'必要（未対応）', tag:'warning' },
         { label:'ビザ有効期間', value:'2026-09-01 〜 2027-08-31' },
         { label:'ビザセンター予約日', value:'2026-07-15' },
-        { label:'健康診断 提出期限', value:'2026-07-25', tag:'warning' }
+        { label:'財政証明（取引明細書・残高証明書）', value:'要提出' },
+        { label:'結核診断書 提出期限（該当者のみ）', value:'2026-07-25', tag:'warning' }
       ]
     },
     CA: {
-      note: 'カナダはビザ発行に数ヶ月かかるため、センター予約と健康診断の期限管理が重要です。',
+      note: 'カナダはビザ発行に数ヶ月かかるため、ビザセンター予約と健康診断（該当者のみ）の期限管理が重要です。無犯罪証明書は取得する国により手続きが異なります。',
       fields: [
         { label:'ビザセンター予約期限', value:'2026-07-30', tag:'warning' },
-        { label:'健康診断 提出期限', value:'2026-08-05', tag:'warning' },
+        { label:'健康診断 提出期限（該当者のみ）', value:'2026-08-05', tag:'warning' },
+        { label:'無犯罪証明書（該当者のみ）', value:'要提出' },
         { label:'入国期限', value:'2027-01-15' }
       ]
     },
     AU: {
-      note: 'オーストラリアはビザ発行後の入国期限のみご確認ください。',
-      fields: [ { label:'入国期限', value:'2027-02-01' } ]
+      note: 'オーストラリアは Form956（同意フォーム）と残高証明書の提出が必要です。健康診断・eMedical Questionnaire 等は該当者のみ対応します。',
+      fields: [
+        { label:'Form956（同意フォーム）', value:'要提出', tag:'warning' },
+        { label:'eMedical Questionnaire（該当者のみ）', value:'該当者のみ' },
+        { label:'健康診断 提出期限（該当者のみ）', value:'2026-08-15', tag:'warning' },
+        { label:'入国期限', value:'2027-02-01' }
+      ]
     },
     NZ: {
-      note: 'ニュージーランドはビザ発行後の入国期限のみご確認ください。',
-      fields: [ { label:'入国期限', value:'2027-02-10' } ]
+      note: 'ニュージーランドは INZ1225（代行申請同意フォーム）の提出が必要です。INZ1007（健康診断）は該当者のみ対応します。',
+      fields: [
+        { label:'INZ1225（代行申請同意フォーム）', value:'要提出', tag:'warning' },
+        { label:'INZ1007（健康診断・該当者のみ）', value:'該当者のみ' },
+        { label:'入国期限', value:'2027-02-10' }
+      ]
     },
     IE: {
-      note: 'アイルランドはビザ発行後の入国期限のみご確認ください。',
-      fields: [ { label:'入国期限', value:'2027-01-20' } ]
+      note: 'アイルランドは申請時に履歴書と航空券（片道もしくは復路）の提出が必要です。',
+      fields: [
+        { label:'Visa document', value:'要提出', tag:'warning' },
+        { label:'航空券（片道／復路）', value:'要提出（申請時に必要）' },
+        { label:'入国期限', value:'2027-01-20' }
+      ]
     }
   };
 
@@ -633,8 +670,9 @@
     if(classroomUrl){
       out += '<div class="event-row"><div class="e-title">留学ハンドブック（' + COUNTRY_META_LABEL(state.country) + '）</div><a href="' + classroomUrl + '" target="_blank" rel="noopener">開く →</a></div>';
     }
-    if(state.country === 'UK'){
-      UK_GUIDES.forEach(function(g){
+    var guides = COUNTRY_GUIDES[state.country];
+    if(guides){
+      guides.forEach(function(g){
         out += '<div class="event-row"><div class="e-title">' + g.title + '</div><a href="' + g.url + '" target="_blank" rel="noopener">開く →</a></div>';
       });
     }
