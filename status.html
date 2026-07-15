@@ -300,10 +300,10 @@
             <div class="step-num">3</div>
             <div class="step-title" data-ja="本開発・データ連携" data-en="Build & Data Integration">本開発・データ連携</div>
           </div>
-          <div class="step-body" data-ja="プロトタイプでの検証を踏まえ、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoと接続し、高優先度の機能から本実装。" data-en="Building on what the prototype validates, we work with Nasu-san (backend & security) to connect to CRM/Zoho and implement the high-priority features for production.">プロトタイプでの検証を踏まえ、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoと接続し、高優先度の機能から本実装。</div>
+          <div class="step-body" data-ja="各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続。まずは「閲覧のみ（read-only）」の高優先度機能を実装し、パイロットを公開します。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に後続ステージで接続します。" data-en="Building on each team's business-process / data-source mapping, we work with Nasu-san (backend & security) to connect to CRM/Zoho. We first implement the high-priority read-only features and launch a pilot; visa-related features connect in a follow-on stage after the Zoho Visa Module is ready (ETA late Nov).">各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続。まずは「閲覧のみ（read-only）」の高優先度機能を実装し、パイロットを公開します。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に後続ステージで接続します。</div>
           <div class="step-meta" style="padding-left:40px">
             <span class="tag upcoming" data-ja="予定" data-en="Planned">予定</span>
-            <span class="step-deadline" data-ja="期限：2026年10月1日（Phase 1 完了）" data-en="Due: Oct 1, 2026 (Phase 1 complete)">期限：2026年10月1日（Phase 1 完了）</span>
+            <span class="step-deadline" data-ja="期限：2026年10月1日（閲覧のみパイロット公開）" data-en="Due: Oct 1, 2026 (read-only pilot launch)">期限：2026年10月1日（閲覧のみパイロット公開）</span>
           </div>
         </div>
       </div>
@@ -594,15 +594,16 @@
         <div class="phase-head">
           <span class="phase-badge">Phase 1</span>
           <h3 data-ja="高優先度" data-en="High Priority">高優先度</h3>
-          <span class="phase-deadline" data-ja="〜2026年10月1日" data-en="Due Oct 1, 2026">〜2026年10月1日</span>
+          <span class="phase-deadline" data-ja="〜2026年10月1日（閲覧のみパイロット）" data-en="Due Oct 1, 2026 (read-only pilot)">〜2026年10月1日（閲覧のみパイロット）</span>
         </div>
         <div class="phase-body">
+          <p style="font-size:12.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:8px;padding:10px 13px;margin:0 0 16px" data-ja="第1弾は「閲覧のみ（read-only）」パイロットとして〜10月に公開します。★印のビザ関連項目はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続する後続ステージの対象です。" data-en="The first release launches as a read-only pilot around October. Items marked ★ are visa-related and belong to a follow-on stage that connects after the Zoho Visa Module is ready (ETA late Nov).">第1弾は「閲覧のみ（read-only）」パイロットとして〜10月に公開します。★印のビザ関連項目はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続する後続ステージの対象です。</p>
           <div class="phase-dept-grid">
             <div class="phase-dept">
               <h4 data-ja="CRM" data-en="CRM">CRM</h4>
               <ul>
                 <li data-ja="会員ID・契約書・請求書・約款を一元表示" data-en="Member ID, contracts, invoices & terms in one place">会員ID・契約書・請求書・約款を一元表示</li>
-                <li data-ja="ビザ番号・ステータス（審査待ち／発行済み）の確認" data-en="Visa number & status tracking (in review / issued)">ビザ番号・ステータス（審査待ち／発行済み）の確認</li>
+                <li data-ja="★ ビザ番号・ステータス（審査待ち／発行済み）の確認" data-en="★ Visa number & status tracking (in review / issued)">★ ビザ番号・ステータス（審査待ち／発行済み）の確認</li>
                 <li data-ja="必要書類の提出フォーム（Zoho連携・自動保存）" data-en="Required-document submission form, auto-saved to Zoho">必要書類の提出フォーム（Zoho連携・自動保存）</li>
                 <li data-ja="学校リスト・各校ホームページの提示" data-en="School list with links to each school's site">学校リスト・各校ホームページの提示</li>
                 <li data-ja="イベント申込・面談予約URL・渡航前オリエンテーション案内" data-en="Event sign-up, counselor meeting links, pre-departure orientation">イベント申込・面談予約URL・渡航前オリエンテーション案内</li>
@@ -613,7 +614,7 @@
               <h4 data-ja="Admin" data-en="Admin">Admin</h4>
               <ul>
                 <li data-ja="学校・滞在先の請求書・支払期限・入金確認日（対象者のみ表示・全体の約20%）" data-en="School & accommodation invoices, due dates & payment confirmation — shown only to the ~20% who use these services">学校・滞在先の請求書・支払期限・入金確認日（対象者のみ表示・全体の約20%）</li>
-                <li data-ja="ビザ請求書・支払期限と、渡航国別の必須項目・必要書類リスト・案内ガイド（UK／カナダ／オーストラリア／ニュージーランド／アイルランド、Adminにて整理済み）" data-en="Visa invoices & payment deadlines, plus country-specific requirements, required-document lists & guide materials (UK/Canada/Australia/New Zealand/Ireland — compiled by Admin)">ビザ請求書・支払期限と、渡航国別の必須項目・必要書類リスト・案内ガイド（UK／カナダ／オーストラリア／ニュージーランド／アイルランド、Adminにて整理済み）</li>
+                <li data-ja="★ ビザ請求書・支払期限と、渡航国別の必須項目・必要書類リスト・案内ガイド（UK／カナダ／オーストラリア／ニュージーランド／アイルランド、Adminにて整理済み）" data-en="★ Visa invoices & payment deadlines, plus country-specific requirements, required-document lists & guide materials (UK/Canada/Australia/New Zealand/Ireland — compiled by Admin)">★ ビザ請求書・支払期限と、渡航国別の必須項目・必要書類リスト・案内ガイド（UK／カナダ／オーストラリア／ニュージーランド／アイルランド、Adminにて整理済み）</li>
                 <li data-ja="希望渡航先の優先順位" data-en="Preferred destination ranking">希望渡航先の優先順位</li>
                 <li data-ja="学校情報（都市・学校名・コース・開始／終了日・期間）" data-en="School details — city, name, course, start/end dates, duration">学校情報（都市・学校名・コース・開始／終了日・期間）</li>
                 <li data-ja="滞在先情報（ホームステイ／寮／自己手配で表示切替）" data-en="Accommodation details, adapting to homestay / dormitory / self-arranged">滞在先情報（ホームステイ／寮／自己手配で表示切替）</li>
