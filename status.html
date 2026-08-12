@@ -202,6 +202,22 @@
   .gate.final .gate-label{color:var(--orange)}
   .gate-note{font-style:italic;color:var(--sub);font-size:12.5px;text-align:center;margin:22px 0 0}
 
+  /* step timeline */
+  .steptl{display:flex;flex-direction:column;margin-top:8px}
+  .stl-item{display:flex;gap:14px;position:relative;padding-bottom:18px}
+  .stl-item:last-child{padding-bottom:0}
+  .stl-rail{position:relative;flex-shrink:0;width:26px;display:flex;justify-content:center}
+  .stl-num{width:26px;height:26px;border-radius:50%;background:var(--teal);color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center;z-index:1}
+  .stl-item.last .stl-num{background:var(--navy)}
+  .stl-item:not(:last-child) .stl-rail::after{content:"";position:absolute;top:26px;bottom:-18px;left:50%;transform:translateX(-50%);width:2px;background:var(--line)}
+  .stl-content{flex:1;display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;align-items:baseline;padding-top:2px}
+  .stl-main{flex:1;min-width:220px}
+  .stl-title{font-size:14px;font-weight:700;color:var(--ink)}
+  .stl-sub{font-size:12px;color:var(--sub);margin-top:3px}
+  .stl-date{font-size:12px;font-weight:700;color:var(--teal-dark);font-family:'SF Mono',Consolas,monospace;white-space:nowrap;background:var(--teal-soft);padding:3px 11px;border-radius:999px}
+  .stl-item.last .stl-date{color:var(--navy);background:#e7e9ee}
+  .stl-fix{display:inline-block;margin-top:5px;font-size:11px;font-weight:800;color:var(--orange);background:var(--orange-soft);padding:3px 10px;border-radius:999px}
+
   /* team */
   .team-group{margin-bottom:22px}
   .team-group:last-child{margin-bottom:0}
@@ -242,7 +258,7 @@
         <h1 data-ja="部署横断プロジェクト管理：会員サイト開発" data-en="Cross-Divisional PM: Member Site Development">部署横断プロジェクト管理：会員サイト開発</h1>
         <p class="lead" data-ja="CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。" data-en="We're building a student-facing member site around the priority features aligned with the CRM, Admin, and QM teams. This page is a shared status view for executives and other stakeholders.">CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。</p>
       </div>
-      <div class="updated" data-ja="最終更新：2026年7月15日" data-en="Last updated: Jul 15, 2026">最終更新：2026年7月15日</div>
+      <div class="updated" data-ja="最終更新：2026年8月12日" data-en="Last updated: Aug 12, 2026">最終更新：2026年8月12日</div>
     </div>
 
     <section class="panel">
@@ -364,111 +380,55 @@
       <h3 class="subhead" data-ja="Phase 1 詳細スケジュール — 閲覧のみパイロット（〜10月1日）" data-en="Phase 1 Detail — Read-only Pilot (through Oct 1)">Phase 1 詳細スケジュール — 閲覧のみパイロット（〜10月1日）</h3>
       <p class="lead" style="margin:-6px 0 14px" data-ja="第1弾は「閲覧のみ（read-only）」のパイロットです。ビザ関連機能は含まれず、Zoho「ビザモジュール」の完成後（見込み：11月下旬）に後続ステージで接続します。" data-en="The first release is a read-only pilot. Visa-related features are not included; they connect in a follow-on stage after the Zoho Visa Module is ready (ETA late Nov).">第1弾は「閲覧のみ（read-only）」のパイロットです。ビザ関連機能は含まれず、Zoho「ビザモジュール」の完成後（見込み：11月下旬）に後続ステージで接続します。</p>
 
-      <div class="gantt-scroll">
-      <div class="gantt">
-        <div class="grow ghead">
-          <div class="glabel"></div>
-          <div class="glane">
-            <span class="gmonth" style="left:14%" data-ja="7月" data-en="July">7月</span>
-            <span class="gmonth" style="left:46%" data-ja="8月" data-en="August">8月</span>
-            <span class="gmonth" style="left:78%" data-ja="9月" data-en="September">9月</span>
-            <span class="gmonth gdeadline" data-ja="10月1日" data-en="Oct 1">10月1日</span>
+      <div class="steptl">
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">1</div></div>
+          <div class="stl-content">
+            <div class="stl-main"><div class="stl-title" data-ja="会員サイト実装機能の選定" data-en="Select the features to build">会員サイト実装機能の選定</div></div>
+            <span class="stl-date" data-ja="〜8/16" data-en="through Aug 16">〜8/16</span>
           </div>
         </div>
-
-        <div class="grow">
-          <div class="glabel" data-ja="立上げ・要件" data-en="Kickoff & discovery">立上げ・要件</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:0%;width:8.3%"></div>
-            <div class="gdiamond" style="left:8.3%"></div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">2</div></div>
+          <div class="stl-content">
+            <div class="stl-main"><div class="stl-title" data-ja="フロントエンド開発（Claude Code / HTML）" data-en="Frontend development (Claude Code / HTML)">フロントエンド開発（Claude Code / HTML）</div></div>
+            <span class="stl-date" data-ja="8/17〜8/23" data-en="Aug 17–23">8/17〜8/23</span>
           </div>
         </div>
-        <div class="grow">
-          <div class="glabel" data-ja="設計・構成" data-en="Design & architecture">設計・構成</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:8.3%;width:24%"></div>
-            <div class="gdiamond" style="left:32.3%"></div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">3</div></div>
+          <div class="stl-content">
+            <div class="stl-main"><div class="stl-title" data-ja="フロントエンド確認MTG" data-en="Frontend review meeting">フロントエンド確認MTG</div></div>
+            <span class="stl-date" data-ja="8/24" data-en="Aug 24">8/24</span>
           </div>
         </div>
-        <div class="grow">
-          <div class="glabel" data-ja="開発" data-en="Core build (dev)">開発</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:32.3%;width:32.3%"></div>
-            <div class="gdiamond" style="left:64.6%"></div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">4</div></div>
+          <div class="stl-content">
+            <div class="stl-main"><div class="stl-title" data-ja="最終修正" data-en="Final revisions">最終修正</div></div>
+            <span class="stl-date" data-ja="8/25〜26" data-en="Aug 25–26">8/25〜26</span>
           </div>
         </div>
-        <div class="grow">
-          <div class="glabel" data-ja="連携（閲覧のみ）・教材" data-en="Read-only integration & content">連携（閲覧のみ）・教材</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:64.6%;width:11.5%"></div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">5</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="翼飛さん・中村さん 確認" data-en="Sign-off: Yifei-san & Nakamura-san">翼飛さん・中村さん 確認</div>
+              <div class="stl-fix" data-ja="8月中に機能とフロントエンドを確定（Fix）" data-en="Lock features & frontend within August">8月中に機能とフロントエンドを確定（Fix）</div>
+            </div>
+            <span class="stl-date" data-ja="8/27 または 8/31" data-en="Aug 27 or 31">8/27 または 8/31</span>
           </div>
         </div>
-        <div class="grow">
-          <div class="glabel" data-ja="検証・テスト" data-en="QA & testing (QM)">検証・テスト</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:76%;width:7.3%"></div>
-            <div class="gdiamond" style="left:83.3%"></div>
+        <div class="stl-item last">
+          <div class="stl-rail"><div class="stl-num">6</div></div>
+          <div class="stl-content">
+            <div class="stl-main"><div class="stl-title" data-ja="バックエンド開発" data-en="Backend development">バックエンド開発</div></div>
+            <span class="stl-date" data-ja="約2週間" data-en="~2 weeks">約2週間</span>
           </div>
-        </div>
-        <div class="grow">
-          <div class="glabel" data-ja="修正・準備" data-en="Fixes & launch prep">修正・準備</div>
-          <div class="glane gtrack">
-            <div class="gbar" style="left:83.3%;width:7.3%"></div>
-          </div>
-        </div>
-        <div class="grow">
-          <div class="glabel" data-ja="予備" data-en="Buffer">予備</div>
-          <div class="glane gtrack">
-            <div class="gbar gbuffer" style="left:90.6%;width:5.2%"></div>
-          </div>
-        </div>
-
-        <div class="gantt-legend">
-          <span><i class="lg-swatch" style="background:var(--teal)"></i><span data-ja="開発" data-en="Delivery">開発</span></span>
-          <span><i class="lg-swatch" style="background:#d7dbe0"></i><span data-ja="予備" data-en="Buffer">予備</span></span>
-          <span><i class="lg-diamond"></i><span data-ja="判断ポイント" data-en="Decision">判断ポイント</span></span>
         </div>
       </div>
-      </div>
 
-      <div class="gates">
-        <div class="gate">
-          <div class="gate-date" data-ja="7月9日" data-en="Jul 9">7月9日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="スコープ確定" data-en="Scope locked">スコープ確定</div>
-        </div>
-        <div class="gate">
-          <div class="gate-date" data-ja="8月1日" data-en="Aug 1">8月1日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="設計承認" data-en="Design approved">設計承認</div>
-        </div>
-        <div class="gate">
-          <div class="gate-date" data-ja="9月1日" data-en="Sep 1">9月1日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="機能確定" data-en="Feature freeze">機能確定</div>
-        </div>
-        <div class="gate">
-          <div class="gate-date" data-ja="9月19日" data-en="Sep 19">9月19日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="受入承認" data-en="UAT sign-off">受入承認</div>
-        </div>
-        <div class="gate">
-          <div class="gate-date" data-ja="9月26日" data-en="Sep 26">9月26日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="公開判断" data-en="Go / no-go">公開判断</div>
-        </div>
-        <div class="gate">
-          <div class="gate-date" data-ja="10月1日" data-en="Oct 1">10月1日</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="パイロット公開（閲覧のみ）" data-en="Pilot launch (read-only)">パイロット公開（閲覧のみ）</div>
-        </div>
-        <div class="gate final">
-          <div class="gate-date" data-ja="11月下旬〜" data-en="Late Nov —">11月下旬〜</div>
-          <div class="gate-dot"></div>
-          <div class="gate-label" data-ja="ビザ機能を接続" data-en="Connect visa features">ビザ機能を接続</div>
-        </div>
-      </div>
-      <p class="gate-note" data-ja="9月1日の機能確定を守ることが、10月1日の閲覧のみパイロット公開の鍵です。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続します。" data-en="Holding the Sep 1 feature freeze protects the Oct 1 read-only pilot launch. Visa-related features connect after the Zoho Visa Module is ready (ETA late Nov).">9月1日の機能確定を守ることが、10月1日の閲覧のみパイロット公開の鍵です。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続します。</p>
+      <p class="gate-note" data-ja="8月中に機能とフロントエンドを確定（Fix）し、その後バックエンド開発（約2週間）へ。10月1日の閲覧のみパイロット公開を目指します。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続します。" data-en="Lock the features and frontend within August, then move to backend development (~2 weeks), targeting the read-only pilot launch on Oct 1. Visa-related features connect after the Zoho Visa Module is ready (ETA late Nov).">8月中に機能とフロントエンドを確定（Fix）し、その後バックエンド開発（約2週間）へ。10月1日の閲覧のみパイロット公開を目指します。ビザ関連機能はZoho「ビザモジュール」完成後（見込み：11月下旬）に接続します。</p>
     </section>
 
     <section class="panel">
