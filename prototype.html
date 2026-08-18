@@ -378,7 +378,7 @@
           <div class="field-grid">
             <div class="field"><span class="f-label">契約タイプ</span><span class="f-value">短期／ワーホリ</span></div>
             <div class="field"><span class="f-label">学校・滞在先手配</span><span class="f-value" id="contractArrangementValue">あり</span></div>
-            <div class="field"><span class="f-label">サポート料金 支払状況</span><span class="f-value">¥420,000 ／ 残り ¥80,000</span></div>
+            <div class="field"><span class="f-label">サポート料金（総額）</span><span class="f-value">¥420,000</span><span class="f-note">※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。</span></div>
             <div class="field"><span class="f-label">契約書・約款</span><span class="f-value"><a href="#">PDFを確認する</a></span></div>
           </div>
         </div>
@@ -576,15 +576,13 @@
       : '<span class="stamp-mark">Pending</span>';
 
     var out = '';
-    out += '<div class="subsection-title">ビザ 請求書・支払い状況</div>';
+    out += '<div class="subsection-title">ビザ 請求書</div>';
     out += '<div class="field-grid">';
-    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + COMMON_VISA.invoiceDue + '</span></div>';
-    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + (COMMON_VISA.invoicePaid || '未確認') + '</span></div>';
+    out += '<div class="field"><span class="f-label">請求書（PDF）</span><span class="f-value"><a href="#">請求書を確認する →</a></span><span class="f-note">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
     out += '</div>';
 
     out += '<div class="perforation"></div>';
     out += '<div class="field-grid">';
-    out += '<div class="field"><span class="f-label">ビザ番号</span><span class="f-value">' + COMMON_VISA.visaNumber + '</span></div>';
     out += '<div class="field"><span class="f-label">ビザステータス</span><span class="f-value">' + statusPill + ' ' + stampHtml + '</span></div>';
     out += '<div class="field"><span class="f-label">必要書類 提出期限</span><span class="f-value">' + COMMON_VISA.docDeadline + '</span></div>';
     out += '</div>';
@@ -596,7 +594,7 @@
     out += '</div>';
     out += '<div class="country-extra-note">' + extra.note + '</div>';
 
-    out += '<div class="btn-row"><button class="btn">必要書類を提出する</button><button class="btn secondary">請求書を確認する</button></div>';
+    out += '<div class="btn-row"><button class="btn">必要書類を提出する</button></div>';
     return out;
   }
 
@@ -701,10 +699,10 @@
       return;
     }
 
-    var out = '<div class="subsection-title">学校 請求書・支払い状況</div>';
+    var out = '<div class="subsection-title">学校・滞在先 請求書・書類</div>';
     out += '<div class="field-grid">';
-    out += '<div class="field"><span class="f-label">支払期限</span><span class="f-value">' + SCHOOL.invoiceDue + '</span></div>';
-    out += '<div class="field"><span class="f-label">入金確認日</span><span class="f-value">' + SCHOOL.invoicePaid + '</span></div>';
+    out += '<div class="field"><span class="f-label">請求書（PDF）</span><span class="f-value"><a href="#">請求書を確認する →</a></span><span class="f-note">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
+    out += '<div class="field"><span class="f-label">見積書・入学許可証</span><span class="f-value"><a href="#">書類を確認する →</a></span><span class="f-note">Adminがアップロードした見積書・入学許可証等をご確認いただけます。</span></div>';
     out += '</div>';
 
     out += '<div class="perforation"></div>';
