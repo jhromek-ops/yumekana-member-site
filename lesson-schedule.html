@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レッスンスケジュール｜夢カナ ENGLISH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#f4f8f9;}
+  body{font-family:"Zen Kaku Gothic New","Outfit",system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#14303d;}
+  a{color:#12658f;text-decoration:none;}
+  a:hover{color:#1a8f92;text-decoration:underline;}
+  ::selection{background:#cbe8e4;}
+  :focus-visible{outline:2px solid #35a077;outline-offset:2px;}
+  /* hover states (approximating the design's style-hover) */
+  .ls-next{transition:border-color .16s, box-shadow .16s;}
+  .ls-next:hover{border-color:#35a077;box-shadow:0 6px 20px rgba(20,48,61,0.09);}
+  .ls-row{transition:box-shadow .16s, border-color .16s;}
+  .ls-row:hover{border-color:#9fc9c3;box-shadow:0 4px 14px rgba(20,48,61,0.07);}
+  .ls-calslot{transition:filter .14s, transform .14s;}
+  .ls-calslot:hover{filter:brightness(0.96);transform:translateY(-1px);}
+  .ls-mat:hover{border-color:#35a077;background:#f6fbfa;text-decoration:none;}
+  .ls-close:hover{background:#f0f5f6;}
+  .ls-primary:hover{background:#0d4a68;text-decoration:none;}
+  .ls-secondary:hover{border-color:#35a077;text-decoration:none;}
+  .ls-tab{transition:all .14s;}
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+<div id="app" style="min-height:100vh; background:#f4f8f9; color:#14303d; padding-bottom:120px"></div>
+
+<script>
+"use strict";
+
+var LEVELS = [
+  { key:"all", label:"すべて", color:"#5c7684" },
+  { key:"入門", label:"入門", color:"#35a077" },
+  { key:"初級", label:"初級", color:"#12658f" },
+  { key:"中級", label:"中級", color:"#1a8f92" },
+  { key:"上級", label:"上級", color:"#0d4a68" }
+];
+
+var WD = ["日","月","火","水","木","金","土"];
+
+var LESSONS = [
+  { d:1, level:"入門", time:"10:00–11:00", instructor:"田中 ゆか", unit:"Unit 1", topicJp:"自己紹介とあいさつ", topicEn:"Greetings & Introductions", goal:"初対面の相手に自分の名前・出身・仕事を英語で伝えられるようになる。", prepShort:"テキスト p.8–13", materials:[{kind:"テキスト",title:"Starter Book Unit 1",meta:"p.8–13 / PDF 1.2MB"},{kind:"音声",title:"Unit 1 リスニング音源",meta:"4分32秒"},{kind:"単語",title:"Unit 1 単語リスト（20語）",meta:"Quizlet"}], prep:["p.8–9 の単語20語に目を通す","自己紹介の3文を書いておく"] },
+  { d:8, level:"入門", time:"10:00–11:00", instructor:"田中 ゆか", unit:"Unit 2", topicJp:"数と時間の言い方", topicEn:"Numbers & Telling Time", goal:"時刻・日付・値段を聞き取り、自分でも正しく言えるようになる。", prepShort:"テキスト p.14–19", materials:[{kind:"テキスト",title:"Starter Book Unit 2",meta:"p.14–19 / PDF 1.1MB"},{kind:"音声",title:"数字ディクテーション音源",meta:"6分10秒"}], prep:["1〜100 の数字を声に出して練習","自分の1日のスケジュールを時刻付きでメモ"] },
+  { d:15, level:"入門", time:"10:00–11:00", instructor:"田中 ゆか", unit:"Unit 3", topicJp:"家族や友だちを紹介する", topicEn:"Talking about Family & Friends", goal:"三人称単数を使って身近な人を2〜3文で紹介できる。", prepShort:"テキスト p.20–25", materials:[{kind:"テキスト",title:"Starter Book Unit 3",meta:"p.20–25 / PDF 1.3MB"},{kind:"動画",title:"三単現のsミニ講義",meta:"7分"}], prep:["家族の呼び方10語を確認","紹介したい人の写真を1枚用意"] },
+  { d:22, level:"入門", time:"10:00–11:00", instructor:"田中 ゆか", unit:"Unit 4", topicJp:"好きなもの・苦手なものを話す", topicEn:"Likes & Dislikes", goal:"like / don't like を使って好みとその理由を言える。", prepShort:"テキスト p.26–31", materials:[{kind:"テキスト",title:"Starter Book Unit 4",meta:"p.26–31 / PDF 1.0MB"},{kind:"単語",title:"Unit 4 単語リスト（18語）",meta:"Quizlet"}], prep:["好きな食べもの・音楽を英語でメモ","p.30 の練習問題を解く"] },
+  { d:29, level:"入門", time:"10:00–11:00", instructor:"田中 ゆか", unit:"復習回", topicJp:"Unit 1–4 総復習とスピーキングテスト", topicEn:"Review & Speaking Check", goal:"8月に学んだ表現を使って1分間の自己紹介スピーチができる。", prepShort:"復習プリント", materials:[{kind:"プリント",title:"8月 復習プリント",meta:"A4 4枚 / PDF"},{kind:"音声",title:"Unit 1–4 音源まとめ",meta:"18分"}], prep:["復習プリントを一度解いておく","1分スピーチの原稿を準備"] },
+
+  { d:4, level:"初級", time:"19:00–20:00", instructor:"Michael Brown", unit:"Unit 5", topicJp:"道案内をする・道をたずねる", topicEn:"Giving & Asking for Directions", goal:"地図を見ながら目的地までの道順を英語で説明できる。", prepShort:"テキスト p.32–37", materials:[{kind:"テキスト",title:"Elementary Book Unit 5",meta:"p.32–37 / PDF 1.4MB"},{kind:"音声",title:"Unit 5 会話音源",meta:"5分40秒"},{kind:"プリント",title:"街の地図ワークシート",meta:"A4 1枚"}], prep:["前置詞の使い分けを確認","最寄り駅から自宅までの道順を英語でメモ"] },
+  { d:11, level:"初級", time:"19:00–20:00", instructor:"Michael Brown", unit:"Unit 6", topicJp:"レストランで注文する", topicEn:"Ordering at a Restaurant", goal:"注文・追加のお願い・支払いまでを一人でやり切れる。", prepShort:"テキスト p.38–43", materials:[{kind:"テキスト",title:"Elementary Book Unit 6",meta:"p.38–43 / PDF 1.2MB"},{kind:"動画",title:"カフェでの注文ロールプレイ",meta:"6分"}], prep:["メニュー用語15語を確認","アレルギーの伝え方を1文用意"] },
+  { d:18, level:"初級", time:"19:00–20:00", instructor:"Michael Brown", unit:"Unit 7", topicJp:"過去のできごとを話す（過去形）", topicEn:"Talking about the Past", goal:"週末や旅行の出来事を過去形で3〜4文つなげて話せる。", prepShort:"テキスト p.44–49", materials:[{kind:"テキスト",title:"Elementary Book Unit 7",meta:"p.44–49 / PDF 1.5MB"},{kind:"音声",title:"不規則動詞40語 音源",meta:"8分20秒"},{kind:"単語",title:"不規則動詞リスト",meta:"Quizlet"}], prep:["不規則動詞40語を音読","先週末の出来事を4文で書く"] },
+  { d:25, level:"初級", time:"19:00–20:00", instructor:"Michael Brown", unit:"Unit 8", topicJp:"電話でのやりとり", topicEn:"Phone Conversations", goal:"聞き返し・伝言を含む電話対応を落ち着いてこなせる。", prepShort:"テキスト p.50–55", materials:[{kind:"テキスト",title:"Elementary Book Unit 8",meta:"p.50–55 / PDF 1.1MB"},{kind:"音声",title:"電話フレーズ音源",meta:"7分"}], prep:["聞き返しフレーズ5つを覚える","p.54 のリスニングを一度解く"] },
+
+  { d:6, level:"中級", time:"20:00–21:00", instructor:"Sarah Miller", unit:"Unit 12", topicJp:"自分の意見を根拠つきで述べる", topicEn:"Expressing Opinions with Reasons", goal:"PREP法（主張→理由→例→結論）で60秒話しきる。", prepShort:"テキスト p.76–81", materials:[{kind:"テキスト",title:"Intermediate Book Unit 12",meta:"p.76–81 / PDF 1.6MB"},{kind:"プリント",title:"PREP法ワークシート",meta:"A4 2枚"}], prep:["意見を表す表現10個を確認","テーマ「在宅勤務」で60秒の原稿を作る"] },
+  { d:13, level:"中級", time:"20:00–21:00", instructor:"Sarah Miller", unit:"記事回", topicJp:"ニュース記事について話し合う", topicEn:"Discussing the News", goal:"英語記事の要点を30秒で要約し、感想を述べられる。", prepShort:"記事プリント", materials:[{kind:"記事",title:"今週の英語記事（BBC Learning）",meta:"約600語 / PDF"},{kind:"単語",title:"記事の重要語20語",meta:"Quizlet"}], prep:["記事を2回読む（1回目は辞書なし）","要約を3文で書く"] },
+  { d:20, level:"中級", time:"20:00–21:00", instructor:"Sarah Miller", unit:"Unit 14", topicJp:"提案する・条件を交渉する", topicEn:"Making Suggestions & Negotiating", goal:"クッション言葉を使って、押しつけずに提案・調整ができる。", prepShort:"テキスト p.88–93", materials:[{kind:"テキスト",title:"Intermediate Book Unit 14",meta:"p.88–93 / PDF 1.4MB"},{kind:"動画",title:"交渉フレーズ解説",meta:"9分"}], prep:["would / could の使い分けを復習","職場で調整したい場面を1つ用意"] },
+  { d:27, level:"中級", time:"20:00–21:00", instructor:"Sarah Miller", unit:"Unit 15", topicJp:"オンライン会議のロールプレイ", topicEn:"Conference Call Roleplay", goal:"音声が悪い・話が被るなど実際の会議トラブルに対応できる。", prepShort:"テキスト p.94–99", materials:[{kind:"テキスト",title:"Intermediate Book Unit 15",meta:"p.94–99 / PDF 1.5MB"},{kind:"プリント",title:"会議ロール カード",meta:"A4 3枚"}], prep:["割り込み・確認のフレーズを5つ","担当ロールを事前に確認"] },
+
+  { d:5, level:"上級", time:"20:00–21:30", instructor:"David Clark", unit:"ディベート", topicJp:"ディベート：リモートワークは生産性を上げるか", topicEn:"Debate: Does Remote Work Boost Productivity?", goal:"反対意見に即興で反論し、立論を90秒でまとめられる。", prepShort:"資料PDF 2本", materials:[{kind:"記事",title:"賛成側 資料（Harvard Business Review 抜粋）",meta:"約900語 / PDF"},{kind:"記事",title:"反対側 資料（The Economist 抜粋）",meta:"約850語 / PDF"},{kind:"プリント",title:"ディベート進行表",meta:"A4 1枚"}], prep:["両方の資料を読み、論点を5つ書き出す","立論90秒のアウトラインを作る"] },
+  { d:12, level:"上級", time:"20:00–21:30", instructor:"David Clark", unit:"プレゼン", topicJp:"3分間プレゼンテーション発表回", topicEn:"3-Minute Presentations", goal:"スライド3枚で自分の専門テーマを説明し、質疑に答えられる。", prepShort:"スライド提出", materials:[{kind:"プリント",title:"プレゼン評価ルーブリック",meta:"A4 1枚"},{kind:"動画",title:"前回の受講生プレゼン（参考）",meta:"3分"}], prep:["スライド3枚を前日までに提出","通し練習を2回、時間を計る"] },
+  { d:19, level:"上級", time:"20:00–21:30", instructor:"David Clark", unit:"ディスカッション", topicJp:"AIと働き方の未来を議論する", topicEn:"AI and the Future of Work", goal:"抽象度の高いテーマで、根拠を挙げながら10分間議論を続けられる。", prepShort:"記事 2本", materials:[{kind:"記事",title:"AI と雇用に関する記事①",meta:"約1,000語 / PDF"},{kind:"記事",title:"AI と雇用に関する記事②",meta:"約780語 / PDF"}], prep:["記事2本を読み、賛否それぞれの論拠を3つ","自分の業界への影響を1分で話せるように"] },
+  { d:26, level:"上級", time:"20:00–21:30", instructor:"David Clark", unit:"ライティング", topicJp:"英文メールの精度を上げる", topicEn:"Precision in Business Email", goal:"依頼・催促・お断りを、相手との距離感に合わせて書き分けられる。", prepShort:"サンプル集", materials:[{kind:"プリント",title:"ビジネスメール サンプル集",meta:"12例 / PDF"},{kind:"プリント",title:"添削用テンプレート",meta:"Google Docs"}], prep:["実際に書いたメール1通を持参（社名は伏せる）","サンプル集の1〜4を読む"] }
+];
+
+var MAT_COLORS = { "テキスト":"#12658f", "音声":"#1a8f92", "動画":"#35a077", "単語":"#0d4a68", "プリント":"#5c7684", "記事":"#12658f" };
+
+var TODAY = 18;
+var MONTH_LABEL = "2026年8月";
+var UPDATED_AT = "8月17日 21:40";
+var DEFAULT_LEVEL = "初級";
+var DEFAULT_VIEW = "list";
+var SHOW_EN = true;
+var SHOW_PAST = true;
+
+var state = { level:null, view:null, selId:null, narrow:false };
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function levelObj(k){ return LEVELS.filter(function(x){return x.key===k;})[0]; }
+function levelColor(k){ var l=levelObj(k); return l?l.color:"#5c7684"; }
+function isNarrow(){ return window.matchMedia('(max-width: 900px)').matches; }
+function curLevel(){ return state.level || DEFAULT_LEVEL; }
+function curView(){ if(isNarrow()) return "list"; return state.view || DEFAULT_VIEW; }
+function wdOf(d){ return (d+5)%7; }
+
+function badgeStyle(level){
+  var c = levelColor(level);
+  return "display:inline-flex; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.04em; color:#fff; background:"+c+"; padding:3px 9px; border-radius:6px; flex:none";
+}
+function statusOf(d){
+  if(d < TODAY) return { label:"終了・復習可", style:"font-size:11px; color:#8aa4ae; background:#f0f4f5; border:1px solid #e2ebed; padding:2px 8px; border-radius:6px; font-weight:600" };
+  if(d === TODAY) return { label:"本日", style:"font-size:11px; color:#1c7a58; background:#e4f4ee; border:1px solid #bfe4d6; padding:2px 8px; border-radius:6px; font-weight:700" };
+  return { label:"予定", style:"font-size:11px; color:#5c7684; background:#eef4f5; border:1px solid #e2ebed; padding:2px 8px; border-radius:6px; font-weight:600" };
+}
+
+function decorate(l){
+  var st = statusOf(l.d);
+  var past = l.d < TODAY;
+  var wd = wdOf(l.d);
+  var c = levelColor(l.level);
+  var id = l.level + "-" + l.d;
+  var initials = (l.instructor.replace(/[^A-Za-z ]/g,'').trim().split(/\s+/).map(function(s){return s[0];}).join('')) || l.instructor.slice(0,2);
+  return {
+    id:id, raw:l, level:l.level, time:l.time, instructor:l.instructor, unit:l.unit,
+    topicJp:l.topicJp, topicEn: SHOW_EN ? l.topicEn : "", goal:l.goal, prepShort:l.prepShort,
+    status:st.label, statusStyle:st.style, badgeStyle:badgeStyle(l.level),
+    whenLabel:"8月"+l.d+"日（"+WD[wd]+"）", initials:initials, isPast:past, d:l.d,
+    rowStyle:"display:flex; gap:14px; width:100%; text-align:left; font-family:inherit; color:inherit; cursor:pointer; background:#fff; border:1px solid #dde7ea; border-left:4px solid "+c+"; border-radius:13px; padding:15px 16px; opacity:"+(past?0.62:1)+"; box-shadow:0 1px 2px rgba(20,48,61,0.04)",
+    topicStyle:"font-size:16px; font-weight:700; line-height:1.45; color:#14303d; text-wrap:pretty",
+    calStyle:"display:flex; flex-direction:column; gap:2px; align-items:flex-start; text-align:left; width:100%; font-family:inherit; cursor:pointer; border:none; border-left:3px solid "+c+"; background:"+(past?"#f4f7f8":"#f0f7f8")+"; border-radius:5px; padding:5px 6px; opacity:"+(past?0.6:1)+"",
+    calTimeStyle:"font-family:'Outfit',sans-serif; font-size:9.5px; font-weight:600; color:"+c+"; letter-spacing:0.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%",
+    calTopicStyle:"font-size:11px; font-weight:600; color:#2c4b58; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden",
+    materials: l.materials.map(function(m){ return { kindShort:m.kind, title:m.title, meta:m.meta,
+      iconStyle:"display:inline-flex; align-items:center; justify-content:center; min-width:52px; height:26px; padding:0 8px; border-radius:6px; font-size:10.5px; font-weight:700; color:#fff; background:"+(MAT_COLORS[m.kind]||"#5c7684")+"; flex:none; letter-spacing:0.02em" }; }),
+    prepList: l.prep.map(function(t){ return {text:t}; })
+  };
+}
+
+function tabBtnStyle(on){
+  return "font-family:inherit; font-size:12.5px; font-weight:"+(on?700:500)+"; color:"+(on?"#14303d":"#7a949f")+"; background:"+(on?"#fff":"transparent")+"; border:none; padding:7px 15px; border-radius:8px; cursor:pointer; box-shadow:"+(on?"0 1px 3px rgba(20,48,61,0.10)":"none")+"";
+}
+
+function render(){
+  var lv = curLevel();
+  var view = curView();
+  var all = LESSONS.map(decorate);
+  var vis = all.filter(function(l){ return lv==="all" || l.level===lv; });
+  if(!SHOW_PAST) vis = vis.filter(function(l){ return !l.isPast; });
+  vis.sort(function(a,b){ return a.d-b.d || a.time.localeCompare(b.time); });
+
+  var html = '';
+
+  /* ---------- header ---------- */
+  html += '<header style="position:sticky; top:0; z-index:30; background:rgba(255,255,255,0.94); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid #dde7ea">';
+  html += '<div style="max-width:1180px; margin:0 auto; padding:14px 20px 0 20px; display:flex; flex-direction:column; gap:12px">';
+
+  html += '<div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">';
+  html += '<div style="display:flex; align-items:center; gap:11px">';
+  html += '<div style="width:38px; height:38px; border-radius:11px; background:linear-gradient(135deg,#12658f,#35a077); display:flex; align-items:center; justify-content:center; color:#fff; font-family:\'Outfit\',sans-serif; font-weight:700; font-size:15px; letter-spacing:-0.02em; flex:none">YK</div>';
+  html += '<div style="display:flex; flex-direction:column; gap:1px">';
+  html += '<div style="font-size:17px; font-weight:700; letter-spacing:0.01em; line-height:1.2">レッスンスケジュール</div>';
+  html += '<div style="font-size:11.5px; color:#7a949f; font-family:\'Outfit\',sans-serif; letter-spacing:0.08em; font-weight:500">夢カナ ENGLISH</div>';
+  html += '</div></div>';
+  html += '<div style="display:flex; align-items:center; gap:10px">';
+  html += '<span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:#5c7684; background:#eef4f5; border:1px solid #dde7ea; padding:5px 10px; border-radius:99px"><span style="width:6px; height:6px; border-radius:99px; background:#35a077; flex:none"></span>最終更新 '+esc(UPDATED_AT)+'</span>';
+  html += '</div></div>';
+
+  /* level tabs */
+  html += '<div style="display:flex; align-items:center; gap:8px; overflow-x:auto; padding-bottom:2px">';
+  LEVELS.forEach(function(l){
+    var on = l.key===lv;
+    var tstyle = "display:inline-flex; align-items:center; gap:7px; font-family:inherit; font-size:13.5px; font-weight:"+(on?700:500)+"; color:"+(on?"#fff":"#5c7684")+"; background:"+(on?l.color:"#fff")+"; border:1px solid "+(on?l.color:"#dde7ea")+"; padding:8px 15px; border-radius:99px; cursor:pointer; white-space:nowrap";
+    var dot = l.key==="all" ? "display:none" : "width:7px; height:7px; border-radius:99px; background:"+(on?"rgba(255,255,255,0.85)":l.color)+"; flex:none";
+    html += '<button type="button" class="ls-tab" data-act="level" data-level="'+esc(l.key)+'" style="'+tstyle+'"><span style="'+dot+'"></span>'+esc(l.label)+'</button>';
+  });
+  html += '</div>';
+
+  /* month + view toggle */
+  html += '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:12px; flex-wrap:wrap">';
+  html += '<div style="display:flex; align-items:baseline; gap:10px"><span style="font-family:\'Outfit\',sans-serif; font-size:22px; font-weight:600; letter-spacing:-0.01em">'+esc(MONTH_LABEL)+'</span><span style="font-size:12px; color:#7a949f">全 '+vis.length+' 回</span></div>';
+  if(!isNarrow()){
+    html += '<div style="display:flex; align-items:center; gap:6px; background:#eef4f5; border:1px solid #dde7ea; border-radius:10px; padding:3px">';
+    html += '<button type="button" data-act="view" data-view="list" style="'+tabBtnStyle(view==="list")+'">リスト</button>';
+    html += '<button type="button" data-act="view" data-view="calendar" style="'+tabBtnStyle(view==="calendar")+'">カレンダー</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  html += '</div></header>';
+
+  /* ---------- body ---------- */
+  html += '<div style="max-width:1180px; margin:0 auto; padding:20px">';
+
+  /* next lesson */
+  var upcoming = vis.filter(function(l){ return l.d >= TODAY; });
+  var nextLesson = upcoming.length ? upcoming[0] : null;
+  if(nextLesson){
+    html += '<button type="button" class="ls-next" data-act="open" data-id="'+esc(nextLesson.id)+'" style="width:100%; text-align:left; border:1px solid #bfdcd7; background:linear-gradient(120deg,#ffffff 0%,#f0f8f6 60%,#eaf4f8 100%); border-radius:16px; padding:18px 20px; margin-bottom:22px; cursor:pointer; display:flex; gap:20px; align-items:center; justify-content:space-between; flex-wrap:wrap; box-shadow:0 1px 2px rgba(20,48,61,0.04); font-family:inherit; color:inherit">';
+    html += '<div style="display:flex; flex-direction:column; gap:7px; min-width:0">';
+    html += '<div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap"><span style="font-size:10.5px; font-weight:700; letter-spacing:0.13em; color:#35a077; font-family:\'Outfit\',sans-serif">NEXT LESSON</span><span style="font-size:12.5px; color:#14303d; font-weight:500">'+esc(nextLesson.whenLabel)+'</span><span style="'+nextLesson.badgeStyle+'">'+esc(nextLesson.level)+'</span></div>';
+    html += '<div style="font-size:20px; font-weight:700; line-height:1.35; text-wrap:pretty">'+esc(nextLesson.topicJp)+'</div>';
+    html += '<div style="font-size:13px; color:#5c7684; display:flex; gap:12px; flex-wrap:wrap; align-items:center"><span>'+esc(nextLesson.unit)+'</span><span style="color:#c4d4d9">|</span><span>'+esc(nextLesson.instructor)+' 先生</span><span style="color:#c4d4d9">|</span><span>'+esc(nextLesson.prepShort)+'</span></div>';
+    html += '</div>';
+    html += '<span style="display:inline-flex; align-items:center; gap:7px; background:#12658f; color:#fff; font-size:13px; font-weight:700; padding:11px 18px; border-radius:10px; flex:none">教材を確認 →</span>';
+    html += '</button>';
+  }
+
+  /* calendar view */
+  if(view==="calendar"){
+    html += '<div style="background:#fff; border:1px solid #dde7ea; border-radius:16px; overflow:hidden; box-shadow:0 1px 2px rgba(20,48,61,0.04)">';
+    html += '<div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid #dde7ea; background:#fafcfc">';
+    WD.forEach(function(w,i){
+      var col = i===0 ? "#c26363" : (i===6 ? "#12658f" : "#7a949f");
+      html += '<div style="padding:10px 6px; text-align:center; font-size:11.5px; font-weight:700; letter-spacing:0.06em; color:'+col+'">'+esc(w)+'</div>';
+    });
+    html += '</div>';
+    var lead = wdOf(1);
+    var cells = [];
+    for(var i=0;i<lead;i++) cells.push(null);
+    for(var d=1; d<=31; d++) cells.push(d);
+    while(cells.length % 7 !== 0) cells.push(null);
+    for(var r=0; r<cells.length; r+=7){
+      html += '<div style="display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid #e8f0f2">';
+      for(var cCol=0;cCol<7;cCol++){
+        var d2 = cells[r+cCol];
+        if(d2===null){ html += '<div style="min-height:112px; padding:6px; border-right:1px solid #e8f0f2; background:#fbfcfd"></div>'; continue; }
+        var wd2 = wdOf(d2), isToday = d2===TODAY;
+        var cellBg = isToday ? "#f0faf6" : (d2<TODAY ? "#fcfdfd" : "#fff");
+        var numCol = isToday ? "#fff" : (wd2===0 ? "#c26363" : (wd2===6 ? "#12658f" : "#8aa4ae"));
+        var numStyle = "font-family:'Outfit',sans-serif; font-size:12.5px; font-weight:"+(isToday?700:500)+"; color:"+numCol+"; background:"+(isToday?"#35a077":"transparent")+"; width:22px; height:22px; border-radius:99px; display:flex; align-items:center; justify-content:center; margin-bottom:1px";
+        html += '<div style="min-height:112px; padding:6px; display:flex; flex-direction:column; gap:4px; border-right:1px solid #e8f0f2; background:'+cellBg+'">';
+        html += '<div style="'+numStyle+'">'+d2+'</div>';
+        vis.filter(function(l){ return l.d===d2; }).forEach(function(slot){
+          html += '<button type="button" class="ls-calslot" data-act="open" data-id="'+esc(slot.id)+'" style="'+slot.calStyle+'"><span style="'+slot.calTimeStyle+'">'+esc(slot.time)+'・'+esc(slot.level)+'</span><span style="'+slot.calTopicStyle+'">'+esc(slot.topicJp)+'</span></button>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  /* list view */
+  if(view==="list"){
+    var byDay = {};
+    vis.forEach(function(l){ (byDay[l.d]=byDay[l.d]||[]).push(l); });
+    var days = Object.keys(byDay).map(Number).sort(function(a,b){return a-b;});
+    html += '<div style="display:flex; flex-direction:column; gap:10px">';
+    days.forEach(function(d){
+      var wd = wdOf(d), isToday = d===TODAY;
+      var dateCol = isToday ? "#1c7a58" : (d<TODAY ? "#9db3bb" : "#14303d");
+      var wdCol = isToday ? "#1c7a58" : (wd===0 ? "#c26363" : (wd===6 ? "#12658f" : "#8aa4ae"));
+      html += '<div style="display:flex; gap:16px; align-items:flex-start; padding:4px 0">';
+      html += '<div style="width:62px; flex:none; display:flex; flex-direction:column; align-items:center; gap:4px; padding-top:14px; color:'+dateCol+'">';
+      html += '<div style="font-family:\'Outfit\',sans-serif; font-size:26px; font-weight:600; line-height:1; letter-spacing:-0.02em">'+d+'</div>';
+      html += '<div style="font-size:11.5px; font-weight:600; color:'+wdCol+'">'+esc(WD[wd])+'</div>';
+      if(isToday) html += '<div style="font-size:9.5px; font-weight:700; color:#fff; background:#35a077; padding:2px 7px; border-radius:99px; letter-spacing:0.06em; font-family:\'Outfit\',sans-serif">TODAY</div>';
+      html += '</div>';
+      html += '<div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:8px">';
+      byDay[d].forEach(function(slot){
+        html += '<button type="button" class="ls-row" data-act="open" data-id="'+esc(slot.id)+'" style="'+slot.rowStyle+'">';
+        html += '<div style="display:flex; flex-direction:column; gap:6px; min-width:0; flex:1">';
+        html += '<div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap"><span style="'+slot.badgeStyle+'">'+esc(slot.level)+'</span><span style="font-family:\'Outfit\',sans-serif; font-size:13px; font-weight:600; color:#14303d; letter-spacing:0.01em">'+esc(slot.time)+'</span><span style="font-size:12px; color:#7a949f">'+esc(slot.instructor)+' 先生</span><span style="'+slot.statusStyle+'">'+esc(slot.status)+'</span></div>';
+        html += '<div style="'+slot.topicStyle+'">'+esc(slot.topicJp)+'</div>';
+        if(slot.topicEn) html += '<div style="font-family:\'Outfit\',sans-serif; font-size:12.5px; color:#8aa4ae; font-weight:400; letter-spacing:0.01em">'+esc(slot.topicEn)+'</div>';
+        html += '<div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:1px"><span style="font-size:11.5px; color:#5c7684; background:#eef4f5; border:1px solid #e2ebed; padding:3px 9px; border-radius:6px">'+esc(slot.unit)+'</span><span style="font-size:11.5px; color:#5c7684; background:#eef4f5; border:1px solid #e2ebed; padding:3px 9px; border-radius:6px">予習 '+esc(slot.prepShort)+'</span></div>';
+        html += '</div>';
+        html += '<span style="align-self:center; color:#b3c7ce; font-size:18px; flex:none; padding-left:8px">›</span>';
+        html += '</button>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  /* info note */
+  html += '<div style="margin-top:26px; padding:16px 18px; background:#fff; border:1px solid #dde7ea; border-radius:14px; font-size:12.5px; color:#5c7684; line-height:1.75">レッスンは各回 60分（上級は90分）／すべて日本時間（JST）表記です。急な変更は前日までにLINEでお知らせします。</div>';
+
+  html += '</div>'; /* /body wrap */
+
+  /* ---------- detail sheet ---------- */
+  var sel = all.filter(function(l){ return l.id===state.selId; })[0] || null;
+  if(sel){
+    var sheetStyle = isNarrow()
+      ? "background:#fff; width:100%; max-height:88vh; margin-top:auto; border-radius:20px 20px 0 0; overflow-y:auto; box-shadow:0 -8px 40px rgba(15,44,56,0.22)"
+      : "background:#fff; width:min(460px,100%); height:100%; overflow-y:auto; box-shadow:-8px 0 40px rgba(15,44,56,0.18)";
+    html += '<div data-act="backdrop" style="position:fixed; inset:0; z-index:50; background:rgba(15,44,56,0.34); display:flex; align-items:stretch; justify-content:flex-end">';
+    html += '<div style="'+sheetStyle+'">';
+    html += '<div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding:22px 24px 0 24px">';
+    html += '<div style="display:flex; flex-direction:column; gap:9px; min-width:0"><div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap"><span style="'+sel.badgeStyle+'">'+esc(sel.level)+'</span><span style="'+sel.statusStyle+'">'+esc(sel.status)+'</span></div><div style="font-family:\'Outfit\',sans-serif; font-size:13.5px; color:#5c7684; font-weight:500; letter-spacing:0.02em">'+esc(sel.whenLabel)+'・'+esc(sel.time)+'</div></div>';
+    html += '<button type="button" class="ls-close" data-act="close" style="width:34px; height:34px; border-radius:99px; border:1px solid #dde7ea; background:#fff; color:#5c7684; font-size:16px; cursor:pointer; flex:none; line-height:1">×</button>';
+    html += '</div>';
+    html += '<div style="padding:14px 24px 24px 24px; display:flex; flex-direction:column; gap:22px">';
+    html += '<div style="display:flex; flex-direction:column; gap:6px"><div style="font-size:23px; font-weight:700; line-height:1.4; text-wrap:pretty">'+esc(sel.topicJp)+'</div><div style="font-family:\'Outfit\',sans-serif; font-size:14px; color:#8aa4ae; letter-spacing:0.01em">'+esc(sel.raw.topicEn)+'</div></div>';
+    html += '<div style="display:flex; flex-direction:column; gap:9px"><div style="font-size:11px; font-weight:700; letter-spacing:0.13em; color:#9db3bb; font-family:\'Outfit\',sans-serif">GOAL・今回のゴール</div><div style="font-size:14px; line-height:1.8; color:#2c4b58; text-wrap:pretty">'+esc(sel.goal)+'</div></div>';
+    html += '<div style="display:flex; flex-direction:column; gap:10px"><div style="font-size:11px; font-weight:700; letter-spacing:0.13em; color:#9db3bb; font-family:\'Outfit\',sans-serif">MATERIALS・教材</div>';
+    sel.materials.forEach(function(m){
+      html += '<a href="#" class="ls-mat" style="display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #dde7ea; border-radius:11px; background:#fff; text-decoration:none; color:inherit"><span style="'+m.iconStyle+'">'+esc(m.kindShort)+'</span><span style="display:flex; flex-direction:column; gap:2px; min-width:0; flex:1"><span style="font-size:13.5px; font-weight:600; color:#14303d">'+esc(m.title)+'</span><span style="font-size:11.5px; color:#7a949f">'+esc(m.meta)+'</span></span><span style="color:#b3c7ce; font-size:15px; flex:none">↗</span></a>';
+    });
+    html += '</div>';
+    html += '<div style="display:flex; flex-direction:column; gap:10px"><div style="font-size:11px; font-weight:700; letter-spacing:0.13em; color:#9db3bb; font-family:\'Outfit\',sans-serif">PREP・予習</div>';
+    sel.prepList.forEach(function(p){
+      html += '<div style="display:flex; align-items:flex-start; gap:10px; font-size:13.5px; line-height:1.7; color:#2c4b58"><span style="width:16px; height:16px; border-radius:5px; border:1.5px solid #bfdcd7; flex:none; margin-top:3px"></span><span>'+esc(p.text)+'</span></div>';
+    });
+    html += '</div>';
+    html += '<div style="display:flex; align-items:center; gap:12px; padding:14px; background:#f6fafb; border:1px solid #e2ebed; border-radius:12px"><div style="width:40px; height:40px; border-radius:99px; background:#dde7ea; flex:none; display:flex; align-items:center; justify-content:center; font-family:\'Outfit\',sans-serif; font-size:13px; font-weight:600; color:#5c7684">'+esc(sel.initials)+'</div><div style="display:flex; flex-direction:column; gap:2px"><div style="font-size:13.5px; font-weight:600">'+esc(sel.instructor)+' 先生</div><div style="font-size:11.5px; color:#7a949f">担当講師・'+esc(sel.level)+'クラス</div></div></div>';
+    html += '<div style="display:flex; gap:10px; flex-wrap:wrap"><a href="#" class="ls-primary" style="flex:1; min-width:150px; text-align:center; background:#12658f; color:#fff; font-size:14px; font-weight:700; padding:14px; border-radius:11px; text-decoration:none">Zoomで参加する</a><a href="#" class="ls-secondary" style="flex:1; min-width:150px; text-align:center; background:#fff; color:#12658f; border:1px solid #bfdcd7; font-size:14px; font-weight:700; padding:14px; border-radius:11px; text-decoration:none">カレンダーに追加</a></div>';
+    html += '</div></div></div>';
+  }
+
+  document.getElementById('app').innerHTML = html;
+}
+
+/* ---------- events ---------- */
+document.getElementById('app').addEventListener('click', function(e){
+  var t = e.target.closest('[data-act]');
+  if(!t) return;
+  var act = t.getAttribute('data-act');
+  if(act==='level'){ state.level = t.getAttribute('data-level'); state.selId = null; render(); }
+  else if(act==='view'){ state.view = t.getAttribute('data-view'); render(); }
+  else if(act==='open'){ state.selId = t.getAttribute('data-id'); render(); }
+  else if(act==='close'){ state.selId = null; render(); }
+  else if(act==='backdrop'){ if(e.target === t){ state.selId = null; render(); } }
+});
+document.addEventListener('keydown', function(e){ if(e.key==='Escape' && state.selId){ state.selId=null; render(); } });
+
+var mq = window.matchMedia('(max-width: 900px)');
+var mqNarrow = mq.matches;
+function onViewportChange(){
+  var n = window.matchMedia('(max-width: 900px)').matches;
+  if(n !== mqNarrow){ mqNarrow = n; render(); }
+}
+if(mq.addEventListener) mq.addEventListener('change', onViewportChange);
+window.addEventListener('resize', onViewportChange);
+render();
+</script>
+</body>
+</html>
