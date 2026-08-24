@@ -17,6 +17,13 @@
   .ms-outline:hover{background:#2AA096 !important;color:#fff !important;}
   .ms-shortcut:hover{border-color:#2AA096 !important;background:#E7F5F3 !important;}
   .ms-ghost:hover{background:#E7EBEF !important;}
+  /* responsive design modes (mobile / tablet / desktop) driven by DEV control */
+  .appcontent{padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;}
+  .m-tablet .appcontent,.m-desktop .appcontent{display:block;column-count:2;column-gap:16px;padding:22px;}
+  .m-desktop .appcontent{padding:24px 28px;}
+  .m-tablet .appcontent>*,.m-desktop .appcontent>*{break-inside:avoid;margin:0 0 16px;}
+  .m-tablet .appcontent>.span2,.m-desktop .appcontent>.span2{column-span:all;}
+  .ms-side-nav:hover{background:#F3F6F7 !important;}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 </style>
 </head>
@@ -188,9 +195,12 @@ var PALETTE = {
 };
 var DOC_PATTERNS = { mixed:null, allTodo:'todo', allApproved:'approved' };
 
+var MODES = { mobile:{label:'モバイル',width:'480px'}, tablet:{label:'タブレット',width:'900px'}, desktop:{label:'デスクトップ',width:'1180px'} };
+
 var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
+  viewMode:'mobile',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null
 };
@@ -233,7 +243,7 @@ function renderLogin(){
   h += '<div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;"><img src="logo.webp" alt="夢カナ留学" style="height:34px;width:auto;display:block;" /><div style="font-size:12px;letter-spacing:.14em;color:#7B8694;text-transform:uppercase;">Member Site</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:6px;"><h1 style="margin:0;font-size:22px;font-weight:700;letter-spacing:.01em;">会員サイトへログイン</h1><p style="margin:0;font-size:13px;color:#7B8694;">会員IDとパスワードを入力してください。</p></div>';
   if(state.loginError) h += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:11px 14px;font-size:12.5px;color:#B4522A;border-radius:0 4px 4px 0;">会員IDまたはパスワードが正しくありません。（エラー状態のサンプル）</div>';
-  h += '<div style="display:flex;flex-direction:column;gap:16px;">';
+  h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
   h += '<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#7B8694;">会員ID<input type="text" value="04317" inputmode="numeric" style="border:1px solid #E7EBEF;border-radius:6px;padding:13px 14px;font-size:15px;font-variant-numeric:tabular-nums;color:#2A3340;background:#F9FBFB;" /></label>';
   h += '<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#7B8694;">パスワード<input type="password" value="password" style="border:1px solid #E7EBEF;border-radius:6px;padding:13px 14px;font-size:15px;background:#F9FBFB;color:#2A3340;" /></label>';
   h += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#7B8694;"><label style="display:flex;align-items:center;gap:7px;"><input type="checkbox" style="accent-color:#39B3A6;width:16px;height:16px;" />ログイン状態を保持</label><a href="#">パスワードをお忘れですか</a></div>';
@@ -268,15 +278,15 @@ function renderHome(){
   var selMeta = countryMeta(state.country);
   var chips = ['契約：'+m.contractType, '渡航国：'+selMeta.label, '手配：'+(state.arrangement==='yes'?'あり':'なし')];
 
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
+  var h = '<div class="appcontent">';
   /* member card */
-  h += '<section style="'+SECTION+'">';
+  h += '<section class="span2" style="'+SECTION+'">';
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(c)+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(m.departureDate)+'）</span></div>';
   h += '</section>';
   /* alert */
-  if(alertCount>0) h += '<button data-act="go" data-screen="todo" style="text-align:left;border:none;border-left:3px solid #EF7A48;background:#FDECE5;padding:14px 16px;border-radius:0 6px 6px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;"><span style="font-size:13px;font-weight:600;color:#B4522A;">対応が必要な項目が '+alertCount+' 件あります</span><span style="font-size:13px;color:#B4522A;">→</span></button>';
+  if(alertCount>0) h += '<button class="span2" data-act="go" data-screen="todo" style="text-align:left;border:none;border-left:3px solid #EF7A48;background:#FDECE5;padding:14px 16px;border-radius:0 6px 6px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;"><span style="font-size:13px;font-weight:600;color:#B4522A;">対応が必要な項目が '+alertCount+' 件あります</span><span style="font-size:13px;color:#B4522A;">→</span></button>';
   /* todo summary */
   h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">渡航までのToDo</h2><button data-act="go" data-screen="todo" style="border:none;background:none;color:#2F9E93;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;">すべて見る →</button></div>';
   h += '<div><div style="height:6px;background:#F3F6F7;border-radius:100px;overflow:hidden;"><div style="height:100%;border-radius:100px;background:#39B3A6;width:'+pct+'%;"></div></div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;margin-top:6px;">'+doneCount+' / '+todos.length+' 完了</div></div>';
@@ -313,7 +323,7 @@ function renderTodo(){
   var todos = computeTodos();
   var doneCount = todos.filter(function(t){return t.done;}).length;
   var pct = Math.round(doneCount/todos.length*100);
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
+  var h = '<div class="appcontent">';
   h += '<section style="'+SECTION+'"><div><div style="height:6px;background:#F3F6F7;border-radius:100px;overflow:hidden;"><div style="height:100%;border-radius:100px;background:#39B3A6;width:'+pct+'%;"></div></div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;margin-top:6px;">'+doneCount+' / '+todos.length+' 完了</div></div>';
   h += '<div style="display:flex;flex-direction:column;">'+todos.map(function(t){
     return '<label data-act="toggleTodo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid #F3F6F7;cursor:pointer;"><input type="checkbox" '+(t.done?'checked':'')+' style="width:18px;height:18px;margin-top:2px;accent-color:#39B3A6;flex-shrink:0;pointer-events:none;" /><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 12px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';">'+esc(t.stateLabel)+'</span></div><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div></label>';
@@ -353,11 +363,11 @@ function renderVisa(){
   var st = stMap[status];
   var handlingLabel = noSupport ? 'サポート対象外' : (isSelf ? 'ご自身で申請' : 'ビザ代行');
 
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
-  h += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#E7E9EE;color:#1F2A44;">'+esc(selMeta.label)+'</span><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#F3F6F7;color:#7B8694;">'+esc(handlingLabel)+'</span></div>';
+  var h = '<div class="appcontent">';
+  h += '<div class="span2" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#E7E9EE;color:#1F2A44;">'+esc(selMeta.label)+'</span><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#F3F6F7;color:#7B8694;">'+esc(handlingLabel)+'</span></div>';
 
   if(isUndecided){
-    h += '<div style="background:#E7E9EE;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;"><p style="margin:0;font-size:12.5px;">渡航先が未定のため、参考として表示パターンをプレビューしています。</p><div style="display:flex;gap:8px;">';
+    h += '<div class="span2" style="background:#E7E9EE;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;"><p style="margin:0;font-size:12.5px;">渡航先が未定のため、参考として表示パターンをプレビューしています。</p><div style="display:flex;gap:8px;">';
     h += '<button data-act="preview" data-val="UK" style="flex:1;border:1px solid #1F2A44;background:'+(state.undecidedPreview==='UK'?'#1F2A44':'#FFFFFF')+';color:'+(state.undecidedPreview==='UK'?'#FFFFFF':'#1F2A44')+';font-size:12px;font-weight:700;padding:9px;border-radius:4px;cursor:pointer;min-height:40px;">イギリス例</button>';
     h += '<button data-act="preview" data-val="OTHER" style="flex:1;border:1px solid #1F2A44;background:'+(state.undecidedPreview!=='UK'?'#1F2A44':'#FFFFFF')+';color:'+(state.undecidedPreview!=='UK'?'#FFFFFF':'#1F2A44')+';font-size:12px;font-weight:700;padding:9px;border-radius:4px;cursor:pointer;min-height:40px;">その他の国の例</button>';
     h += '</div></div>';
@@ -366,9 +376,9 @@ function renderVisa(){
   var visaEmpty = noSupport || isSelf;
   if(visaEmpty){
     var emptyText = noSupport ? selMeta.label+'は現在ビザサポートの対象外です。学校・滞在先情報は引き続きご確認いただけます。' : 'ビザ申請はお客様ご自身で行われています。進捗の管理・お問い合わせはお客様にてお願いいたします。必要書類の一覧は参考としてご確認ください。';
-    h += '<div style="display:flex;gap:12px;align-items:flex-start;background:#F3F6F7;border-radius:8px;padding:18px;"><span style="font-size:20px;color:#39B3A6;line-height:1;">—</span><p style="margin:0;font-size:13px;color:#7B8694;">'+esc(emptyText)+'</p></div>';
+    h += '<div class="span2" style="display:flex;gap:12px;align-items:flex-start;background:#F3F6F7;border-radius:8px;padding:18px;"><span style="font-size:20px;color:#39B3A6;line-height:1;">—</span><p style="margin:0;font-size:13px;color:#7B8694;">'+esc(emptyText)+'</p></div>';
   } else {
-    h += '<div style="display:flex;flex-direction:column;gap:16px;">';
+    h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
     h += '<section style="'+SECTION+'"><div style="display:flex;flex-direction:column;gap:6px;"><span style="font-size:11.5px;color:#7B8694;">ビザステータス</span><span style="font-size:17px;font-weight:800;letter-spacing:.02em;padding:9px 18px;border-radius:8px;background:'+st.bg+';color:'+st.fg+';align-self:flex-start;">'+esc(st.label)+'</span></div>';
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類 提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(d.commonVisa.docDeadline)+'</span></div>';
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">ビザ請求書（PDF）</span><a href="#" style="font-size:14px;font-weight:600;">請求書を確認する →</a><span style="font-size:11px;color:#7B8694;">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
@@ -388,9 +398,9 @@ function renderVisa(){
 
 function renderSchool(){
   var d = DATA;
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
+  var h = '<div class="appcontent">';
   if(state.arrangement!=='yes'){
-    h += '<div style="display:flex;gap:12px;align-items:flex-start;background:#F3F6F7;border-radius:8px;padding:18px;"><span style="font-size:20px;color:#39B3A6;line-height:1;">—</span><p style="margin:0;font-size:13px;color:#7B8694;">学校・滞在先の手配はご契約に含まれていません。手配ありの会員は全体の約20%です。ご自身で手配された内容は担当コンサルタントへ共有ください。</p></div>';
+    h += '<div class="span2" style="display:flex;gap:12px;align-items:flex-start;background:#F3F6F7;border-radius:8px;padding:18px;"><span style="font-size:20px;color:#39B3A6;line-height:1;">—</span><p style="margin:0;font-size:13px;color:#7B8694;">学校・滞在先の手配はご契約に含まれていません。手配ありの会員は全体の約20%です。ご自身で手配された内容は担当コンサルタントへ共有ください。</p></div>';
     h += '</div>'; return h;
   }
   var sc = d.school;
@@ -403,7 +413,7 @@ function renderSchool(){
     {label:'入金状況',value:sc.invoicePaid?'入金済み（'+sc.invoicePaid+'）':'未入金',field:'school.invoicePaid'}
   ];
   var stayLabel = state.stayType==='homestay'?'ホームステイ':(state.stayType==='dorm'?'寮':'自己手配');
-  h += '<div style="display:flex;flex-direction:column;gap:16px;">';
+  h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">語学学校</h2>'+schoolRows.map(plainRow).join('')+'</section>';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">滞在先</h2><span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(stayLabel)+'</span></div>'+(d.stayFields[state.stayType]||[]).map(plainRow).join('')+'</section>';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">渡航前レッスン</h2><a href="'+esc(d.classroom[effectiveCountry()]||'#')+'" target="_blank" rel="noopener" style="font-size:13.5px;font-weight:600;">Google Classroom を開く →</a><p style="margin:0;font-size:11.5px;color:#7B8694;">国別のクラスへリンクします（classroom[country]）。</p></section>';
@@ -413,8 +423,8 @@ function renderSchool(){
 
 function renderBooking(){
   var d = DATA;
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
-  h += '<div style="display:flex;gap:6px;align-items:center;">'+[1,2,3].map(function(n){var on=state.bookingStep>=n;return '<div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div style="height:4px;border-radius:100px;background:'+(on?'#39B3A6':'#E7EBEF')+';"></div><span style="font-size:11px;font-weight:700;color:'+(on?'#2A3340':'#9AA6B2')+';">'+(n===1?'① 日程':n===2?'② 確認':'③ 完了')+'</span></div>';}).join('')+'</div>';
+  var h = '<div class="appcontent">';
+  h += '<div class="span2" style="display:flex;gap:6px;align-items:center;">'+[1,2,3].map(function(n){var on=state.bookingStep>=n;return '<div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div style="height:4px;border-radius:100px;background:'+(on?'#39B3A6':'#E7EBEF')+';"></div><span style="font-size:11px;font-weight:700;color:'+(on?'#2A3340':'#9AA6B2')+';">'+(n===1?'① 日程':n===2?'② 確認':'③ 完了')+'</span></div>';}).join('')+'</div>';
 
   if(state.bookingStep===1){
     h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">日程を選ぶ</h2><p style="margin:0;font-size:12.5px;color:#7B8694;">サポートチームとのオンライン面談です。</p><div style="display:flex;flex-direction:column;gap:8px;">';
@@ -446,7 +456,7 @@ function renderBooking(){
 }
 
 function renderNotices(){
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:12px;">';
+  var h = '<div class="appcontent">';
   h += DATA.notices.map(function(n){return '<button data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:1px solid #E7EBEF;background:#fff;border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(n.date)+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(n.tag)+'</span>'+(n.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#EF7A48;display:inline-block;"></span>':'')+'</div><div style="font-size:14.5px;font-weight:700;color:#2A3340;">'+esc(n.title)+'</div><div style="font-size:12.5px;color:#7B8694;">'+esc(n.body.slice(0,46))+'…</div></button>';}).join('');
   h += '</div>';
   return h;
@@ -454,15 +464,15 @@ function renderNotices(){
 
 function renderNotice(){
   var cur = DATA.notices.filter(function(n){return n.id===state.noticeId;})[0] || DATA.notices[0];
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
-  h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(cur.date)+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(cur.tag)+'</span></div><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(cur.title)+'</h2><p style="margin:0;font-size:14px;color:#2A3340;text-wrap:pretty;">'+esc(cur.body)+'</p></section>';
-  h += '<button data-act="go" data-screen="notices" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← お知らせ一覧へ</button>';
+  var h = '<div class="appcontent">';
+  h += '<section class="span2" style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;max-width:760px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(cur.date)+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(cur.tag)+'</span></div><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(cur.title)+'</h2><p style="margin:0;font-size:14px;color:#2A3340;text-wrap:pretty;">'+esc(cur.body)+'</p></section>';
+  h += '<button class="span2" data-act="go" data-screen="notices" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← お知らせ一覧へ</button>';
   h += '</div>';
   return h;
 }
 
 function renderSpec(){
-  var h = '<div style="padding:12px 18px 24px;display:flex;flex-direction:column;gap:16px;">';
+  var h = '<div class="appcontent">';
   h += '<p style="margin:0;font-size:12.5px;color:#7B8694;">画面に表示している値と、想定するデータ項目の対応表です。ダミーデータは <code style="font-variant-numeric:tabular-nums;color:#2F9E93;">member-data.json</code> に分離できます。</p>';
   h += DATA.spec.map(function(g){return '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;"><h2 style="margin:0;font-size:14.5px;font-weight:700;">'+esc(g.group)+'</h2><p style="margin:0;font-size:12px;color:#7B8694;">'+esc(g.note)+'</p>'+g.rows.map(function(r){return '<div style="border-top:1px solid #F3F6F7;padding-top:10px;display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><code style="font-variant-numeric:tabular-nums;font-size:12.5px;color:#2A3340;">'+esc(r.field)+'</code><span style="font-variant-numeric:tabular-nums;font-size:11px;color:#2F9E93;flex-shrink:0;">'+esc(r.type)+'</span></div><span style="font-size:11.5px;color:#7B8694;">取得元：'+esc(r.source)+'</span><span style="font-size:11.5px;color:#7B8694;">'+esc(r.note)+'</span></div>';}).join('')+'</section>';}).join('');
   h += '</div>';
@@ -480,6 +490,7 @@ function renderDev(){
   var h = '<div style="position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(31,42,68,.35);z-index:40;display:flex;align-items:flex-end;justify-content:center;" data-act="devBackdrop"><div style="width:100%;max-width:480px;background:#F3F6F7;border-top:1px dashed #C9D2D9;border-radius:12px 12px 0 0;padding:18px;max-height:86vh;overflow:auto;display:flex;flex-direction:column;gap:16px;">';
   h += '<div style="display:flex;justify-content:space-between;align-items:baseline;"><div><div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7B8694;">Prototype controls</div><div style="font-size:15px;font-weight:700;">表示パターン切替</div></div><button data-act="toggleDev" style="border:none;background:#fff;color:#7B8694;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;cursor:pointer;min-height:40px;">閉じる</button></div>';
   h += '<p style="margin:0;font-size:11.5px;color:#7B8694;">本番では CRM／Zoho の登録情報から自動で切り替わります。</p>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;border-bottom:1px dashed #C9D2D9;padding-bottom:14px;"><span style="font-size:11.5px;font-weight:700;">表示モード — mobile / tablet / desktop</span><div style="display:flex;gap:6px;">'+optBtns('viewMode',[{label:'モバイル',value:'mobile'},{label:'タブレット',value:'tablet'},{label:'デスクトップ',value:'desktop'}])+'</div><span style="font-size:11px;color:#7B8694;">モバイル：1カラム＋下部ナビ／タブレット：2カラム／デスクトップ：左サイドナビ＋2カラム</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航国 — member.country</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+DATA.countries.map(function(c){var active=state.country===c.code;return '<button data-act="setCountry" data-code="'+esc(c.code)+'" style="border:1px solid '+(active?'#39B3A6':'#E7EBEF')+';background:'+(active?'#39B3A6':'#FFFFFF')+';color:'+(active?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+esc(c.label)+'</button>';}).join('')+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ手続き — member.visaHandling</span><div style="display:flex;gap:6px;">'+optBtns('visaHandling',[{label:'代行',value:'agency'},{label:'ご自身で申請',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">学校・滞在先の手配 — member.arrangement</span><div style="display:flex;gap:6px;">'+optBtns('arrangement',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">※対象者は全体の約20%です</span></div>';
@@ -490,34 +501,69 @@ function renderDev(){
   return h;
 }
 
+var NAV_ICONS = {
+  home:'M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z',
+  todo:'M6 3h9l3 3v15H6zM9 12l2 2 4-4',
+  visa:'M4 6h16v12H4zM8 11h4M8 15h8',
+  school:'M4 10l8-4 8 4-8 4zM8 12v4c0 1 8 1 8 0v-4',
+  notices:'M6 5h12v11H9l-3 3z'
+};
+function navList(){
+  return [ {key:'home',label:'ホーム'}, {key:'todo',label:'ToDo'}, {key:'visa',label:'ビザ'}, {key:'school',label:'学校'}, {key:'notices',label:'お知らせ'} ].filter(function(n){return n.key!=='school' || state.arrangement==='yes';});
+}
+function screenContent(){
+  var s = state.screen;
+  if(s==='home') return renderHome();
+  if(s==='todo') return renderTodo();
+  if(s==='visa') return renderVisa();
+  if(s==='school') return renderSchool();
+  if(s==='booking') return renderBooking();
+  if(s==='notices') return renderNotices();
+  if(s==='notice') return renderNotice();
+  if(s==='spec') return renderSpec();
+  return '';
+}
+
 function render(){
   var frame = document.getElementById('frame');
-  if(state.screen==='login'){ frame.innerHTML = renderLogin(); return; }
+  var mode = state.viewMode || 'mobile';
+  if(state.screen==='login'){ frame.className='m-'+mode; frame.style.maxWidth='480px'; frame.innerHTML = renderLogin(); return; }
+
+  frame.className = 'm-'+mode;
+  frame.style.maxWidth = (MODES[mode]||MODES.mobile).width;
 
   var titles = { home:{en:'My page',ja:'マイページ'}, todo:{en:'Countdown',ja:'渡航までのToDo'}, visa:{en:'Visa',ja:'ビザ情報'}, school:{en:'School & Accommodation',ja:'学校・滞在先情報'}, booking:{en:'Counseling',ja:'面談を予約する'}, notices:{en:'Notices',ja:'お知らせ'}, notice:{en:'Notice',ja:'お知らせ詳細'}, spec:{en:'For developers',ja:'API／フィールド仕様'} };
   var t = titles[state.screen] || titles.home;
-  var nav = [ {key:'home',label:'ホーム'}, {key:'todo',label:'ToDo'}, {key:'visa',label:'ビザ'}, {key:'school',label:'学校'}, {key:'notices',label:'お知らせ'} ].filter(function(n){return n.key!=='school' || state.arrangement==='yes';});
+  var nav = navList();
+  var h = '';
 
-  var h = '<div style="display:flex;flex-direction:column;padding-bottom:88px;">';
-  h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div style="display:flex;align-items:center;gap:10px;"><img src="logo.webp" alt="夢カナ留学" style="height:22px;width:auto;display:block;" /><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;border-left:1px solid #E7EBEF;padding-left:10px;">会員サイト</span></div><button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:100px;cursor:pointer;">DEV</button></header>';
-  h += '<div style="padding:20px 18px 8px;display:flex;flex-direction:column;gap:6px;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div>';
-
-  var s = state.screen;
-  if(s==='home') h += renderHome();
-  else if(s==='todo') h += renderTodo();
-  else if(s==='visa') h += renderVisa();
-  else if(s==='school') h += renderSchool();
-  else if(s==='booking') h += renderBooking();
-  else if(s==='notices') h += renderNotices();
-  else if(s==='notice') h += renderNotice();
-  else if(s==='spec') h += renderSpec();
-
-  if(state.devOpen) h += renderDev();
-
-  h += '<nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #E7EBEF;display:grid;grid-template-columns:repeat('+nav.length+',1fr);z-index:30;">';
-  h += nav.map(function(n){var on=state.screen===n.key;return '<button data-act="nav" data-screen="'+n.key+'" style="border:none;background:none;cursor:pointer;padding:11px 4px 14px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:56px;"><span style="width:100%;height:2px;border-radius:100px;background:'+(on?'#39B3A6':'transparent')+';"></span><span style="font-size:11.5px;font-weight:'+(on?700:500)+';color:'+(on?'#2A3340':'#9AA6B2')+';">'+esc(n.label)+'</span></button>';}).join('');
-  h += '</nav>';
-  h += '</div>';
+  if(mode==='desktop'){
+    h += '<div style="display:flex;min-height:100vh;align-items:stretch;">';
+    /* sidebar */
+    h += '<aside style="width:224px;flex:none;border-right:1px solid #E7EBEF;background:#fff;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:20px 14px;gap:3px;">';
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;"><img src="logo.webp" alt="夢カナ留学" style="height:24px;width:auto;display:block;" /></div>';
+    h += nav.map(function(n){var on=state.screen===n.key;return '<button class="ms-side-nav" data-act="nav" data-screen="'+n.key+'" style="display:flex;align-items:center;gap:11px;text-align:left;border:none;background:'+(on?'#E7F5F3':'transparent')+';color:'+(on?'#1F7A72':'#5B6672')+';font-size:14px;font-weight:'+(on?700:600)+';padding:12px 12px;border-radius:8px;cursor:pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="'+(on?'#1F7A72':'#9AA6B2')+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+NAV_ICONS[n.key]+'"></path></svg>'+esc(n.label)+'</button>';}).join('');
+    h += '<div style="flex:1;"></div>';
+    h += '<button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:10px 12px;border-radius:8px;cursor:pointer;">DEV パネル</button>';
+    h += '</aside>';
+    /* main */
+    h += '<div style="flex:1;min-width:0;display:flex;flex-direction:column;">';
+    h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div><div style="text-align:right;font-size:12px;color:#7B8694;line-height:1.5;">'+esc(DATA.member.name)+' さま<br><span style="font-variant-numeric:tabular-nums;">ID '+esc(DATA.member.memberId)+'</span></div></header>';
+    h += screenContent();
+    h += '</div></div>';
+    if(state.devOpen) h += renderDev();
+  } else {
+    var navW = (MODES[mode]||MODES.mobile).width;
+    h += '<div style="display:flex;flex-direction:column;padding-bottom:88px;">';
+    h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div style="display:flex;align-items:center;gap:10px;"><img src="logo.webp" alt="夢カナ留学" style="height:22px;width:auto;display:block;" /><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;border-left:1px solid #E7EBEF;padding-left:10px;">会員サイト</span></div><button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:100px;cursor:pointer;">DEV</button></header>';
+    h += '<div style="padding:20px 18px 8px;display:flex;flex-direction:column;gap:6px;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div>';
+    h += screenContent();
+    if(state.devOpen) h += renderDev();
+    h += '<nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:'+navW+';background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #E7EBEF;display:grid;grid-template-columns:repeat('+nav.length+',1fr);z-index:30;">';
+    h += nav.map(function(n){var on=state.screen===n.key;return '<button data-act="nav" data-screen="'+n.key+'" style="border:none;background:none;cursor:pointer;padding:11px 4px 14px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:56px;"><span style="width:100%;height:2px;border-radius:100px;background:'+(on?'#39B3A6':'transparent')+';"></span><span style="font-size:11.5px;font-weight:'+(on?700:500)+';color:'+(on?'#2A3340':'#9AA6B2')+';">'+esc(n.label)+'</span></button>';}).join('');
+    h += '</nav>';
+    h += '</div>';
+  }
   frame.innerHTML = h;
 }
 
