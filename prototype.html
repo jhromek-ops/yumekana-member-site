@@ -207,6 +207,8 @@ var state = {
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
 
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* format any embedded ISO date (YYYY-MM-DD) to Japanese YYYY年M月D日; leaves other text untouched */
+function jd(s){ if(s==null) return s; return String(s).replace(/(\d{4})-(\d{2})-(\d{2})/g, function(_,y,m,d){ return y+'年'+parseInt(m,10)+'月'+parseInt(d,10)+'日'; }); }
 function countryMeta(code){ return DATA.countries.filter(function(c){return c.code===code;})[0] || {code:code,label:code,city:''}; }
 function effectiveCountry(){ if(state.country!=='undecided') return state.country; return state.undecidedPreview==='UK'?'UK':'CA'; }
 function visaStatus(code){ return DATA.lotteryCountries.indexOf(code)!==-1 ? 'lottery' : DATA.commonVisa.status; }
@@ -217,7 +219,7 @@ function fieldRow(r){
   var showField = state.showFields && !!r.field;
   var h = '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:11px;">';
   h += '<span style="font-size:11.5px;color:#7B8694;">'+esc(r.label)+'</span>';
-  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(r.value)+'</span>';
+  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(r.value))+'</span>';
   if(warn) h += '<span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#FDF3E7;color:#C2761F;">要対応</span>';
   h += '</div>';
   if(showField) h += '<code style="font-variant-numeric:tabular-nums;font-size:10.5px;color:#9AA6B2;background:#F3F6F7;padding:1px 6px;border-radius:3px;align-self:flex-start;">'+esc(r.field)+'</code>';
@@ -228,7 +230,7 @@ function plainRow(r){
   var showField = state.showFields && !!r.field;
   var h = '<div style="display:flex;flex-direction:column;gap:2px;border-top:1px solid #F3F6F7;padding-top:10px;">';
   h += '<span style="font-size:11.5px;color:#7B8694;">'+esc(r.label)+'</span>';
-  h += '<span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(r.value)+'</span>';
+  h += '<span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(r.value))+'</span>';
   if(showField) h += '<code style="font-variant-numeric:tabular-nums;font-size:10.5px;color:#9AA6B2;background:#F3F6F7;padding:1px 6px;border-radius:3px;align-self:flex-start;">'+esc(r.field)+'</code>';
   h += '</div>';
   return h;
@@ -262,7 +264,7 @@ function computeTodos(){
     var done = !!state.todoDone[t.id];
     var key = done ? 'done' : (t.state==='overdue' ? 'overdue' : 'todo');
     var p = PALETTE[key];
-    return { id:t.id, label:t.label, deadlineLabel:(t.deadline.indexOf('-')===-1?t.deadline:'期限 '+t.deadline), done:done, state:key, stateLabel:p.label, bg:p.bg, fg:p.fg,
+    return { id:t.id, label:t.label, deadlineLabel:(t.deadline.indexOf('-')===-1?t.deadline:'期限 '+jd(t.deadline)), done:done, state:key, stateLabel:p.label, bg:p.bg, fg:p.fg,
       labelColor: done?'#7B8694':'#2A3340', labelDecoration: done?'line-through':'none' };
   });
 }
@@ -276,14 +278,16 @@ function renderHome(){
   var alertCount = todos.filter(function(t){return !t.done;}).length;
   var days = Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
   var selMeta = countryMeta(state.country);
-  var chips = ['契約：'+m.contractType, '渡航国：'+selMeta.label, '手配：'+(state.arrangement==='yes'?'あり':'なし')];
+  var FLAGS = { UK:'🇬🇧', NZ:'🇳🇿', AU:'🇦🇺', CA:'🇨🇦', IE:'🇮🇪', PH:'🇵🇭', US:'🇺🇸', undecided:'🏳️' };
+  var chips = [{ text:(FLAGS[state.country]||'🏳️')+' '+selMeta.label, bg:'#E7F5F3', fg:'#2F9E93' }];
+  if(state.visaHandling==='self') chips.push({ text:'ビザ：ご自身で申請', bg:'#FDF3E7', fg:'#C2761F' });
 
   var h = '<div class="appcontent">';
   /* member card */
   h += '<section class="span2" style="'+SECTION+'">';
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
-  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(c)+'</span>';}).join('')+'</div>';
-  h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(m.departureDate)+'）</span></div>';
+  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(c.text)+'</span>';}).join('')+'</div>';
+  h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
   h += '</section>';
   /* alert */
   if(alertCount>0) h += '<button class="span2" data-act="go" data-screen="todo" style="text-align:left;border:none;border-left:3px solid #EF7A48;background:#FDECE5;padding:14px 16px;border-radius:0 6px 6px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;"><span style="font-size:13px;font-weight:600;color:#B4522A;">対応が必要な項目が '+alertCount+' 件あります</span><span style="font-size:13px;color:#B4522A;">→</span></button>';
@@ -329,12 +333,12 @@ function renderTodo(){
     return '<label data-act="toggleTodo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-top:1px solid #F3F6F7;cursor:pointer;"><input type="checkbox" '+(t.done?'checked':'')+' style="width:18px;height:18px;margin-top:2px;accent-color:#39B3A6;flex-shrink:0;pointer-events:none;" /><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 12px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';">'+esc(t.stateLabel)+'</span></div><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div></label>';
   }).join('')+'</div></section>';
   /* documents */
-  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">必要書類の提出</h2><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">期限 '+esc(d.commonVisa.docDeadline)+'</span></div>';
+  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">必要書類の提出</h2><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">期限 '+esc(jd(d.commonVisa.docDeadline))+'</span></div>';
   h += '<div style="display:flex;flex-direction:column;">'+d.documents.map(function(doc){
     var stt = docState(doc); var p = PALETTE[stt]||PALETTE.todo;
     var showUpload = stt==='todo'||stt==='rejected';
     var b = '<div style="display:flex;flex-direction:column;gap:8px;padding:13px 0;border-top:1px solid #F3F6F7;">';
-    b += '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div style="font-size:14px;font-weight:600;">'+esc(doc.name)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+(doc.updatedAt?'更新 '+esc(doc.updatedAt):'未提出')+'</div></div><span style="flex-shrink:0;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 12px;border-radius:6px;background:'+p.bg+';color:'+p.fg+';">'+esc(p.label)+'</span></div>';
+    b += '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div style="font-size:14px;font-weight:600;">'+esc(doc.name)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+(doc.updatedAt?'更新 '+esc(jd(doc.updatedAt)):'未提出')+'</div></div><span style="flex-shrink:0;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 12px;border-radius:6px;background:'+p.bg+';color:'+p.fg+';">'+esc(p.label)+'</span></div>';
     if(stt==='rejected') b += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:9px 12px;font-size:12px;color:#B4522A;border-radius:0 4px 4px 0;">再提出のお願い：発行日が3ヶ月以上前のため、最新のものをご提出ください。</div>';
     if(showUpload) b += '<button class="ms-outline" data-act="uploadDoc" data-id="'+esc(doc.id)+'" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;white-space:nowrap;">ファイルをアップロード</button>';
     if(state.showFields) b += '<code style="font-variant-numeric:tabular-nums;font-size:10.5px;color:#9AA6B2;background:#F3F6F7;padding:3px 6px;border-radius:3px;align-self:flex-start;line-height:1.5;display:block;">document['+esc(doc.id)+'].state = '+esc(stt)+'</code>';
@@ -380,7 +384,7 @@ function renderVisa(){
   } else {
     h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
     h += '<section style="'+SECTION+'"><div style="display:flex;flex-direction:column;gap:6px;"><span style="font-size:11.5px;color:#7B8694;">ビザステータス</span><span style="font-size:17px;font-weight:800;letter-spacing:.02em;padding:9px 18px;border-radius:8px;background:'+st.bg+';color:'+st.fg+';align-self:flex-start;">'+esc(st.label)+'</span></div>';
-    h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類 提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(d.commonVisa.docDeadline)+'</span></div>';
+    h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類 提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(d.commonVisa.docDeadline))+'</span></div>';
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">ビザ請求書（PDF）</span><a href="#" style="font-size:14px;font-weight:600;">請求書を確認する →</a><span style="font-size:11px;color:#7B8694;">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
     h += '</section>';
     h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">'+esc(selMeta.label)+'固有の項目</h2>'+extra.fields.map(fieldRow).join('');
@@ -435,12 +439,12 @@ function renderBooking(){
       var fg = sl.available?'#2A3340':'#9AA6B2';
       var tag = sl.available?(active?'選択中':'空きあり'):'満席';
       var tagColor = sl.available?(active?'#2F9E93':'#7B8694'):'#9AA6B2';
-      return '<button '+(sl.available?'data-act="selectSlot" data-id="'+esc(sl.id)+'"':'disabled')+' style="text-align:left;border:1px solid '+border+';background:'+bg+';border-radius:6px;padding:13px 14px;min-height:56px;cursor:'+(sl.available?'pointer':'not-allowed')+';display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="display:flex;flex-direction:column;"><span style="font-size:13.5px;font-weight:700;color:'+fg+';">'+esc(sl.date)+'</span><span style="font-variant-numeric:tabular-nums;font-size:12px;color:#7B8694;">'+esc(sl.time)+'</span></span><span style="font-size:11.5px;font-weight:700;color:'+tagColor+';">'+esc(tag)+'</span></button>';
+      return '<button '+(sl.available?'data-act="selectSlot" data-id="'+esc(sl.id)+'"':'disabled')+' style="text-align:left;border:1px solid '+border+';background:'+bg+';border-radius:6px;padding:13px 14px;min-height:56px;cursor:'+(sl.available?'pointer':'not-allowed')+';display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="display:flex;flex-direction:column;"><span style="font-size:13.5px;font-weight:700;color:'+fg+';">'+esc(jd(sl.date))+'</span><span style="font-variant-numeric:tabular-nums;font-size:12px;color:#7B8694;">'+esc(sl.time)+'</span></span><span style="font-size:11.5px;font-weight:700;color:'+tagColor+';">'+esc(tag)+'</span></button>';
     }).join('');
     h += '</div><button '+(state.slotId?'data-act="step" data-step="2"':'disabled')+' style="border:none;background:'+(state.slotId?'#2AA096':'#C9D2D9')+';color:#fff;font-size:15.5px;font-weight:800;padding:17px;border-radius:8px;cursor:pointer;min-height:52px;letter-spacing:.03em;box-shadow:'+(state.slotId?'0 6px 14px rgba(42,160,150,.3)':'none')+';">確認画面へ</button></section>';
   }
   var selected = d.slots.filter(function(sl){return sl.id===state.slotId;})[0];
-  var selLabel = selected ? selected.date+' '+selected.time : '—';
+  var selLabel = selected ? jd(selected.date)+' '+selected.time : '—';
   if(state.bookingStep===2){
     h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">内容の確認</h2><div style="display:flex;flex-direction:column;gap:3px;background:#F9FBFB;border-radius:6px;padding:14px;"><span style="font-size:11.5px;color:#7B8694;">ご希望日時</span><span style="font-variant-numeric:tabular-nums;font-size:15px;">'+esc(selLabel)+'</span></div>';
     h += '<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#7B8694;">相談したいこと（任意）<textarea rows="4" placeholder="例：ビザ申請の進捗と、滞在先の延長について相談したいです。" style="border:1px solid #E7EBEF;border-radius:6px;padding:12px;font-size:14px;color:#2A3340;background:#F9FBFB;resize:vertical;"></textarea></label>';
@@ -450,14 +454,14 @@ function renderBooking(){
   if(state.bookingStep===3){
     h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:24px 18px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;"><span style="font-size:15px;font-weight:800;letter-spacing:.04em;background:#EAFAF0;color:#1F8B4C;padding:8px 16px;border-radius:8px;">予約確定</span><h2 style="margin:0;font-size:17px;font-weight:700;">予約が完了しました</h2><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:11.5px;color:#7B8694;">確定日時</span><span style="font-variant-numeric:tabular-nums;font-size:15px;">'+esc(selLabel)+'</span></div><p style="margin:0;font-size:12.5px;color:#7B8694;">Google Meet のURLは前日までにメールとお知らせでご案内します。</p><button class="ms-outline" data-act="go" data-screen="home" style="'+OUTLINE_BTN+'background:#E7F5F3;font-size:14px;padding:14px 20px;min-height:48px;">マイページへ戻る</button></section>';
   }
-  h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">イベント・サポート</h2>'+d.events.map(function(e){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #F3F6F7;padding-top:12px;flex-wrap:wrap;"><div><div style="font-size:13.5px;font-weight:600;">'+esc(e.title)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(e.meta)+'</div></div><button class="ms-outline" style="'+OUTLINE_BTN+'font-size:13px;padding:11px 16px;min-height:46px;">'+esc(e.action)+'</button></div>';}).join('')+'</section>';
+  h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">イベント・サポート</h2>'+d.events.map(function(e){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #F3F6F7;padding-top:12px;flex-wrap:wrap;"><div><div style="font-size:13.5px;font-weight:600;">'+esc(e.title)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(e.meta))+'</div></div><button class="ms-outline" style="'+OUTLINE_BTN+'font-size:13px;padding:11px 16px;min-height:46px;">'+esc(e.action)+'</button></div>';}).join('')+'</section>';
   h += '</div>';
   return h;
 }
 
 function renderNotices(){
   var h = '<div class="appcontent">';
-  h += DATA.notices.map(function(n){return '<button data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:1px solid #E7EBEF;background:#fff;border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(n.date)+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(n.tag)+'</span>'+(n.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#EF7A48;display:inline-block;"></span>':'')+'</div><div style="font-size:14.5px;font-weight:700;color:#2A3340;">'+esc(n.title)+'</div><div style="font-size:12.5px;color:#7B8694;">'+esc(n.body.slice(0,46))+'…</div></button>';}).join('');
+  h += DATA.notices.map(function(n){return '<button data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:1px solid #E7EBEF;background:#fff;border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(n.date))+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(n.tag)+'</span>'+(n.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#EF7A48;display:inline-block;"></span>':'')+'</div><div style="font-size:14.5px;font-weight:700;color:#2A3340;">'+esc(n.title)+'</div><div style="font-size:12.5px;color:#7B8694;">'+esc(n.body.slice(0,46))+'…</div></button>';}).join('');
   h += '</div>';
   return h;
 }
@@ -465,7 +469,7 @@ function renderNotices(){
 function renderNotice(){
   var cur = DATA.notices.filter(function(n){return n.id===state.noticeId;})[0] || DATA.notices[0];
   var h = '<div class="appcontent">';
-  h += '<section class="span2" style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;max-width:760px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(cur.date)+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(cur.tag)+'</span></div><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(cur.title)+'</h2><p style="margin:0;font-size:14px;color:#2A3340;text-wrap:pretty;">'+esc(cur.body)+'</p></section>';
+  h += '<section class="span2" style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;max-width:760px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(cur.date))+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(cur.tag)+'</span></div><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(cur.title)+'</h2><p style="margin:0;font-size:14px;color:#2A3340;text-wrap:pretty;">'+esc(cur.body)+'</p></section>';
   h += '<button class="span2" data-act="go" data-screen="notices" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← お知らせ一覧へ</button>';
   h += '</div>';
   return h;
