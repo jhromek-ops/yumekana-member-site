@@ -38,24 +38,26 @@
 var DATA = {
   "member": { "name":"山田 花奈", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。" },
   "ye": {
-    "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3,
+    "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
     "booking":"#", "materials":"#", "resumeForm":"#",
     "manual":"https://sites.google.com/jstyle-yumekana.com/yumekana-english?usp=sharing",
-    "quizzes":[
-      { "label":"第1回 月次クイズ", "state":"done" },
-      { "label":"第2回 月次クイズ", "state":"done" },
-      { "label":"第3回 月次クイズ", "state":"todo" },
-      { "label":"第4回 月次クイズ", "state":"todo" }
+    "tasks":[
+      { "label":"ミニクイズ①", "state":"done" },
+      { "label":"ミニクイズ②", "state":"done" },
+      { "label":"ミニクイズ③", "state":"todo" },
+      { "label":"ミニクイズ④", "state":"todo" },
+      { "label":"採点付きクイズ", "state":"todo" },
+      { "label":"Speaking Exercise", "state":"todo" }
     ]
   },
   "eventPrograms": [
-    { "name":"初回オリエンテーション", "en":"Orientation", "tag":"オリエン", "desc":"ご契約後にまず参加いただく、留学準備の全体説明会です。" },
-    { "name":"Chill Talk", "en":"英会話イベント", "tag":"英会話", "desc":"少人数でリラックスして話す、ゆるめの英会話セッション。" },
-    { "name":"Tea Talk", "en":"英会話イベント", "tag":"英会話", "desc":"お茶を片手にカジュアルに話す英会話イベント。" },
-    { "name":"Coffee Talk", "en":"英会話イベント", "tag":"英会話", "desc":"コーヒーブレイク感覚で気軽に参加できる英会話イベント。" },
-    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "desc":"テーマに沿って世界とつながる、国際交流イベント。" },
-    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。" },
-    { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"オリエン", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。" }
+    { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
+    { "name":"Chill Talk", "en":"英会話イベント", "tag":"英会話", "kind":"anytime", "desc":"少人数でリラックスして話す、ゆるめの英会話セッション。いつでも参加できます。" },
+    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "kind":"anytime", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。", "schedule":{ "nextDate":"2026-07-19", "freq":"月2回", "capacity":25, "booked":18, "signedUp":true } },
+    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "kind":"yeOnly", "desc":"テーマに沿って世界とつながる、国際交流イベント。", "schedule":{ "nextDate":"2026-07-26", "freq":"月1回", "capacity":8, "booked":5, "signedUp":false } },
+    { "name":"Tea Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "desc":"お茶を片手にカジュアルに話す英会話イベント。" },
+    { "name":"Coffee Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "desc":"コーヒーブレイク感覚で気軽に参加できる英会話イベント。" },
+    { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
   ],
   "countries": [
     { "code":"UK", "label":"イギリス", "city":"ロンドン" },
@@ -148,6 +150,9 @@ var DATA = {
   ],
   "notices": [
     { "id":"n-0708", "date":"2026-07-08", "tag":"リマインド", "title":"本日が必要書類のご提出期限です", "body":"本日が必要書類のご提出期限です。まだご提出いただいていない方は、本日中にマイページの「必要書類の提出」よりアップロードをお願いします。提出が難しい場合は、担当コンサルタントまでご連絡ください。", "unread":true },
+    { "id":"n-ebb09", "date":"2026-07-07", "tag":"イベント", "title":"9月 English Beyond Borders!（EBB）の開催日を公開しました", "body":"9月の English Beyond Borders!（EBB）の開催日を公開しました。定員は8名です。毎月1回の開催で先着順のため、イベントページよりお早めにお申し込みください。※夢カナEnglish 受講者限定のイベントです。", "unread":true },
+    { "id":"n-meet07", "date":"2026-07-06", "tag":"イベント", "title":"夢カナMeetup 今月の開催日（月2回）が決定しました", "body":"今月の夢カナMeetupの開催日が決定しました。月2回・各回定員25名で開催します。イベントページの「この回に申し込む」からお申し込みいただけます。", "unread":true },
+    { "id":"n-task07", "date":"2026-07-05", "tag":"夢カナEnglish", "title":"毎月の課題の提出期限は毎月25日です", "body":"毎月の課題（ミニクイズ①〜④・採点付きクイズ・Speaking Exercise）の提出期限は、毎月25日です。マイページの「夢カナEnglish」ページから各課題にアクセスし、期限までにご提出ください。", "unread":true },
     { "id":"n-0702", "date":"2026-07-02", "tag":"担当者より", "title":"健康診断の提出期限が近づいています", "body":"健康診断証明書の提出期限が近づいています。指定病院での受診が必要なため、まだ受診されていない方はお早めにご予約ください。指定病院リストは資料ダウンロードよりご確認いただけます。", "unread":true },
     { "id":"n-0624", "date":"2026-06-24", "tag":"お知らせ", "title":"夢カナEnglish 7月のグループレッスン日程を更新しました", "body":"7月のグループレッスン日程を更新しました。Google Classroom よりご確認のうえ、ご希望の枠にお申し込みください。定員に達した枠は表示されません。", "unread":false }
   ],
@@ -220,7 +225,7 @@ var MODES = { mobile:{label:'モバイル',width:'480px'}, tablet:{label:'タブ
 var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
-  viewMode:'mobile', yeContract:'yes',
+  viewMode:'mobile', yeContract:'yes', oriDone:false,
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null
 };
@@ -304,6 +309,7 @@ function renderHome(){
   var FLAGS = { UK:'🇬🇧', NZ:'🇳🇿', AU:'🇦🇺', CA:'🇨🇦', IE:'🇮🇪', PH:'🇵🇭', US:'🇺🇸', undecided:'🏳️' };
   var chips = [{ text:(FLAGS[state.country]||'🏳️')+' '+selMeta.label, bg:'#E7F5F3', fg:'#2F9E93' }];
   if(state.visaHandling==='self') chips.push({ text:'ビザ：ご自身で申請', bg:'#FDF3E7', fg:'#C2761F' });
+  if(hasYE()) chips.push({ text:'夢カナEnglish '+d.ye.level+'・'+d.ye.months+'ヶ月', bg:'#EEF0FB', fg:'#4A56B8' });
 
   var h = '<div class="appcontent">';
   /* member card */
@@ -321,7 +327,7 @@ function renderHome(){
   h += '</section>';
   /* notices */
   h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">お知らせ</h2><button data-act="go" data-screen="notices" style="border:none;background:none;color:#2F9E93;font-size:12.5px;font-weight:600;cursor:pointer;padding:0;">一覧 →</button></div>';
-  h += '<div style="display:flex;flex-direction:column;gap:12px;">'+d.notices.map(function(n){return '<button data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:none;background:none;padding:0;cursor:pointer;display:flex;gap:12px;align-items:flex-start;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;flex-shrink:0;padding-top:2px;width:44px;">'+esc(n.date.slice(5).replace('-','/'))+'</time><div><span style="font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#2F9E93;">'+esc(n.tag)+'</span><div style="font-size:13.5px;color:#2A3340;">'+esc(n.title)+'</div></div></button>';}).join('')+'</div>';
+  h += '<div style="display:flex;flex-direction:column;gap:12px;">'+d.notices.slice(0,4).map(function(n){return '<button data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:none;background:none;padding:0;cursor:pointer;display:flex;gap:12px;align-items:flex-start;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;flex-shrink:0;padding-top:2px;width:44px;">'+esc(n.date.slice(5).replace('-','/'))+'</time><div><span style="font-size:10.5px;font-weight:700;letter-spacing:.04em;color:#2F9E93;">'+esc(n.tag)+'</span><div style="font-size:13.5px;color:#2A3340;">'+esc(n.title)+'</div></div></button>';}).join('')+'</div>';
   h += '</section>';
   /* shortcuts */
   var sc2 = state.arrangement==='yes'
@@ -510,15 +516,40 @@ function renderSpec(){
 
 function renderEvents(){
   var d = DATA;
-  var TAGC = { 'オリエン':{bg:'#E7F5F3',fg:'#1F7A72'}, '英会話':{bg:'#FDF3E7',fg:'#C2761F'}, '交流':{bg:'#EEF0FB',fg:'#4A56B8'} };
+  var TAGC = { '必須':{bg:'#FDECE5',fg:'#B4522A'}, '英会話':{bg:'#FDF3E7',fg:'#C2761F'}, '交流':{bg:'#EEF0FB',fg:'#4A56B8'} };
+  var ye = hasYE();
+  var joinBtn = function(label,act){ return '<button class="ms-outline"'+(act?' data-act="'+act+'"':'')+' style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">'+esc(label)+'</button>'; };
   var h = '<div class="appcontent">';
-  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;">夢カナ生が参加できるイベント・交流会の一覧です。日程と申込は各イベントのページからご確認いただけます。</p>';
+  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;">夢カナ生が参加できるイベント・交流会の一覧です。<span style="color:#4A56B8;font-weight:600;">交流・英会話の一部は夢カナEnglish 受講者限定</span>です。</p>';
   h += d.eventPrograms.map(function(ev){
     var c = TAGC[ev.tag] || TAGC['交流'];
-    var b = '<section style="'+SECTION+'gap:10px;">';
+    var locked = ev.kind==='yeOnly' && !ye;
+    var b = '<section style="'+SECTION+'gap:10px;'+(locked?'opacity:.6;':'')+'">';
+    /* header */
     b += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:15.5px;font-weight:800;color:#2A3340;">'+esc(ev.name)+'</span>'+(ev.en?'<span style="font-size:10.5px;letter-spacing:.06em;color:#9AA6B2;">'+esc(ev.en)+'</span>':'')+'</div><span style="flex-shrink:0;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(ev.tag)+'</span></div>';
     b += '<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.6;">'+esc(ev.desc)+'</p>';
-    b += '<button class="ms-outline" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">日程を見る・申し込む →</button>';
+    /* schedule preview (EBB / Meetup) — only when available */
+    if(ev.schedule && !locked){
+      var s = ev.schedule;
+      var full = s.booked>=s.capacity;
+      b += '<div style="background:#F7FAFA;border:1px solid #E7EBEF;border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:8px;">';
+      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">次回開催</span><span style="display:flex;align-items:center;gap:8px;"><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#2A3340;">'+esc(jd(s.nextDate))+'</span><span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#EEF0FB;color:#4A56B8;">'+esc(s.freq)+'</span></span></div>';
+      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">予約状況</span><span style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:'+(full?'#B4522A':'#2A3340')+';">'+s.booked+' / '+s.capacity+' 名'+(full?'（満席）':'')+'</span></div>';
+      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">お申込状況</span>'+(s.signedUp?'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">✓ 申込済み</span>':'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#FDF3E7;color:#C2761F;">未申込</span>')+'</div>';
+      b += '</div>';
+    }
+    /* action */
+    if(ev.kind==='onboarding'){
+      b += state.oriDone
+        ? '<button data-act="toggleOri" style="align-self:flex-start;border:none;background:#EAFAF0;color:#1F8B4C;font-size:13.5px;font-weight:800;padding:11px 16px;border-radius:7px;cursor:pointer;min-height:46px;">✅ 参加済み</button>'
+        : joinBtn('参加を申し込む','toggleOri');
+    } else if(locked){
+      b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>';
+    } else if(ev.schedule){
+      b += joinBtn(ev.schedule.signedUp?'申込内容を確認・変更':'この回に申し込む →');
+    } else {
+      b += joinBtn(ev.kind==='anytime'?'空き枠を見て申し込む →':'日程を見る →');
+    }
     b += '</section>';
     return b;
   }).join('');
@@ -529,8 +560,12 @@ function renderEvents(){
 function renderYe(){
   var y = DATA.ye;
   var h = '<div class="appcontent">';
-  /* 受講期間 banner */
-  h += '<section class="span2" style="'+SECTION+'gap:8px;background:#E7F5F3;border-color:#B9E3DD;"><div style="font-size:11px;letter-spacing:.08em;color:#1F7A72;font-weight:700;">受講期間</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:#1F5C56;">'+esc(jd(y.start))+' 〜 '+esc(jd(y.end))+'<span style="font-size:12px;font-weight:600;color:#2F9E93;">（'+esc(y.months)+'ヶ月）</span></div></section>';
+  /* 受講期間 + レベル banner */
+  var LEVELS = ['入門','初級','中級','上級'];
+  h += '<section class="span2" style="'+SECTION+'gap:12px;background:#E7F5F3;border-color:#B9E3DD;">';
+  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:11px;letter-spacing:.08em;color:#1F7A72;font-weight:700;">受講期間</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:#1F5C56;">'+esc(jd(y.start))+' 〜 '+esc(jd(y.end))+' <span style="font-size:12px;font-weight:600;color:#2F9E93;">（'+esc(y.months)+'ヶ月）</span></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;"><div style="font-size:11px;letter-spacing:.08em;color:#1F7A72;font-weight:700;">現在のレベル</div><div style="font-size:16px;font-weight:800;color:#1F5C56;">'+esc(y.level)+'</div></div></div>';
+  h += '<div style="display:flex;gap:6px;">'+LEVELS.map(function(lv){var on=lv===y.level;return '<span style="flex:1;text-align:center;font-size:12px;font-weight:'+(on?800:600)+';padding:7px 4px;border-radius:6px;background:'+(on?'#2F9E93':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';border:1px solid '+(on?'#2F9E93':'#CFE6E2')+';">'+esc(lv)+'</span>';}).join('')+'</div>';
+  h += '</section>';
   /* links */
   var links = [
     {ja:'レッスン予約サイト',sub:'オンライン英会話レッスンの予約',href:y.booking,icon:'M4 6h16v10H4zM9 20h6M12 16v4'},
@@ -541,10 +576,10 @@ function renderYe(){
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">リンク・教材</h2>'+links.map(function(l){
     return '<a href="'+esc(l.href)+'" target="_blank" rel="noopener" style="text-decoration:none;display:flex;align-items:center;gap:12px;border-top:1px solid #F3F6F7;padding:13px 0;"><span style="flex-shrink:0;width:36px;height:36px;border-radius:9px;background:#E7F5F3;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1F7A72" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+l.icon+'"></path></svg></span><span style="flex:1;display:flex;flex-direction:column;gap:2px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(l.ja)+'</span><span style="font-size:11.5px;color:#7B8694;">'+esc(l.sub)+'</span></span><span style="flex-shrink:0;color:#9AA6B2;font-size:16px;">↗</span></a>';
   }).join('')+'</section>';
-  /* monthly quizzes */
-  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">月次クイズ</h2><span style="font-size:11.5px;color:#7B8694;">全'+y.quizzes.length+'回</span></div>'+y.quizzes.map(function(q){
+  /* 毎月の課題 */
+  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;"><h2 style="margin:0;font-size:15px;font-weight:700;">毎月の課題</h2><span style="font-size:11.5px;font-weight:700;color:#C2761F;">締め切り：毎月25日</span></div>'+y.tasks.map(function(q){
     var done = q.state==='done';
-    var chip = done ? '<span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:#EAFAF0;color:#1F8B4C;">受験済み</span>' : '<span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:#FDF3E7;color:#C2761F;">未受験</span>';
+    var chip = done ? '<span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:#EAFAF0;color:#1F8B4C;">提出済み</span>' : '<span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:#FDF3E7;color:#C2761F;">未提出</span>';
     return '<a href="#" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding:13px 0;"><span style="font-size:13.5px;font-weight:600;color:#2A3340;">'+esc(q.label)+'</span>'+chip+'</a>';
   }).join('')+'</section>';
   h += '</div>';
@@ -680,6 +715,7 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'step': state.bookingStep=Number(el.getAttribute('data-step')); break;
     case 'setCountry': state.country=el.getAttribute('data-code'); break;
     case 'opt': state[el.getAttribute('data-key')]=el.getAttribute('data-value'); break;
+    case 'toggleOri': state.oriDone=!state.oriDone; break;
     case 'toggleFields': state.showFields=!state.showFields; break;
     case 'logout': state.screen='login'; state.devOpen=false; break;
     default: return;
