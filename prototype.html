@@ -51,13 +51,13 @@ var DATA = {
     ]
   },
   "eventPrograms": [
-    { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
-    { "name":"Chill Talk", "en":"英会話イベント", "tag":"英会話", "kind":"anytime", "desc":"少人数でリラックスして話す、ゆるめの英会話セッション。いつでも参加できます。" },
-    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "kind":"anytime", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。", "schedule":{ "nextDate":"2026-07-19", "freq":"月2回", "capacity":25, "booked":18, "signedUp":true } },
-    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "kind":"yeOnly", "desc":"テーマに沿って世界とつながる、国際交流イベント。", "schedule":{ "nextDate":"2026-07-26", "freq":"月1回", "capacity":8, "booked":5, "signedUp":false } },
-    { "name":"Tea Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "desc":"お茶を片手にカジュアルに話す英会話イベント。" },
-    { "name":"Coffee Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "desc":"コーヒーブレイク感覚で気軽に参加できる英会話イベント。" },
-    { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
+    { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "group":"start", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
+    { "name":"Chill Talk", "en":"英会話イベント", "tag":"英会話", "kind":"anytime", "group":"social", "desc":"少人数でリラックスして話す、ゆるめの英会話セッション。いつでも参加できます。" },
+    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "kind":"anytime", "group":"social", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。", "schedule":{ "nextDate":"2026-07-19", "freq":"月2回", "capacity":25, "booked":18, "signedUp":true } },
+    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "kind":"yeOnly", "group":"english", "desc":"テーマに沿って世界とつながる、国際交流イベント。", "schedule":{ "nextDate":"2026-07-26", "freq":"月1回", "capacity":8, "booked":5, "signedUp":false } },
+    { "name":"Tea Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "group":"english", "desc":"お茶を片手にカジュアルに話す英会話イベント。" },
+    { "name":"Coffee Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "group":"english", "desc":"コーヒーブレイク感覚で気軽に参加できる英会話イベント。" },
+    { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "group":"end", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
   ],
   "countries": [
     { "code":"UK", "label":"イギリス", "city":"ロンドン" },
@@ -209,6 +209,8 @@ var DATA = {
   ]
 };
 
+var FLAGS = { UK:'🇬🇧', NZ:'🇳🇿', AU:'🇦🇺', CA:'🇨🇦', IE:'🇮🇪', PH:'🇵🇭', US:'🇺🇸', undecided:'🌏' };
+
 var PALETTE = {
   todo:{bg:'#FDF3E7',fg:'#C2761F',label:'未対応'},
   overdue:{bg:'#FDECE5',fg:'#B4522A',label:'期限切れ'},
@@ -306,10 +308,8 @@ function renderHome(){
   var alertCount = todos.filter(function(t){return !t.done;}).length;
   var days = Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
   var selMeta = countryMeta(state.country);
-  var FLAGS = { UK:'🇬🇧', NZ:'🇳🇿', AU:'🇦🇺', CA:'🇨🇦', IE:'🇮🇪', PH:'🇵🇭', US:'🇺🇸', undecided:'🏳️' };
   var chips = [{ text:(FLAGS[state.country]||'🏳️')+' '+selMeta.label, bg:'#E7F5F3', fg:'#2F9E93' }];
   if(state.visaHandling==='self') chips.push({ text:'ビザ：ご自身で申請', bg:'#FDF3E7', fg:'#C2761F' });
-  if(hasYE()) chips.push({ text:'夢カナEnglish '+d.ye.level+'・'+d.ye.months+'ヶ月', bg:'#EEF0FB', fg:'#4A56B8' });
 
   var h = '<div class="appcontent">';
   /* member card */
@@ -317,6 +317,7 @@ function renderHome(){
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(c.text)+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
+  if(hasYE()) h += '<div style="display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">受講期間</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(d.ye.start))+' 〜 '+esc(jd(d.ye.end))+'</span></div></div>';
   h += '</section>';
   /* alert */
   if(alertCount>0) h += '<button class="span2" data-act="go" data-screen="todo" style="text-align:left;border:none;border-left:3px solid #EF7A48;background:#FDECE5;padding:14px 16px;border-radius:0 6px 6px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;"><span style="font-size:13px;font-weight:600;color:#B4522A;">対応が必要な項目が '+alertCount+' 件あります</span><span style="font-size:13px;color:#B4522A;">→</span></button>';
@@ -347,7 +348,6 @@ function renderHome(){
     {label:'学校・滞在先手配',value:state.arrangement==='yes'?'あり':'なし',field:'member.arrangement'},
     {label:'サポート料金（総額）',value:m.supportFee,field:'contract.supportFee'}
   ];
-  if(hasYE()) contractRows.splice(2,0,{label:'夢カナEnglish 受講期間',value:d.ye.start+'〜'+d.ye.end+'（'+d.ye.months+'ヶ月）',field:'ye.start / ye.end'});
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">契約情報</h2>'+contractRows.map(plainRow).join('')+'<p style="margin:0;font-size:11px;color:#7B8694;">'+esc(m.contractNote)+'</p></section>';
   h += '</div>';
   return h;
@@ -396,10 +396,9 @@ function renderVisa(){
   var status = visaStatus(code);
   var stMap = { pending:{label:'審査待ち',bg:'#FDF3E7',fg:'#C2761F'}, lottery:{label:'当選待ち',bg:'#E7E9EE',fg:'#1F2A44'}, issued:{label:'発行済み',bg:'#EAFAF0',fg:'#1F8B4C'} };
   var st = stMap[status];
-  var handlingLabel = noSupport ? 'サポート対象外' : (isSelf ? 'ご自身で申請' : 'ビザ代行');
 
   var h = '<div class="appcontent">';
-  h += '<div class="span2" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#E7E9EE;color:#1F2A44;">'+esc(selMeta.label)+'</span><span style="font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;background:#F3F6F7;color:#7B8694;">'+esc(handlingLabel)+'</span></div>';
+  h += '<div class="span2" style="display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #E7EBEF;border-radius:8px;padding:14px 18px;"><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;">渡航先</span><span style="font-size:18px;font-weight:800;color:#2A3340;">'+esc(selMeta.label)+'</span>'+(selMeta.city&&selMeta.city!=='—'?'<span style="font-size:11.5px;color:#7B8694;">'+esc(selMeta.city)+'</span>':'')+'</div><span style="font-size:54px;line-height:1;" aria-hidden="true">'+(FLAGS[state.country]||'🌏')+'</span></div>';
 
   if(isUndecided){
     h += '<div class="span2" style="background:#E7E9EE;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;"><p style="margin:0;font-size:12.5px;">渡航先が未定のため、参考として表示パターンをプレビューしています。</p><div style="display:flex;gap:8px;">';
@@ -519,9 +518,13 @@ function renderEvents(){
   var TAGC = { '必須':{bg:'#FDECE5',fg:'#B4522A'}, '英会話':{bg:'#FDF3E7',fg:'#C2761F'}, '交流':{bg:'#EEF0FB',fg:'#4A56B8'} };
   var ye = hasYE();
   var joinBtn = function(label,act){ return '<button class="ms-outline"'+(act?' data-act="'+act+'"':'')+' style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">'+esc(label)+'</button>'; };
-  var h = '<div class="appcontent">';
-  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;">夢カナ生が参加できるイベント・交流会の一覧です。<span style="color:#4A56B8;font-weight:600;">交流・英会話の一部は夢カナEnglish 受講者限定</span>です。</p>';
-  h += d.eventPrograms.map(function(ev){
+  var GROUPS = [
+    { key:'start',   title:'留学のはじめに', sub:'ご契約後にまず参加（必須・1回のみ）' },
+    { key:'social',  title:'交流イベント', sub:'どなたでも参加できます（英語不問）' },
+    { key:'english', title:'夢カナEnglish イベント', sub:'夢カナEnglish 受講者向けの英語イベント' },
+    { key:'end',     title:'渡航前に', sub:'渡航の直前に参加（必須）' }
+  ];
+  function card(ev){
     var c = TAGC[ev.tag] || TAGC['交流'];
     var locked = ev.kind==='yeOnly' && !ye;
     var b = '<section style="'+SECTION+'gap:10px;'+(locked?'opacity:.6;':'')+'">';
@@ -552,7 +555,15 @@ function renderEvents(){
     }
     b += '</section>';
     return b;
-  }).join('');
+  }
+  var h = '<div class="appcontent">';
+  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;">夢カナ生が参加できるイベント・交流会の一覧です。<span style="color:#4A56B8;font-weight:600;">「夢カナEnglish イベント」は受講者限定</span>です。</p>';
+  GROUPS.forEach(function(g){
+    var evs = d.eventPrograms.filter(function(e){ return (e.group||'social')===g.key; });
+    if(!evs.length) return;
+    h += '<div class="span2" style="display:flex;flex-direction:column;gap:2px;margin-top:6px;"><h2 style="margin:0;font-size:13.5px;font-weight:800;letter-spacing:.02em;color:#2A3340;">'+esc(g.title)+'</h2><span style="font-size:11.5px;color:#7B8694;">'+esc(g.sub)+'</span></div>';
+    h += evs.map(card).join('');
+  });
   h += '</div>';
   return h;
 }
@@ -560,18 +571,23 @@ function renderEvents(){
 function renderYe(){
   var y = DATA.ye;
   var h = '<div class="appcontent">';
-  /* 受講期間 + レベル banner */
-  var LEVELS = ['入門','初級','中級','上級'];
-  h += '<section class="span2" style="'+SECTION+'gap:12px;background:#E7F5F3;border-color:#B9E3DD;">';
-  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:11px;letter-spacing:.08em;color:#1F7A72;font-weight:700;">受講期間</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:#1F5C56;">'+esc(jd(y.start))+' 〜 '+esc(jd(y.end))+' <span style="font-size:12px;font-weight:600;color:#2F9E93;">（'+esc(y.months)+'ヶ月）</span></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;"><div style="font-size:11px;letter-spacing:.08em;color:#1F7A72;font-weight:700;">現在のレベル</div><div style="font-size:16px;font-weight:800;color:#1F5C56;">'+esc(y.level)+'</div></div></div>';
-  h += '<div style="display:flex;gap:6px;">'+LEVELS.map(function(lv){var on=lv===y.level;return '<span style="flex:1;text-align:center;font-size:12px;font-weight:'+(on?800:600)+';padding:7px 4px;border-radius:6px;background:'+(on?'#2F9E93':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';border:1px solid '+(on?'#2F9E93':'#CFE6E2')+';">'+esc(lv)+'</span>';}).join('')+'</div>';
+  /* 受講期間 + レベル banner — header colour depends on level */
+  var LEVEL_THEME = {
+    '入門':{ bg:'#E9F1FC', border:'#C4D8F2', eyebrow:'#3B76D1', text:'#254E86' },
+    '初級':{ bg:'#E7F5F3', border:'#B9E3DD', eyebrow:'#1F7A72', text:'#1F5C56' },
+    '中級':{ bg:'#FDF3E7', border:'#F3D6B0', eyebrow:'#C2761F', text:'#8A5011' },
+    '上級':{ bg:'#FDECE9', border:'#F4C6BD', eyebrow:'#D9432E', text:'#9E2A19' }
+  };
+  var lt = LEVEL_THEME[y.level] || LEVEL_THEME['初級'];
+  h += '<section class="span2" style="'+SECTION+'gap:12px;background:'+lt.bg+';border-color:'+lt.border+';">';
+  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">受講期間</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:'+lt.text+';">'+esc(jd(y.start))+' 〜 '+esc(jd(y.end))+'</div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">現在のレベル</div><div style="font-size:20px;font-weight:800;color:'+lt.text+';">'+esc(y.level)+'</div></div></div>';
   h += '</section>';
   /* links */
   var links = [
     {ja:'レッスン予約サイト',sub:'オンライン英会話レッスンの予約',href:y.booking,icon:'M4 6h16v10H4zM9 20h6M12 16v4'},
     {ja:'スケジュール・教材サイト',sub:'レッスン日程と学習教材',href:y.materials,icon:'M7 4h10v16H7zM10 9h4M10 13h4'},
     {ja:'履歴書・ワーホリ提出フォーム',sub:'外部フォームで提出',href:y.resumeForm,icon:'M6 3h9l3 3v15H6zM9 12l2 2 4-4'},
-    {ja:'夢カナEnglish マニュアル',sub:'使い方ガイド（Google サイト）',href:y.manual,icon:'M5 4h11l3 3v13H5zM8 9h7M8 12h7M8 15h4'}
+    {ja:'夢カナEnglishガイド',sub:'使い方ガイド（Google サイト）',href:y.manual,icon:'M5 4h11l3 3v13H5zM8 9h7M8 12h7M8 15h4'}
   ];
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">リンク・教材</h2>'+links.map(function(l){
     return '<a href="'+esc(l.href)+'" target="_blank" rel="noopener" style="text-decoration:none;display:flex;align-items:center;gap:12px;border-top:1px solid #F3F6F7;padding:13px 0;"><span style="flex-shrink:0;width:36px;height:36px;border-radius:9px;background:#E7F5F3;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1F7A72" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+l.icon+'"></path></svg></span><span style="flex:1;display:flex;flex-direction:column;gap:2px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(l.ja)+'</span><span style="font-size:11.5px;color:#7B8694;">'+esc(l.sub)+'</span></span><span style="flex-shrink:0;color:#9AA6B2;font-size:16px;">↗</span></a>';
