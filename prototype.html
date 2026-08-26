@@ -52,11 +52,18 @@ var DATA = {
   },
   "eventPrograms": [
     { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "group":"start", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
-    { "name":"Chill Talk", "en":"英会話イベント", "tag":"英会話", "kind":"anytime", "group":"social", "desc":"少人数でリラックスして話す、ゆるめの英会話セッション。いつでも参加できます。" },
-    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "kind":"anytime", "group":"social", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。", "schedule":{ "nextDate":"2026-07-19", "freq":"月2回", "capacity":25, "booked":18, "signedUp":true } },
-    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "kind":"yeOnly", "group":"english", "desc":"テーマに沿って世界とつながる、国際交流イベント。", "schedule":{ "nextDate":"2026-07-26", "freq":"月1回", "capacity":8, "booked":5, "signedUp":false } },
-    { "name":"Tea Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "group":"english", "desc":"お茶を片手にカジュアルに話す英会話イベント。" },
-    { "name":"Coffee Talk", "en":"英会話イベント", "tag":"英会話", "kind":"yeOnly", "group":"english", "desc":"コーヒーブレイク感覚で気軽に参加できる英会話イベント。" },
+    { "name":"Chill Talk", "en":"個別相談・質問会", "tag":"相談", "kind":"anytime", "group":"social", "desc":"受講生が持ち寄った疑問に自由にお答えするフリーセッション。月2回、対象者ごとに開催します（人数制限なし）。", "sessions":[
+      { "audience":"ビザ発行前の方向け", "nextDate":"2026-07-14", "time":"19:00〜20:00", "signedUp":false },
+      { "audience":"ビザ発行済みの方向け", "nextDate":"2026-07-28", "time":"19:00〜20:00", "signedUp":false }
+    ] },
+    { "name":"夢カナMeetup", "en":"交流会", "tag":"交流", "kind":"anytime", "group":"social", "desc":"夢カナ生同士がつながる、仲間づくりのミートアップ。", "sessions":[
+      { "nextDate":"2026-07-19", "time":"14:00〜16:00", "capacity":25, "booked":18, "signedUp":true }
+    ] },
+    { "name":"Coffee Talk", "en":"英語フリートーク", "tag":"英語", "kind":"yeOnly", "group":"english", "desc":"英語で自由に話せる、毎日開催のフリートークセッションです。", "recurring":{ "when":"毎日", "time":"19:00〜19:30" } },
+    { "name":"Tea Talk", "en":"日本語フリートーク", "tag":"日本語", "kind":"yeOnly", "group":"english", "desc":"日本語で気軽に相談・雑談できるフリートークセッション。水・土・日に開催します。", "recurring":{ "when":"毎週 水・土・日", "time":"12:00〜12:30" } },
+    { "name":"English Beyond Borders!（EBB）", "en":"国際交流", "tag":"交流", "kind":"yeOnly", "group":"english", "desc":"テーマに沿って世界とつながる、国際交流イベントです。", "sessions":[
+      { "nextDate":"2026-07-26", "time":"10:00〜11:30", "capacity":8, "booked":5, "signedUp":false }
+    ] },
     { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "group":"end", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
   ],
   "countries": [
@@ -211,6 +218,72 @@ var DATA = {
 
 var FLAGS = { UK:'🇬🇧', NZ:'🇳🇿', AU:'🇦🇺', CA:'🇨🇦', IE:'🇮🇪', PH:'🇵🇭', US:'🇺🇸', undecided:'🌏' };
 
+/* ---- inline SVG flags (emoji flags don't render on Windows) ---- */
+function starPath(cx,cy,r,rot){
+  rot = (rot==null?-90:rot); var p=[];
+  for(var i=0;i<5;i++){
+    var ao=(rot+i*72)*Math.PI/180, ai=(rot+36+i*72)*Math.PI/180;
+    p.push((cx+r*Math.cos(ao)).toFixed(2)+' '+(cy+r*Math.sin(ao)).toFixed(2));
+    p.push((cx+r*0.42*Math.cos(ai)).toFixed(2)+' '+(cy+r*0.42*Math.sin(ai)).toFixed(2));
+  }
+  return 'M'+p.join('L')+'Z';
+}
+function starsSVG(list,fill,stroke){
+  return list.map(function(s){ return '<path d="'+starPath(s[0],s[1],s[2],s[3])+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="0.5"':'')+'/>'; }).join('');
+}
+function unionJack(w,h,s){
+  return '<rect width="'+w+'" height="'+h+'" fill="#012169"/>'
+    +'<path d="M0 0L'+w+' '+h+'M'+w+' 0L0 '+h+'" stroke="#fff" stroke-width="'+(8*s)+'"/>'
+    +'<path d="M0 0L'+w+' '+h+'M'+w+' 0L0 '+h+'" stroke="#C8102E" stroke-width="'+(3.2*s)+'"/>'
+    +'<path d="M'+(w/2)+' 0V'+h+'M0 '+(h/2)+'H'+w+'" stroke="#fff" stroke-width="'+(11*s)+'"/>'
+    +'<path d="M'+(w/2)+' 0V'+h+'M0 '+(h/2)+'H'+w+'" stroke="#C8102E" stroke-width="'+(6.5*s)+'"/>';
+}
+function ozFlag(nz){
+  var cid='oz'+(nz?'nz':'au');
+  var h='<rect width="60" height="40" fill="#00247D"/>';
+  h+='<defs><clipPath id="'+cid+'"><rect width="30" height="20"/></clipPath></defs>';
+  h+='<g clip-path="url(#'+cid+')">'+unionJack(30,20,0.5)+'</g>';
+  if(nz){ h+=starsSVG([[46,10,2.6,-90],[52,20,2.2,-90],[46,31,2.6,-90],[40,22,2.2,-90]],'#CC142B','#fff'); }
+  else {
+    h+=starsSVG([[15,30,4,-90]],'#fff');
+    h+=starsSVG([[47,10,2.5,-90],[54,20,1.5,-90],[47,31,2.5,-90],[40,22,2.3,-90],[48,20,2.2,-90]],'#fff');
+  }
+  return h;
+}
+function usFlag(){
+  var sh=40/13, h='';
+  for(var i=0;i<13;i++){ h+='<rect y="'+(i*sh).toFixed(2)+'" width="60" height="'+sh.toFixed(2)+'" fill="'+(i%2===0?'#B22234':'#fff')+'"/>'; }
+  var ch=7*sh; h+='<rect width="24" height="'+ch.toFixed(2)+'" fill="#3C3B6E"/>';
+  var sl=[]; for(var r=0;r<5;r++){ for(var c=0;c<6;c++){ if((r+c)%2===0) sl.push([2.4+c*3.6, 2.1+r*(ch-4.2)/4, 1.05, -90]); } }
+  return h+starsSVG(sl,'#fff');
+}
+function phFlag(){
+  var h='<rect width="60" height="20" fill="#0038A8"/><rect y="20" width="60" height="20" fill="#CE1126"/>';
+  h+='<path d="M0 0L26 20L0 40Z" fill="#fff"/>';
+  h+='<circle cx="9" cy="20" r="3.1" fill="#FCD116"/>';
+  for(var k=0;k<8;k++){ var a=k*45*Math.PI/180; h+='<line x1="'+(9+3.5*Math.cos(a)).toFixed(2)+'" y1="'+(20+3.5*Math.sin(a)).toFixed(2)+'" x2="'+(9+5*Math.cos(a)).toFixed(2)+'" y2="'+(20+5*Math.sin(a)).toFixed(2)+'" stroke="#FCD116" stroke-width="1"/>'; }
+  return h+starsSVG([[3.6,3.6,1.4,-90],[3.6,36.4,1.4,-90],[22,20,1.4,-90]],'#FCD116');
+}
+function FLAG_ART(code){
+  switch(code){
+    case 'UK': return unionJack(60,40,1);
+    case 'IE': return '<rect width="20" height="40" fill="#169B62"/><rect x="20" width="20" height="40" fill="#fff"/><rect x="40" width="20" height="40" fill="#FF883E"/>';
+    case 'CA': return '<rect width="60" height="40" fill="#fff"/><rect width="15" height="40" fill="#D80621"/><rect x="45" width="15" height="40" fill="#D80621"/><path d="M30 9L31.2 13L35 12.2L34 15.5L38 16L35.5 18.5L40 21L31.5 20.5L32 31L30 29.5L28 31L28.5 20.5L20 21L24.5 18.5L22 16L26 15.5L25 12.2L28.8 13Z" fill="#D80621"/>';
+    case 'AU': return ozFlag(false);
+    case 'NZ': return ozFlag(true);
+    case 'US': return usFlag();
+    case 'PH': return phFlag();
+    default: return '<rect width="60" height="40" fill="#DCE6EF"/><circle cx="30" cy="20" r="13" fill="#5AA9A0"/><g stroke="#fff" stroke-width="0.9" fill="none"><circle cx="30" cy="20" r="13"/><ellipse cx="30" cy="20" rx="5" ry="13"/><line x1="17" y1="20" x2="43" y2="20"/><line x1="19.5" y1="12" x2="40.5" y2="12"/><line x1="19.5" y1="28" x2="40.5" y2="28"/></g>';
+  }
+}
+function flagSVG(code, px){
+  var w=px, h=Math.round(px*2/3), cid='fclip_'+code;
+  return '<svg viewBox="0 0 60 40" width="'+w+'" height="'+h+'" role="img" aria-label="国旗" style="display:block;flex-shrink:0;">'
+    +'<defs><clipPath id="'+cid+'"><rect width="60" height="40" rx="4"/></clipPath></defs>'
+    +'<g clip-path="url(#'+cid+')">'+FLAG_ART(code)+'</g>'
+    +'<rect x="0.4" y="0.4" width="59.2" height="39.2" rx="4" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="0.8"/></svg>';
+}
+
 var PALETTE = {
   todo:{bg:'#FDF3E7',fg:'#C2761F',label:'未対応'},
   overdue:{bg:'#FDECE5',fg:'#B4522A',label:'期限切れ'},
@@ -308,14 +381,14 @@ function renderHome(){
   var alertCount = todos.filter(function(t){return !t.done;}).length;
   var days = Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
   var selMeta = countryMeta(state.country);
-  var chips = [{ text:(FLAGS[state.country]||'🏳️')+' '+selMeta.label, bg:'#E7F5F3', fg:'#2F9E93' }];
+  var chips = [{ html:flagSVG(state.country,20)+'<span>'+esc(selMeta.label)+'</span>', bg:'#E7F5F3', fg:'#2F9E93' }];
   if(state.visaHandling==='self') chips.push({ text:'ビザ：ご自身で申請', bg:'#FDF3E7', fg:'#C2761F' });
 
   var h = '<div class="appcontent">';
   /* member card */
   h += '<section class="span2" style="'+SECTION+'">';
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
-  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(c.text)+'</span>';}).join('')+'</div>';
+  h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+(c.html||esc(c.text))+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
   if(hasYE()) h += '<div style="display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">受講期間</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(d.ye.start))+' 〜 '+esc(jd(d.ye.end))+'</span></div></div>';
   h += '</section>';
@@ -398,7 +471,7 @@ function renderVisa(){
   var st = stMap[status];
 
   var h = '<div class="appcontent">';
-  h += '<div class="span2" style="display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #E7EBEF;border-radius:8px;padding:14px 18px;"><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;">渡航先</span><span style="font-size:18px;font-weight:800;color:#2A3340;">'+esc(selMeta.label)+'</span>'+(selMeta.city&&selMeta.city!=='—'?'<span style="font-size:11.5px;color:#7B8694;">'+esc(selMeta.city)+'</span>':'')+'</div><span style="font-size:54px;line-height:1;" aria-hidden="true">'+(FLAGS[state.country]||'🌏')+'</span></div>';
+  h += '<div class="span2" style="display:flex;justify-content:center;align-items:center;border:1px solid #E7EBEF;border-radius:8px;padding:20px;">'+flagSVG(state.country,132)+'</div>';
 
   if(isUndecided){
     h += '<div class="span2" style="background:#E7E9EE;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;"><p style="margin:0;font-size:12.5px;">渡航先が未定のため、参考として表示パターンをプレビューしています。</p><div style="display:flex;gap:8px;">';
@@ -515,54 +588,61 @@ function renderSpec(){
 
 function renderEvents(){
   var d = DATA;
-  var TAGC = { '必須':{bg:'#FDECE5',fg:'#B4522A'}, '英会話':{bg:'#FDF3E7',fg:'#C2761F'}, '交流':{bg:'#EEF0FB',fg:'#4A56B8'} };
+  var TAGC = { '必須':{bg:'#FDECE5',fg:'#B4522A'}, '交流':{bg:'#EEF0FB',fg:'#4A56B8'}, '英語':{bg:'#E9F1FC',fg:'#2B5AA8'}, '日本語':{bg:'#F1ECFA',fg:'#6D51B8'}, '相談':{bg:'#E7F5F3',fg:'#1F7A72'} };
   var ye = hasYE();
   var joinBtn = function(label,act){ return '<button class="ms-outline"'+(act?' data-act="'+act+'"':'')+' style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">'+esc(label)+'</button>'; };
+  var timeBadge = function(t){ return '<span style="font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#EEF0FB;color:#4A56B8;">'+esc(t)+'</span>'; };
+  var srow = function(label,valHtml){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">'+label+'</span><span style="display:flex;align-items:center;gap:8px;">'+valHtml+'</span></div>'; };
+  var box = function(inner){ return '<div style="background:#F7FAFA;border:1px solid #E7EBEF;border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:8px;">'+inner+'</div>'; };
+  var sessBtn = function(label){ return '<button class="ms-outline" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:12.5px;padding:9px 14px;min-height:40px;margin-top:2px;">'+esc(label)+'</button>'; };
+  var signChip = function(on){ return on?'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">✓ 申込済み</span>':'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#FDF3E7;color:#C2761F;">未申込</span>'; };
+  function sessionBox(s){
+    var inner = '';
+    if(s.audience) inner += '<div style="font-size:12px;font-weight:800;color:#4A56B8;">'+esc(s.audience)+'</div>';
+    inner += srow('次回開催','<span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#2A3340;">'+esc(jd(s.nextDate))+'</span>'+timeBadge(s.time));
+    if(s.capacity!=null){ var full=s.booked>=s.capacity; inner += srow('予約状況','<span style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:'+(full?'#B4522A':'#2A3340')+';">'+s.booked+' / '+s.capacity+' 名'+(full?'（満席）':'')+'</span>'); }
+    else inner += srow('定員','<span style="font-size:12.5px;font-weight:600;color:#5B6672;">人数制限なし</span>');
+    inner += srow('お申込状況', signChip(s.signedUp));
+    inner += sessBtn(s.signedUp?'申込内容を確認・変更':'この回に申し込む →');
+    return box(inner);
+  }
   var GROUPS = [
     { key:'start',   title:'留学のはじめに', sub:'ご契約後にまず参加（必須・1回のみ）' },
     { key:'social',  title:'交流イベント', sub:'どなたでも参加できます（英語不問）' },
-    { key:'english', title:'夢カナEnglish イベント', sub:'夢カナEnglish 受講者向けの英語イベント' },
+    { key:'english', title:'夢カナEnglish イベント', sub:'夢カナEnglish 受講者限定' },
     { key:'end',     title:'渡航前に', sub:'渡航の直前に参加（必須）' }
   ];
   function card(ev){
     var c = TAGC[ev.tag] || TAGC['交流'];
     var locked = ev.kind==='yeOnly' && !ye;
+    /* collapsed once attended (初回オリエンテーション) */
+    if(ev.kind==='onboarding' && state.oriDone){
+      return '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.name)+'</span><button data-act="toggleOri" style="border:none;background:#EAFAF0;color:#1F8B4C;font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:100px;cursor:pointer;">✅ 参加済み</button></section>';
+    }
     var b = '<section style="'+SECTION+'gap:10px;'+(locked?'opacity:.6;':'')+'">';
-    /* header */
     b += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:15.5px;font-weight:800;color:#2A3340;">'+esc(ev.name)+'</span>'+(ev.en?'<span style="font-size:10.5px;letter-spacing:.06em;color:#9AA6B2;">'+esc(ev.en)+'</span>':'')+'</div><span style="flex-shrink:0;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(ev.tag)+'</span></div>';
     b += '<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.6;">'+esc(ev.desc)+'</p>';
-    /* schedule preview (EBB / Meetup) — only when available */
-    if(ev.schedule && !locked){
-      var s = ev.schedule;
-      var full = s.booked>=s.capacity;
-      b += '<div style="background:#F7FAFA;border:1px solid #E7EBEF;border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:8px;">';
-      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">次回開催</span><span style="display:flex;align-items:center;gap:8px;"><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#2A3340;">'+esc(jd(s.nextDate))+'</span><span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#EEF0FB;color:#4A56B8;">'+esc(s.freq)+'</span></span></div>';
-      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">予約状況</span><span style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:'+(full?'#B4522A':'#2A3340')+';">'+s.booked+' / '+s.capacity+' 名'+(full?'（満席）':'')+'</span></div>';
-      b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">お申込状況</span>'+(s.signedUp?'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">✓ 申込済み</span>':'<span style="font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:100px;background:#FDF3E7;color:#C2761F;">未申込</span>')+'</div>';
-      b += '</div>';
+    if(!locked){
+      if(ev.recurring){ b += box(srow('開催','<span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.recurring.when)+'</span>')+srow('時間','<span style="font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:#2A3340;">'+esc(ev.recurring.time)+'</span>')); }
+      else if(ev.sessions){ b += ev.sessions.map(sessionBox).join(''); }
     }
     /* action */
-    if(ev.kind==='onboarding'){
-      b += state.oriDone
-        ? '<button data-act="toggleOri" style="align-self:flex-start;border:none;background:#EAFAF0;color:#1F8B4C;font-size:13.5px;font-weight:800;padding:11px 16px;border-radius:7px;cursor:pointer;min-height:46px;">✅ 参加済み</button>'
-        : joinBtn('参加を申し込む','toggleOri');
-    } else if(locked){
-      b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>';
-    } else if(ev.schedule){
-      b += joinBtn(ev.schedule.signedUp?'申込内容を確認・変更':'この回に申し込む →');
-    } else {
-      b += joinBtn(ev.kind==='anytime'?'空き枠を見て申し込む →':'日程を見る →');
-    }
+    if(ev.kind==='onboarding'){ b += joinBtn('参加を申し込む','toggleOri'); }
+    else if(locked){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>'; }
+    else if(ev.recurring){ b += joinBtn('予約する →'); }
+    else if(!ev.sessions){ b += joinBtn(ev.kind==='anytime'?'空き枠を見て申し込む →':'日程を見る →'); }
     b += '</section>';
     return b;
   }
   var h = '<div class="appcontent">';
   h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;">夢カナ生が参加できるイベント・交流会の一覧です。<span style="color:#4A56B8;font-weight:600;">「夢カナEnglish イベント」は受講者限定</span>です。</p>';
+  var drawn = false;
   GROUPS.forEach(function(g){
     var evs = d.eventPrograms.filter(function(e){ return (e.group||'social')===g.key; });
     if(!evs.length) return;
-    h += '<div class="span2" style="display:flex;flex-direction:column;gap:2px;margin-top:6px;"><h2 style="margin:0;font-size:13.5px;font-weight:800;letter-spacing:.02em;color:#2A3340;">'+esc(g.title)+'</h2><span style="font-size:11.5px;color:#7B8694;">'+esc(g.sub)+'</span></div>';
+    h += '<div class="span2" style="display:flex;flex-direction:column;gap:3px;'+(drawn?'border-top:1px solid #E7EBEF;margin-top:18px;padding-top:20px;':'margin-top:2px;')+'"><h2 style="margin:0;font-size:14px;font-weight:800;letter-spacing:.02em;color:#2A3340;">'+esc(g.title)+'</h2><span style="font-size:11.5px;color:#7B8694;">'+esc(g.sub)+'</span></div>';
     h += evs.map(card).join('');
+    drawn = true;
   });
   h += '</div>';
   return h;
