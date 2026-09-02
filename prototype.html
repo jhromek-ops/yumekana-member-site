@@ -40,6 +40,7 @@ var DATA = {
   "ye": {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
     "leave":{ "start":"2026-10-01", "end":"2026-10-31" },
+    "private":{ "has":true, "start":"2026-10-01", "end":"2027-03-31" },
     "booking":"#", "materials":"#", "resumeForm":"#",
     "milestones":"#",
     "manual":"https://sites.google.com/jstyle-yumekana.com/yumekana-english?usp=sharing",
@@ -318,7 +319,7 @@ var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
   viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
-  taskId:null, cancelStage:'s2', journeyStage:3,
+  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null
 };
@@ -330,6 +331,9 @@ function jd(s){ if(s==null) return s; return String(s).replace(/(\d{4})-(\d{2})-
 /* ISO date -> "M月D日（曜）" (no year, with weekday) — for event dates */
 function jdWd(s){ var m=String(s).match(/(\d{4})-(\d{2})-(\d{2})/); if(!m) return jd(s); var dt=new Date(+m[1], +m[2]-1, +m[3]); var wd=['日','月','火','水','木','金','土'][dt.getDay()]; return parseInt(m[2],10)+'月'+parseInt(m[3],10)+'日（'+wd+'）'; }
 function hasYE(){ return !!(DATA.ye && DATA.ye.has && state.yeContract==='yes'); }
+function hasPrivate(){ return !!(hasYE() && DATA.ye.private && DATA.ye.private.has && state.yePrivate==='yes'); }
+/* returns the 受講期間 row(s): a single "受講期間", or group + マンツーマン when private lessons apply */
+function yePeriods(){ var y=DATA.ye; if(hasPrivate()) return [ {label:'グループレッスン 受講期間', start:y.start, end:y.end}, {label:'マンツーマンレッスン 受講期間', start:y.private.start, end:y.private.end} ]; return [ {label:'受講期間', start:y.start, end:y.end} ]; }
 function unreadNotices(){ return DATA.notices.filter(function(n){return n.unread;}).length; }
 function navBadge(key){ return key==='notices' ? unreadNotices() : 0; }
 function countryMeta(code){ return DATA.countries.filter(function(c){return c.code===code;})[0] || {code:code,label:code,city:''}; }
@@ -410,7 +414,7 @@ function renderHome(){
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+(c.html||esc(c.text))+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
-  if(hasYE()) h += '<div style="display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">受講期間</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(d.ye.start))+' 〜 '+esc(jd(d.ye.end))+'</span></div></div>';
+  if(hasYE()) h += '<div style="display:flex;gap:20px 24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div>'+yePeriods().map(function(p){return '<div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">'+esc(p.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(p.start))+' 〜 '+esc(jd(p.end))+'</span></div>';}).join('')+'</div>';
   h += '</section>';
   /* roadmap / journey */
   h += renderJourney();
@@ -755,7 +759,7 @@ function renderYe(){
   };
   var lt = LEVEL_THEME[y.level] || LEVEL_THEME['初級'];
   h += '<section class="span2" style="'+SECTION+'gap:12px;background:'+lt.bg+';border-color:'+lt.border+';">';
-  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">受講期間</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:'+lt.text+';">'+esc(jd(y.start))+' 〜 '+esc(jd(y.end))+'</div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">現在のレベル</div><div style="font-size:20px;font-weight:800;color:'+lt.text+';">'+esc(y.level)+'</div></div></div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:10px;">'+yePeriods().map(function(p){return '<div style="display:flex;flex-direction:column;gap:3px;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">'+esc(p.label)+'</div><div style="font-variant-numeric:tabular-nums;font-size:16px;font-weight:700;color:'+lt.text+';">'+esc(jd(p.start))+' 〜 '+esc(jd(p.end))+'</div></div>';}).join('')+'</div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;"><div style="font-size:11px;letter-spacing:.08em;color:'+lt.eyebrow+';font-weight:700;">現在のレベル</div><div style="font-size:20px;font-weight:800;color:'+lt.text+';">'+esc(y.level)+'</div></div></div>';
   if(state.yeLeave==='yes' && y.leave) h += '<div style="display:flex;align-items:center;gap:8px;border-top:1px solid '+lt.border+';padding-top:10px;flex-wrap:wrap;"><span style="flex-shrink:0;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:100px;background:'+lt.eyebrow+';color:#fff;">休学期間</span><span style="font-variant-numeric:tabular-nums;font-size:13.5px;font-weight:700;color:'+lt.text+';">'+esc(jd(y.leave.start))+' 〜 '+esc(jd(y.leave.end))+'</span></div>';
   h += '</section>';
   /* link-row helper */
@@ -806,6 +810,7 @@ function renderDev(){
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ手続き — member.visaHandling</span><div style="display:flex;gap:6px;">'+optBtns('visaHandling',[{label:'代行',value:'agency'},{label:'ご自身で申請',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">夢カナEnglish 契約 — member.ye.has</span><div style="display:flex;gap:6px;">'+optBtns('yeContract',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">「あり」のとき、契約情報に受講期間・メニューに夢カナEnglishを表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">受講期間の補足（休学期間） — member.ye.leave</span><div style="display:flex;gap:6px;">'+optBtns('yeLeave',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">夢カナEnglishページの受講期間に「休学期間」を表示します。</span></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">マンツーマンレッスン 契約 — member.ye.private</span><div style="display:flex;gap:6px;">'+optBtns('yePrivate',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">「あり」のとき、受講期間をグループ／マンツーマンの2種類に分けて表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ロードマップ 現在地 — journey.current</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+DATA.journey.stages.map(function(s,i){var n=i+1;var on=(state.journeyStage||DATA.journey.current)===n;return '<button data-act="setStage" data-n="'+n+'" title="'+esc(s.ja)+'" style="border:1px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#39B3A6':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+n+'</button>';}).join('')+'</div><span style="font-size:11px;color:#7B8694;">ホームの「夢カナロードマップ」で現在のステップを切り替えます。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">学校・滞在先の手配 — member.arrangement</span><div style="display:flex;gap:6px;">'+optBtns('arrangement',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">※対象者は全体の約20%です</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">滞在先タイプ — member.stayType</span><div style="display:flex;gap:6px;">'+optBtns('stayType',[{label:'ホームステイ',value:'homestay'},{label:'寮',value:'dorm'},{label:'自己手配',value:'self'}])+'</div></div>';
