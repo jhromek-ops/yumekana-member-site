@@ -29,7 +29,14 @@
   .ms-notice{border-radius:8px;transition:background .12s;}
   .ms-notice:hover{background:#F5F8FA !important;}
   .ms-notice:hover .ms-link{color:#173F73 !important;}
-  @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+  /* attention effect for the notification bell (like the official site's present icon) */
+  @keyframes msPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.14);}}
+  @keyframes msRing{0%{box-shadow:0 0 0 0 rgba(224,69,58,.5);}70%{box-shadow:0 0 0 9px rgba(224,69,58,0);}100%{box-shadow:0 0 0 0 rgba(224,69,58,0);}}
+  .ms-bell{animation:msPulse 1.9s ease-in-out infinite;}
+  .ms-bell-dot{animation:msRing 1.9s ease-out infinite;}
+  .ms-logo{cursor:pointer;}
+  .ms-logo:hover{opacity:.72;}
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
 </style>
 </head>
 <body>
@@ -50,7 +57,11 @@ var DATA = {
     "milestones":"#",
     "manual":"https://sites.google.com/jstyle-yumekana.com/yumekana-english?usp=sharing",
     "tasks":[
-      { "label":"ミニクイズ①", "state":"done", "pdf":"https://drive.google.com/file/d/1wxok6T1uKQvLT4lkaP8fImX6OoZyyFQZ/view", "form":"https://docs.google.com/forms/d/e/1FAIpQLSeHPs2npYOZb1PbYmh1jXuEMWXUu4KM34g24dVgkMnUOY6uLw/viewform" },
+      { "label":"ミニクイズ①", "state":"done",
+        "topic":"But, However, Although の使い分け",
+        "intro":"「but」「however」「although」は、どれも「しかし」「〜だけど」「〜にもかかわらず」のように、異なる内容や対比する内容をつなぐときに使う表現です。日本語では似た意味に訳されますが、英語ではそれぞれ文法上の役割や文の中で使える位置、ニュアンスが異なります。この教材では、3つの基本的な違いと使い方を、例文を通して学びます。",
+        "goals":["「but」「however」「although」の違いを理解する","文の構造に合わせて正しい表現を選ぶ","会話やライティングで自然に使い分ける"],
+        "pdf":"https://drive.google.com/file/d/1wxok6T1uKQvLT4lkaP8fImX6OoZyyFQZ/view", "form":"https://docs.google.com/forms/d/e/1FAIpQLSeHPs2npYOZb1PbYmh1jXuEMWXUu4KM34g24dVgkMnUOY6uLw/viewform" },
       { "label":"ミニクイズ②", "state":"done", "pdf":"https://drive.google.com/file/d/1HK5m8yXVMvP2mLi7gTgF1L_DehssliT8/view", "form":"https://docs.google.com/forms/d/e/1FAIpQLSeKDs6xPNUFyCkZZ4TdJyInlDu_-D9LehJEggeNNriXef4HzQ/viewform" },
       { "label":"ミニクイズ③", "state":"todo", "pdf":"https://drive.google.com/file/d/12yXgsQOgF_MLvBOkvQgssjaK0zXmIQFs/view", "form":"https://docs.google.com/forms/d/1gItp3w8j3BnagMfbQX3prM1IoDGszuuQzcUBZgF8zMw/edit" },
       { "label":"ミニクイズ④", "state":"todo", "pdf":"https://drive.google.com/file/d/1SOK-sQXz3JFAaciB9NrlGa-DtvcP3nOl/view", "form":"https://docs.google.com/forms/d/e/1FAIpQLSetue_3astNEoEvMPSc1usdBDhDgX0rO39zKuhoMi_fR71SYQ/viewform" },
@@ -232,15 +243,15 @@ var DATA = {
     "self": [ { "label":"滞在手配", "value":"自己手配", "field":"stay.arrangedBy" } ]
   },
   "todos": [
-    { "id":"docs", "label":"必要書類の提出", "deadline":"2026-08-10", "state":"done", "actor":"member", "action":"提出", "target":"docs" },
+    { "id":"docs", "label":"必要書類の提出", "deadline":"2026-08-10", "state":"done", "actor":"member", "action":"提出", "recommend":"推奨：期限の1週間前（2026年8月3日頃）までにご提出", "target":"docs" },
     { "id":"docreview", "label":"ご提出書類の内容確認", "deadline":"2026-08-12", "state":"staff", "actor":"staff", "target":"docs" },
-    { "id":"flight", "label":"航空券の購入", "deadline":"2026-07-25", "state":"done", "actor":"member", "action":"購入", "target":"task",
+    { "id":"flight", "label":"航空券の購入", "deadline":"2026-07-25", "state":"done", "actor":"member", "action":"購入", "recommend":"推奨：渡航の1か月半前（2026年7月25日頃）までにご購入", "target":"task",
       "page":{ "desc":"渡航日に合わせて航空券をご購入ください。語学学校の手配をご希望の場合は、学校の申請完了後のご購入となります。", "cta":"航空券の予約について", "href":"#", "note":"ご購入後は、Eチケット控えを契約者様専用LINEへご提出ください。ご購入目安：渡航の1か月半前", "mats":[ { "t":"航空券手配代理店 MTCジャパン 説明会", "u":"https://drive.google.com/file/d/1giRyyB6C0cehDX9ZkQohMf_B4jkxUDmc/view" } ] } },
-    { "id":"flightsubmit", "label":"航空券情報の提出", "deadline":"購入後1週間以内", "state":"todo", "actor":"member", "action":"提出", "target":"task",
+    { "id":"flightsubmit", "label":"航空券情報の提出", "deadline":"購入後1週間以内", "state":"todo", "actor":"member", "action":"提出", "recommend":"推奨：渡航の1か月半前（2026年7月25日頃）までに購入し、購入後すぐにご提出", "target":"task",
       "page":{ "desc":"ご購入いただいた航空券のEチケット控えをご提出ください。", "cta":"Eチケットをアップロード", "href":"#", "note":"契約者様専用LINEからもご提出いただけます。", "mats":[ { "t":"航空券手配代理店 MTCジャパン 説明会", "u":"https://drive.google.com/file/d/1giRyyB6C0cehDX9ZkQohMf_B4jkxUDmc/view" } ] } },
-    { "id":"insurance", "label":"海外保険の加入", "deadline":"2026-08-01", "state":"overdue", "actor":"member", "action":"加入", "target":"task",
+    { "id":"insurance", "label":"海外保険の加入", "deadline":"2026-08-01", "state":"overdue", "actor":"member", "action":"加入", "recommend":"推奨：渡航の1か月半前（2026年7月25日頃）までにご加入", "target":"task",
       "page":{ "desc":"渡航の1か月半前を目安に、海外旅行保険にご加入ください。", "cta":"海外保険のご案内", "href":"#", "note":"保険加入証明書を契約者様専用LINEへご提出ください。" } },
-    { "id":"orientation", "label":"渡航前オリエンテーションの参加", "deadline":"2026-08-02", "state":"todo", "actor":"member", "action":"申込", "target":"events" }
+    { "id":"orientation", "label":"渡航前オリエンテーションの参加", "deadline":"2026-08-02", "state":"todo", "actor":"member", "action":"申込", "recommend":"推奨：渡航の1か月前までにご参加", "target":"events" }
   ],
   "journey": {
     "current": 3,
@@ -409,9 +420,34 @@ var state = {
   viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
   taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
-  slotId:null, noticeId:null
+  slotId:null, noticeId:null, cheer:''
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
+
+/* ログイン時の励ましメッセージ（ランダム表示。将来的には手続き・学習状況に応じて自動生成） */
+var CHEERS = [
+  '今日も英語がんばろうね！',
+  'ワーホリ楽しみだね！',
+  '一歩ずつ、夢に近づいています！',
+  '準備は順調です。この調子でいきましょう！',
+  '今日もおつかれさま。少しずつで大丈夫！',
+  '渡航後の毎日を想像しながら進めましょう！'
+];
+function pickCheer(){ return CHEERS[Math.floor(Math.random()*CHEERS.length)]; }
+
+/* ブラウザの「戻る」を有効にする（画面遷移を履歴に積む） */
+function histState(){ return { screen:state.screen, taskId:state.taskId, noticeId:state.noticeId, bookingStep:state.bookingStep }; }
+function pushHist(){ try{ history.pushState(histState(), '', '#'+state.screen); }catch(err){} }
+function replaceHist(){ try{ history.replaceState(histState(), '', '#'+state.screen); }catch(err){} }
+window.addEventListener('popstate', function(e){
+  var st = e.state;
+  if(st && st.screen){
+    state.screen = st.screen; state.taskId = st.taskId || null; state.noticeId = st.noticeId || null;
+    if(st.bookingStep) state.bookingStep = st.bookingStep;
+  } else { state.screen = 'login'; }
+  state.devOpen = false; state.chatOpen = false;
+  render();
+});
 
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 /* format any embedded ISO date (YYYY-MM-DD) to Japanese YYYY年M月D日; leaves other text untouched */
@@ -483,7 +519,7 @@ function computeTodos(){
     if(done){ key='done'; stateLabel='完了'; bg=PALETTE.done.bg; fg=PALETTE.done.fg; who=''; }
     else if(isStaff){ key='staff'; stateLabel='夢カナ確認中'; bg='#EEF0FB'; fg='#4A56B8'; who='夢カナが対応中（お客様の操作は不要です）'; whoBg='#EEF0FB'; whoFg='#4A56B8'; }
     else { key = overdue?'overdue':'todo'; stateLabel=(t.action||'ご対応')+'が必要'; if(overdue) stateLabel='期限超過・'+stateLabel; bg=(overdue?PALETTE.overdue.bg:PALETTE.todo.bg); fg=(overdue?PALETTE.overdue.fg:PALETTE.todo.fg); who='お客様のご対応が必要です'; whoBg='#FDF3E7'; whoFg='#B4522A'; }
-    return { id:t.id, label:t.label, deadlineLabel:(t.deadline.indexOf('-')===-1?t.deadline:'期限 '+jd(t.deadline)), done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
+    return { id:t.id, label:t.label, deadlineLabel:'期限：'+(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline)), recommend:t.recommend||'', done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
       labelColor: done?'#7B8694':'#2A3340', labelDecoration: done?'line-through':'none' };
   });
 }
@@ -497,13 +533,14 @@ function renderHome(){
   var alertCount = todos.filter(function(t){return !t.done && !t.isStaff;}).length;
   var days = Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
   var selMeta = countryMeta(state.country);
-  var chips = [{ html:flagSVG(state.country,20)+'<span>'+esc(selMeta.label)+'</span>', bg:'#E7F5F3', fg:'#2F9E93' }];
+  var cityLabel = (selMeta.city && selMeta.city!=='—') ? selMeta.label+'・'+selMeta.city : selMeta.label;
+  var chips = [{ html:flagSVG(state.country,20)+'<span>'+esc(cityLabel)+'</span>', bg:'#E7F5F3', fg:'#2F9E93' }];
   if(state.visaHandling==='self') chips.push({ text:'ビザ：ご自身で申請', bg:'#FDF3E7', fg:'#C2761F' });
 
   var h = '<div class="appcontent">';
   /* member card */
   h += '<section class="span2" style="'+SECTION+'">';
-  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div></div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div>'+(state.cheer?'<div style="font-size:12.5px;font-weight:600;color:#2F9E93;margin-top:2px;">'+esc(state.cheer)+'</div>':'')+'</div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+(c.html||esc(c.text))+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
   if(hasYE()) h += '<div style="display:flex;gap:20px 24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div>'+yePeriods().map(function(p){return '<div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">'+esc(p.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(p.start))+' 〜 '+esc(jd(p.end))+'</span></div>';}).join('')+'</div>';
@@ -567,9 +604,12 @@ function renderTodo(){
   h += '<section style="'+SECTION+'"><div><div style="height:6px;background:#F3F6F7;border-radius:100px;overflow:hidden;"><div style="height:100%;border-radius:100px;background:#39B3A6;width:'+pct+'%;"></div></div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;margin-top:6px;">'+doneCount+' / '+todos.length+' 完了</div></div>';
   h += '<div style="display:flex;flex-direction:column;">'+todos.map(function(t){
     var whoTag = t.who ? '<span style="align-self:flex-start;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:'+t.whoBg+';color:'+t.whoFg+';">'+(t.isStaff?'夢カナ対応':'要お客様対応')+'</span>' : '';
-    return '<div data-act="todoGo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:center;padding:13px 0;border-top:1px solid #F3F6F7;cursor:pointer;"><span data-act="toggleTodo" data-id="'+esc(t.id)+'" style="flex-shrink:0;display:inline-flex;padding:2px;cursor:pointer;"><input type="checkbox" '+(t.done?'checked':'')+' style="width:18px;height:18px;accent-color:#39B3A6;pointer-events:none;" /></span><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:12.5px;font-weight:800;letter-spacing:.02em;padding:6px 11px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';white-space:nowrap;">'+esc(t.stateLabel)+'</span></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+whoTag+'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div>'+(t.who?'<span style="font-size:11px;color:'+t.whoFg+';">'+esc(t.who)+'</span>':'')+'</div><span style="flex-shrink:0;color:#9AA6B2;font-size:18px;">→</span></div>';
+    var mark = t.done
+      ? '<span title="完了" style="flex-shrink:0;width:20px;height:20px;border-radius:100px;background:#39B3A6;display:inline-flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"></path></svg></span>'
+      : '<span title="未完了" style="flex-shrink:0;width:20px;height:20px;border-radius:100px;background:#fff;border:2px solid '+(t.isStaff?'#B9C0E8':'#EFBE8A')+';display:inline-block;"></span>';
+    return '<div data-act="todoGo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:center;padding:13px 0;border-top:1px solid #F3F6F7;cursor:pointer;">'+mark+'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:12.5px;font-weight:800;letter-spacing:.02em;padding:6px 11px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';white-space:nowrap;">'+esc(t.stateLabel)+'</span></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+whoTag+'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div>'+(t.recommend?'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#1F7A72;">'+esc(t.recommend)+'</span>':'')+(t.who?'<span style="font-size:11px;color:'+t.whoFg+';">'+esc(t.who)+'</span>':'')+'</div><span style="flex-shrink:0;color:#9AA6B2;font-size:18px;">→</span></div>';
   }).join('')+'</div></section>';
-  h += '<p class="span2" style="margin:0;font-size:11.5px;color:#7B8694;">各項目をタップすると、手続きのページへ移動します。チェックボックスで完了の記録もできます。</p>';
+  h += '<p class="span2" style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">各項目をタップすると、手続きのページへ移動します。ステータスは、ご提出・ご対応や夢カナ側の確認に応じて<b style="color:#2A3340;">自動で更新</b>されます（お客様がチェックを付ける必要はありません）。</p>';
   h += matSection('関連資料', matBy(state.country,['visa','event']));
   h += '</div>';
   return h;
@@ -611,7 +651,7 @@ function renderTask(){
   var done = !!state.todoDone[t.id];
   var h = '<div class="appcontent">';
   h += '<section class="span2" style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(t.label)+'</h2>'+(done?'<span style="flex-shrink:0;font-size:12px;font-weight:800;padding:5px 11px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">完了</span>':'')+'</div>';
-  h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline))+'</span></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline))+'</span>'+(t.recommend?'<span style="font-variant-numeric:tabular-nums;font-size:12px;color:#1F7A72;font-weight:600;">'+esc(t.recommend)+'</span>':'')+'</div>';
   if(pg.desc) h += '<p style="margin:0;font-size:13.5px;color:#2A3340;line-height:1.7;border-top:1px solid #F3F6F7;padding-top:12px;">'+esc(pg.desc)+'</p>';
   if(pg.cta) h += '<a href="'+esc(pg.href||'#')+'" target="_blank" rel="noopener" class="ms-teal" style="'+TEAL_BTN+'align-self:flex-start;text-decoration:none;font-size:14px;padding:14px 20px;min-height:50px;display:inline-flex;align-items:center;">'+esc(pg.cta)+' →</a>';
   if(pg.note) h += '<p style="margin:0;font-size:12px;color:#7B8694;background:#F3F6F7;border-left:3px solid #39B3A6;padding:11px 14px;border-radius:0 4px 4px 0;line-height:1.7;">'+esc(pg.note)+'</p>';
@@ -624,18 +664,22 @@ function renderTask(){
 }
 
 function renderCancelFee(){
+  var base = Number(String(DATA.member.supportFee||'').replace(/[^0-9]/g,'')) || 0;
+  var yen = function(n){ return '¥'+Number(n).toLocaleString('ja-JP'); };
   var STAGES = [
-    { id:'s1', label:'ご契約〜クーリングオフ期間内', fee:'0円', note:'クーリングオフ対象期間内は、サポート料金の全額を返金いたします。' },
-    { id:'s2', label:'渡航90日前まで', fee:'サポート料金の20%', note:'この時期の解約手数料は、サポート料金の20%（上限あり）です。' },
-    { id:'s3', label:'渡航89日前〜渡航前', fee:'サポート料金の50%', note:'渡航が近づくほど、手続き済みの費用が増えるため手数料が高くなります。' },
-    { id:'s4', label:'渡航後', fee:'原則返金なし', note:'渡航開始後は、原則として返金の対象外となります。' }
+    { id:'s1', label:'ご契約〜クーリングオフ期間内', rate:0, note:'クーリングオフ対象期間内のため、サポート料金は全額が返金対象です。' },
+    { id:'s2', label:'渡航90日前まで', rate:0.2, note:'この時期の解約手数料は、サポート料金の20%です。' },
+    { id:'s3', label:'渡航89日前〜渡航前', rate:0.5, note:'渡航が近づくほど手配済みの費用が増えるため、手数料が高くなります。' },
+    { id:'s4', label:'渡航後', rate:null, note:'渡航開始後は、原則として返金の対象外となります。' }
   ];
   var cur = STAGES.filter(function(s){return s.id===state.cancelStage;})[0] || STAGES[1];
+  var curFee = (cur.rate===null) ? null : Math.round(base*cur.rate);
   var h = '<div class="appcontent">';
-  h += '<section class="span2" style="'+SECTION+'"><h2 style="margin:0;font-size:17px;font-weight:700;">解約手数料シミュレーター</h2><p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">解約のご検討にあたり、時期ごとの解約手数料の目安を確認できます。解約タイミングを選択してください。</p>';
-  h += '<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #F3F6F7;padding-top:14px;"><span style="font-size:11.5px;font-weight:700;color:#7B8694;">解約タイミング</span><div style="display:flex;flex-direction:column;gap:8px;">'+STAGES.map(function(s){var on=s.id===state.cancelStage;return '<button data-act="opt" data-key="cancelStage" data-value="'+s.id+'" style="text-align:left;border:1.5px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#E7F5F3':'#fff')+';color:'+(on?'#1F5C56':'#5B6672')+';font-size:13.5px;font-weight:'+(on?800:600)+';padding:13px 15px;border-radius:8px;cursor:pointer;min-height:48px;">'+esc(s.label)+'</button>';}).join('')+'</div></div>';
-  h += '<div style="border-top:1px solid #F3F6F7;padding-top:14px;display:flex;flex-direction:column;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">解約手数料の目安</span><div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:26px;font-weight:800;color:#B4522A;">'+esc(cur.fee)+'</span></div><p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.7;">'+esc(cur.note)+'</p></div>';
-  h += '<div style="border-top:1px dashed #E7EBEF;padding-top:12px;font-size:11.5px;color:#9AA6B2;line-height:1.7;">※ 本ツールはダミーの試算です（開発中）。実際の解約手数料は契約書の定めに基づき算出され、担当コンサルタントよりご案内します。金額は確定値ではありません。</div>';
+  h += '<section class="span2" style="'+SECTION+'"><h2 style="margin:0;font-size:17px;font-weight:700;">解約手数料シミュレーター</h2><p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">お客様の<b style="color:#2A3340;">サポート料金</b>をもとに、解約時期ごとの手数料を自動で計算します。解約タイミングを選択してください。</p>';
+  h += '<div style="background:#F3F6F7;border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><span style="font-size:11.5px;font-weight:700;color:#7B8694;">算定基礎：サポート料金</span><span style="font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;color:#2A3340;">'+esc(yen(base))+'</span></div><p style="margin:0;font-size:11px;color:#7B8694;line-height:1.7;">「サポート料金」とは、ビザ申請サポート・学校／滞在先の手配・渡航前サポート・夢カナEnglish など、夢カナ留学のサポート全体に対する料金です。航空券・学費・保険料などの実費は含みません。</p></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #F3F6F7;padding-top:14px;"><span style="font-size:11.5px;font-weight:700;color:#7B8694;">解約タイミング</span><div style="display:flex;flex-direction:column;gap:8px;">'+STAGES.map(function(s){var on=s.id===state.cancelStage;return '<button data-act="opt" data-key="cancelStage" data-value="'+s.id+'" style="text-align:left;border:1.5px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#E7F5F3':'#fff')+';color:'+(on?'#1F5C56':'#5B6672')+';font-size:13.5px;font-weight:'+(on?800:600)+';padding:13px 15px;border-radius:8px;cursor:pointer;min-height:48px;display:flex;justify-content:space-between;align-items:center;gap:10px;"><span>'+esc(s.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;color:'+(on?'#B4522A':'#9AA6B2')+';white-space:nowrap;">'+esc(s.rate===null?'原則返金なし':yen(Math.round(base*s.rate)))+'</span></button>';}).join('')+'</div></div>';
+  h += '<div style="border-top:1px solid #F3F6F7;padding-top:14px;display:flex;flex-direction:column;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">解約手数料の目安</span><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;"><span style="font-variant-numeric:tabular-nums;font-size:28px;font-weight:800;color:#B4522A;">'+esc(curFee===null?'原則返金なし':yen(curFee))+'</span>'+(curFee===null?'':'<span style="font-size:12px;font-weight:700;color:#7B8694;">（サポート料金の'+Math.round(cur.rate*100)+'%）</span>')+'</div>'+(curFee===null?'':'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px dashed #E7EBEF;padding-top:10px;"><span style="font-size:11.5px;color:#7B8694;">返金の目安</span><span style="font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;color:#1F8B4C;">'+esc(yen(base-curFee))+'</span></div>')+'<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.7;">'+esc(cur.note)+'</p></div>';
+  h += '<div style="border-top:1px dashed #E7EBEF;padding-top:12px;font-size:11.5px;color:#9AA6B2;line-height:1.7;">※ 表示金額はお客様のサポート料金をもとにした<b>概算</b>です。実際の解約手数料は約款・契約書の定めに基づいて算出され、担当コンサルタントよりご案内します（確定金額ではありません）。</div>';
   h += '</section>';
   h += '<button class="span2" data-act="go" data-screen="home" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← マイページへ戻る</button>';
   h += '</div>';
@@ -697,6 +741,7 @@ function renderResources(){
   else h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-radius:8px;padding:14px 16px;">'+esc(meta.label)+'向けの資料は現在準備中です。下記の「各国共通の資料」をご覧ください。</p>';
   h += '<div class="span2" style="display:flex;align-items:center;gap:10px;border-top:1px solid #E7EBEF;margin-top:14px;padding-top:16px;"><h2 style="margin:0;font-size:15px;font-weight:800;color:#2A3340;">各国共通の資料</h2></div>';
   h += group(common);
+  h += '<p class="span2" style="margin:0;font-size:11px;color:#9AA6B2;line-height:1.8;background:#F3F6F7;border-radius:6px;padding:10px 12px;">※ 将来的には、PDFやGoogle Classroomではなく<b style="color:#7B8694;">会員サイト内のコンテンツ</b>として閲覧できるよう移管を予定しています。</p>';
   h += '</div>';
   return h;
 }
@@ -731,6 +776,14 @@ function renderVisa(){
     h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;"><div style="display:flex;flex-direction:column;gap:6px;"><span style="font-size:11.5px;color:#7B8694;">ビザステータス</span><span style="font-size:17px;font-weight:800;letter-spacing:.02em;padding:9px 18px;border-radius:8px;background:'+st.bg+';color:'+st.fg+';align-self:flex-start;">'+esc(st.label)+'</span></div>'+flagSVG(state.country,72)+'</div>';
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類 提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(d.commonVisa.docDeadline))+'</span></div>';
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">ビザ請求書（PDF）</span><a href="#" style="font-size:14px;font-weight:600;">請求書を確認する →</a><span style="font-size:11px;color:#7B8694;">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
+    h += '</section>';
+    /* 提出済み書類の再確認（何を提出したかをいつでも見返せるように） */
+    var submitted = d.documents.filter(function(doc){ var st=docState(doc); return st==='reviewing'||st==='approved'||st==='rejected'; });
+    h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">ご提出済みの書類</h2><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+submitted.length+' 件</span></div>';
+    h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">「どの書類を提出したか」をあとからいつでもご確認いただけます。</p>';
+    if(submitted.length) h += '<div style="display:flex;flex-direction:column;">'+submitted.map(function(doc){ var st=docState(doc); var pp=PALETTE[st]||PALETTE.todo; var lbl=DOC_STATUS_LABEL[st]||pp.label; return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding:11px 0;"><div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;">'+esc(doc.name)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11px;color:#7B8694;">'+(doc.updatedAt?'提出日 '+esc(jd(doc.updatedAt)):'—')+'</div></div><span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(lbl)+'</span></div>'; }).join('')+'</div>';
+    else h += '<p style="margin:0;font-size:12.5px;color:#7B8694;">まだご提出済みの書類はありません。</p>';
+    h += '<button class="ms-outline" data-act="go" data-screen="docs" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">書類の提出ページを開く →</button>';
     h += '</section>';
     h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">'+esc(selMeta.label)+'固有の項目</h2>'+extra.fields.map(fieldRow).join('');
     h += '<p style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-left:3px solid #39B3A6;padding:11px 14px;border-radius:0 4px 4px 0;">'+esc(extra.note)+'</p>';
@@ -938,10 +991,21 @@ function renderYe(){
     var done = q.state==='done';
     var chip = done ? '<span style="flex-shrink:0;font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">回答済み</span>' : '<span style="flex-shrink:0;font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;background:#FDF3E7;color:#C2761F;">未回答</span>';
     var b = '<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid #F3F6F7;padding:13px 0;">';
-    b += '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(q.label)+'</span>'+chip+'</div>';
+    b += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div style="display:flex;flex-direction:column;gap:2px;min-width:0;"><span style="font-size:11px;font-weight:800;letter-spacing:.04em;color:#7B8694;">'+esc(q.label)+'</span><span style="font-size:14.5px;font-weight:800;color:'+(q.topic?'#2A3340':'#9AA6B2')+';">'+esc(q.topic||'学習テーマ（準備中）')+'</span></div>'+chip+'</div>';
+    if(q.intro) b += '<p style="margin:0;font-size:12px;color:#5B6672;line-height:1.75;">'+esc(q.intro)+'</p>';
+    if(q.goals && q.goals.length) b += '<div style="background:#F3F6F7;border-radius:6px;padding:10px 12px;"><div style="font-size:11px;font-weight:800;color:#1F7A72;margin-bottom:4px;">学習後にできるようになること</div><ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px;">'+q.goals.map(function(g){return '<li style="font-size:11.5px;color:#5B6672;line-height:1.6;">'+esc(g)+'</li>';}).join('')+'</ul></div>';
     b += '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+miniBtn('自習用PDF', q.pdf, 'M7 3h7l4 4v14H7zM13 3v5h5M9 13h6M9 16h6', false)+miniBtn('クイズに回答', q.form, 'M9 11l3 3 8-8M20 12v7H5V4h10', true)+'</div>';
     return b+'</div>';
   }).join('')+'</section>';
+  /* アーカイブ（終えた課題の復習） */
+  var doneTasks = y.tasks.filter(function(q){ return q.state==='done' && q.pdf; });
+  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">アーカイブ（終えた課題）</h2><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+doneTasks.length+' 件</span></div>';
+  h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">提出が終わった課題は、あとから何度でも復習できます。過去の月の課題も、完了後に順次追加されます。</p>';
+  if(doneTasks.length) h += doneTasks.map(function(q){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding:12px 0;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:1px;min-width:0;"><span style="font-size:13.5px;font-weight:700;color:#2A3340;">'+esc(q.label)+'</span>'+(q.topic?'<span style="font-size:11px;color:#7B8694;">'+esc(q.topic)+'</span>':'')+'</div><a href="'+esc(q.pdf)+'" target="_blank" rel="noopener" class="ms-link" style="flex-shrink:0;font-size:12.5px;font-weight:700;">自習用PDFで復習 ↗</a></div>'; }).join('');
+  else h += '<p style="margin:0;font-size:12.5px;color:#7B8694;">まだ終えた課題はありません。</p>';
+  h += '</section>';
+  /* 将来的な移管の予定 */
+  h += '<p class="span2" style="margin:0;font-size:11px;color:#9AA6B2;line-height:1.8;background:#F3F6F7;border-radius:6px;padding:10px 12px;">※ 将来的には、自習用PDFやGoogleフォームではなく<b style="color:#7B8694;">会員サイト内のコンテンツ</b>としてご提供する予定です（管理者側で登録・編集）。あわせて、AIによる自動採点・アドバイスや、学習状況のCRM（Zoho）連携も検討しています。</p>';
   /* 夢カナEnglishガイド — separate, last */
   h += '<section style="'+SECTION+'"><a href="'+esc(y.manual)+'" target="_blank" rel="noopener" style="text-decoration:none;display:flex;align-items:center;gap:12px;"><span style="flex-shrink:0;width:36px;height:36px;border-radius:9px;background:#E7F5F3;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1F7A72" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5zM8 9h7M8 12h7M8 15h4"></path></svg></span><span style="flex:1;display:flex;flex-direction:column;gap:2px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">夢カナEnglishガイド</span><span style="font-size:11.5px;color:#7B8694;">使い方ガイド（Google サイト）</span></span><span style="flex-shrink:0;color:#9AA6B2;font-size:16px;">↗</span></a></section>';
   h += '</div>';
@@ -1050,7 +1114,7 @@ function render(){
     h += '<div style="display:flex;min-height:100vh;align-items:stretch;">';
     /* sidebar */
     h += '<aside style="width:224px;flex:none;border-right:1px solid #E7EBEF;background:#fff;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:20px 14px;gap:3px;">';
-    h += '<div style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;"><img src="logo.webp" alt="夢カナ留学" style="height:24px;width:auto;display:block;" /></div>';
+    h += '<div class="ms-logo" data-act="go" data-screen="home" role="button" tabindex="0" aria-label="ホームへ" title="ホームへ" style="display:flex;align-items:center;gap:10px;padding:4px 8px 18px;"><img src="logo.webp" alt="夢カナ留学" style="height:24px;width:auto;display:block;pointer-events:none;" /></div>';
     h += nav.map(function(n){var on=state.screen===n.key;var bd=navBadge(n.key);var badge=bd>0?'<span style="margin-left:auto;flex-shrink:0;min-width:20px;height:20px;padding:0 6px;border-radius:100px;background:#E0453A;color:#fff;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;justify-content:center;">'+bd+'</span>':'';return '<button class="ms-side-nav" data-act="nav" data-screen="'+n.key+'" style="display:flex;align-items:center;gap:11px;text-align:left;border:none;background:'+(on?'#E7F5F3':'transparent')+';color:'+(on?'#1F7A72':'#5B6672')+';font-size:14px;font-weight:'+(on?700:600)+';padding:12px 12px;border-radius:8px;cursor:pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="'+(on?'#1F7A72':'#9AA6B2')+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+NAV_ICONS[n.key]+'"></path></svg><span>'+esc(n.label)+'</span>'+badge+'</button>';}).join('');
     h += '<div style="flex:1;"></div>';
     h += '<button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:10px 12px;border-radius:8px;cursor:pointer;">DEV パネル</button>';
@@ -1065,7 +1129,7 @@ function render(){
     var nav = navList('bottom');
     var navW = (MODES[mode]||MODES.mobile).width;
     h += '<div style="display:flex;flex-direction:column;padding-bottom:88px;">';
-    h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div style="display:flex;align-items:center;gap:10px;"><img src="logo.webp" alt="夢カナ留学" style="height:22px;width:auto;display:block;" /><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;border-left:1px solid #E7EBEF;padding-left:10px;">会員サイト</span></div><div style="display:flex;align-items:center;gap:9px;"><button data-act="nav" data-screen="notices" aria-label="お知らせ" style="position:relative;border:1px solid #E7EBEF;background:#fff;border-radius:100px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="'+(state.screen==='notices'?'#1F7A72':'#5B6672')+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICON_BELL+'"></path></svg>'+(unreadNotices()>0?'<span style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:100px;background:#E0453A;color:#fff;font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;">'+unreadNotices()+'</span>':'')+'</button><button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:100px;cursor:pointer;">DEV</button></div></header>';
+    h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div class="ms-logo" data-act="go" data-screen="home" role="button" tabindex="0" aria-label="ホームへ" title="ホームへ" style="display:flex;align-items:center;gap:10px;"><img src="logo.webp" alt="夢カナ留学" style="height:22px;width:auto;display:block;pointer-events:none;" /><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;border-left:1px solid #E7EBEF;padding-left:10px;pointer-events:none;">会員サイト</span></div><div style="display:flex;align-items:center;gap:9px;"><button data-act="nav" data-screen="notices" aria-label="お知らせ"'+(unreadNotices()>0?' class="ms-bell"':'')+' style="position:relative;border:1px solid #E7EBEF;background:#fff;border-radius:100px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="'+(state.screen==='notices'?'#1F7A72':'#5B6672')+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICON_BELL+'"></path></svg>'+(unreadNotices()>0?'<span class="ms-bell-dot" style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:100px;background:#E0453A;color:#fff;font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;">'+unreadNotices()+'</span>':'')+'</button><button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:100px;cursor:pointer;">DEV</button></div></header>';
     h += '<div style="padding:20px 18px 8px;display:flex;flex-direction:column;gap:6px;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div>';
     h += screenContent();
     if(state.devOpen) h += renderDev();
@@ -1082,8 +1146,9 @@ function render(){
 document.getElementById('frame').addEventListener('click', function(e){
   var el = e.target.closest('[data-act]'); if(!el) return;
   var a = el.getAttribute('data-act');
+  var prevScreen = state.screen;
   switch(a){
-    case 'login': state.screen='home'; state.loginError=false; state.devOpen=false; break;
+    case 'login': state.screen='home'; state.loginError=false; state.devOpen=false; state.cheer=pickCheer(); break;
     case 'toggleLoginError': state.loginError=!state.loginError; break;
     case 'toggleDev': state.devOpen=!state.devOpen; break;
     case 'toggleChat': state.chatOpen=!state.chatOpen; break;
@@ -1095,7 +1160,6 @@ document.getElementById('frame').addEventListener('click', function(e){
       if(scr==='booking') state.bookingStep=1;
       if(scr==='notices') state.noticeId=null;
       break;
-    case 'toggleTodo': var id=el.getAttribute('data-id'); state.todoDone[id]=!state.todoDone[id]; break;
     case 'todoGo': { var tid=el.getAttribute('data-id'); var td=DATA.todos.filter(function(x){return x.id===tid;})[0]; state.devOpen=false; if(td && td.target==='task'){ state.screen='task'; state.taskId=tid; } else { state.screen=(td&&td.target)||'todo'; } break; }
     case 'openNotice': { var nid=el.getAttribute('data-id'); var n=DATA.notices.filter(function(x){return x.id===nid;})[0]; if(n){ n.unread=false; state.screen=n.target||'notices'; } state.devOpen=false; state.noticeId=null; break; }
     case 'setStage': state.journeyStage=Number(el.getAttribute('data-n')); break;
@@ -1110,9 +1174,11 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'logout': state.screen='login'; state.devOpen=false; break;
     default: return;
   }
+  if(state.screen!==prevScreen) pushHist(); else replaceHist();
   render();
 });
 
+replaceHist();
 render();
 </script>
 </body>
