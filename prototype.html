@@ -48,7 +48,8 @@
 "use strict";
 
 var DATA = {
-  "member": { "name":"山田 花奈", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。" },
+  "member": { "name":"山田 花奈", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。",
+    "jtb": { "type":"サポートあり", "months":12, "code":"JTB-2026-0431" } },
   "ye": {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
     "leave":{ "start":"2026-10-01", "end":"2026-10-31" },
@@ -418,7 +419,7 @@ var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
   viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
-  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes', resCountry:'',
+  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:''
 };
@@ -577,6 +578,12 @@ function renderHome(){
     {label:'契約タイプ',value:'短期／'+m.contractType,field:'member.contractType'},
     {label:'学校・滞在先手配',value:state.arrangement==='yes'?'あり':'なし',field:'member.arrangement'}
   ];
+  var jtbOn = state.jtbType==='support';
+  contractRows.push({label:'JTB契約形態',value:jtbOn?m.jtb.type:'サポートなし',field:'member.jtb.type'});
+  if(jtbOn){
+    contractRows.push({label:'JTB期間（月数）',value:m.jtb.months+'ヶ月',field:'member.jtb.months'});
+    contractRows.push({label:'JTBコード',value:m.jtb.code,field:'member.jtb.code'});
+  }
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">契約情報</h2>'+contractRows.map(plainRow).join('')+'<div style="align-self:flex-start;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;display:inline-flex;align-items:center;gap:9px;cursor:not-allowed;opacity:.85;">解約手数料シミュレーター<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#E7EBEF;color:#7B8694;">次フェーズ</span></div><p style="margin:0;font-size:11px;color:#7B8694;">'+esc(m.contractNote)+'</p></section>';
   h += '</div>';
   return h;
@@ -1079,6 +1086,7 @@ function renderDev(){
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ手続き — member.visaHandling</span><div style="display:flex;gap:6px;">'+optBtns('visaHandling',[{label:'代行',value:'agency'},{label:'ご自身で申請',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">夢カナEnglish 契約 — member.ye.has</span><div style="display:flex;gap:6px;">'+optBtns('yeContract',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">「あり」のとき、契約情報に受講期間・メニューに夢カナEnglishを表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">受講期間の補足（休学期間） — member.ye.leave</span><div style="display:flex;gap:6px;">'+optBtns('yeLeave',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">夢カナEnglishページの受講期間に「休学期間」を表示します。</span></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">JTB契約形態 — member.jtb.type</span><div style="display:flex;gap:6px;">'+optBtns('jtbType',[{label:'サポートあり',value:'support'},{label:'サポートなし',value:'none'}])+'</div><span style="font-size:11px;color:#7B8694;">「サポートなし」のとき、JTB期間・JTBコードは非表示になります。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">マンツーマンレッスン 契約 — member.ye.private</span><div style="display:flex;gap:6px;">'+optBtns('yePrivate',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">「あり」のとき、受講期間をグループ／マンツーマンの2種類に分けて表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ロードマップ 現在地 — journey.current</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+DATA.journey.stages.map(function(s,i){var n=i+1;var on=(state.journeyStage||DATA.journey.current)===n;return '<button data-act="setStage" data-n="'+n+'" title="'+esc(s.ja)+'" style="border:1px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#39B3A6':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+n+'</button>';}).join('')+'</div><span style="font-size:11px;color:#7B8694;">ホームの「夢カナロードマップ」で現在のステップを切り替えます。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">学校・滞在先の手配 — member.arrangement</span><div style="display:flex;gap:6px;">'+optBtns('arrangement',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">※対象者は全体の約20%です</span></div>';
