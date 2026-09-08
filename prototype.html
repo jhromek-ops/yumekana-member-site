@@ -418,7 +418,7 @@ var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
   viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
-  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes',
+  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes', resCountry:'',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:''
 };
@@ -748,17 +748,33 @@ var MAT_CATS = [
 ];
 function renderResources(){
   var d = DATA;
-  var code = state.country==='undecided' ? effectiveCountry() : state.country;
-  var meta = countryMeta(code);
-  var country = d.materials[code] || [];
+  var undecided = state.country==='undecided';
+  var picked = undecided ? (state.resCountry||'') : state.country;
+  var meta = picked ? countryMeta(picked) : null;
+  var country = picked ? (d.materials[picked]||[]) : [];
   var common = d.materials.common || [];
   var linkA = function(m){ return '<a href="'+esc(m.u)+'" target="_blank" rel="noopener" class="ms-notice" style="text-decoration:none;display:flex;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding:12px 8px;margin:0 -8px;"><span class="ms-link" style="flex:1;font-size:13.5px;font-weight:600;">'+esc(m.t)+'</span><span style="flex-shrink:0;color:#9AA6B2;font-size:15px;">↗</span></a>'; };
   var group = function(list){ return MAT_CATS.map(function(c){ var items=list.filter(function(m){return m.c===c.k;}); if(!items.length) return ''; return '<section style="'+SECTION+'gap:0;"><div style="display:flex;align-items:center;gap:9px;padding-bottom:6px;"><span style="flex-shrink:0;width:30px;height:30px;border-radius:8px;background:#E7F5F3;display:flex;align-items:center;justify-content:center;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1F7A72" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+c.icon+'"></path></svg></span><h2 style="margin:0;font-size:14.5px;font-weight:700;">'+c.label+'</h2></div>'+items.map(linkA).join('')+'</section>'; }).join(''); };
   var h = '<div class="appcontent">';
-  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">夢カナが作成した資料・ガイドをまとめています。各リンクから外部サイト（Google ドライブ／スライド／Classroom）が開きます。渡航国は現在「'+esc(meta.label)+'」で表示しています（DEVパネルで切替可能）。</p>';
-  h += '<div class="span2" style="display:flex;align-items:center;gap:10px;margin-top:2px;">'+flagSVG(code,30)+'<h2 style="margin:0;font-size:15px;font-weight:800;color:#2A3340;">'+esc(meta.label)+'の資料</h2></div>';
-  if(country.length) h += group(country);
-  else h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-radius:8px;padding:14px 16px;">'+esc(meta.label)+'向けの資料は現在準備中です。下記の「各国共通の資料」をご覧ください。</p>';
+  h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">夢カナが作成した資料・ガイドをまとめています。各リンクから外部サイト（Google ドライブ／スライド／Classroom）が開きます。'+(undecided?'渡航先が未定のため、下のメニューから国を選ぶと、その国の資料が表示されます。':'渡航国は現在「'+esc(meta.label)+'」で表示しています（DEVパネルで切替可能）。')+'</p>';
+  /* 渡航先が未定の場合：国を選んでその国の資料だけを表示する */
+  if(undecided){
+    var opts = d.countries.filter(function(c){ return c.code!=='undecided' && (d.materials[c.code]||[]).length; });
+    h += '<section class="span2" style="'+SECTION+'gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">渡航先を選んで資料を見る</h2><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">気になる国を選ぶと、その国の資料だけが表示されます。何度でも切り替えられます。</p>';
+    h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">'+opts.map(function(c){
+      var on = c.code===picked;
+      return '<button data-act="setResCountry" data-code="'+esc(c.code)+'" style="display:flex;align-items:center;gap:9px;text-align:left;border:1.5px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#E7F5F3':'#FFFFFF')+';color:'+(on?'#1F5C56':'#2A3340')+';font-size:13px;font-weight:'+(on?800:600)+';padding:10px 12px;border-radius:8px;cursor:pointer;min-height:48px;">'+flagSVG(c.code,24)+'<span style="min-width:0;">'+esc(c.label)+'</span>'+(on?'<span style="margin-left:auto;flex-shrink:0;color:#2F9E93;font-size:14px;font-weight:800;">✓</span>':'')+'</button>';
+    }).join('')+'</div>';
+    if(picked) h += '<button data-act="setResCountry" data-code="" style="align-self:flex-start;border:none;background:none;color:#7B8694;font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer;padding:4px 0;min-height:32px;">選択を解除</button>';
+    h += '</section>';
+  }
+  if(picked){
+    h += '<div class="span2" style="display:flex;align-items:center;gap:10px;margin-top:2px;">'+flagSVG(picked,30)+'<h2 style="margin:0;font-size:15px;font-weight:800;color:#2A3340;">'+esc(meta.label)+'の資料</h2></div>';
+    if(country.length) h += group(country);
+    else h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-radius:8px;padding:14px 16px;">'+esc(meta.label)+'向けの資料は現在準備中です。下記の「各国共通の資料」をご覧ください。</p>';
+  } else {
+    h += '<p class="span2" style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-radius:8px;padding:14px 16px;line-height:1.7;">上のメニューから渡航先を選ぶと、その国の資料が表示されます。まだ迷っている場合は、下の「各国共通の資料」からご覧ください。</p>';
+  }
   h += '<div class="span2" style="display:flex;align-items:center;gap:10px;border-top:1px solid #E7EBEF;margin-top:14px;padding-top:16px;"><h2 style="margin:0;font-size:15px;font-weight:800;color:#2A3340;">各国共通の資料</h2></div>';
   h += group(common);
   h += '<p class="span2" style="margin:0;font-size:11px;color:#9AA6B2;line-height:1.8;background:#F3F6F7;border-radius:6px;padding:10px 12px;">※ 将来的には、PDFやGoogle Classroomではなく<b style="color:#7B8694;">会員サイト内のコンテンツ</b>として閲覧できるよう移管を予定しています。</p>';
@@ -1214,6 +1230,7 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'selectSlot': state.slotId=el.getAttribute('data-id'); break;
     case 'step': state.bookingStep=Number(el.getAttribute('data-step')); break;
     case 'setCountry': state.country=el.getAttribute('data-code'); break;
+    case 'setResCountry': state.resCountry=el.getAttribute('data-code')||''; break;
     case 'opt': state[el.getAttribute('data-key')]=el.getAttribute('data-value'); break;
     case 'toggleOri': state.oriDone=!state.oriDone; break;
     case 'toggleFields': state.showFields=!state.showFields; break;
