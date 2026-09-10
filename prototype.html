@@ -34,6 +34,9 @@
   @keyframes msRing{0%{box-shadow:0 0 0 0 rgba(224,69,58,.5);}70%{box-shadow:0 0 0 9px rgba(224,69,58,0);}100%{box-shadow:0 0 0 0 rgba(224,69,58,0);}}
   .ms-bell{animation:msPulse 1.9s ease-in-out infinite;}
   .ms-bell-dot{animation:msRing 1.9s ease-out infinite;}
+  .ms-sns{transition:border-color .12s,background .12s;}
+  .ms-sns:hover{border-color:#39B3A6 !important;background:#E7F5F3 !important;}
+  .ms-sns:hover svg{stroke:#1F7A72 !important;}
   .ms-logo{cursor:pointer;}
   .ms-logo:hover{opacity:.72;}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
@@ -234,6 +237,10 @@ var DATA = {
       { "t":"航空券手配代理店 MTCジャパン 説明会", "c":"event", "u":"https://drive.google.com/file/d/1giRyyB6C0cehDX9ZkQohMf_B4jkxUDmc/view" },
       { "t":"夢カナ社員がおすすめする洋画3選", "c":"content", "u":"https://drive.google.com/file/d/1KtXrN7O232aLHCd430-Pw5CMUDDOdfdA/view" },
       { "t":"スタッフおすすめの洋楽5選", "c":"content", "u":"https://drive.google.com/file/d/1SfuGsHWsD81omq37Ddg4vj1IHqjf0bPw/view" },
+      { "t":"Instagram（日々の留学情報）", "c":"sns", "u":"https://www.instagram.com/yumekana.ryugaku/" },
+      { "t":"TikTok（ショート動画）", "c":"sns", "u":"https://www.tiktok.com/@yumekana.ryugaku" },
+      { "t":"YouTube（体験談・解説）", "c":"sns", "u":"https://www.youtube.com/@ryugaku.yume-kana/" },
+      { "t":"Spotify（夢カナPodcast）", "c":"sns", "u":"https://open.spotify.com/show/2RDOC9Jlzx6G576JxTu7R8" },
       { "t":"友達紹介制度", "c":"campaign", "u":"https://drive.google.com/file/d/1WurZeWVaxD8oaC-dRB6Ku11ubKNEd-Cx/view" }
     ]
   },
@@ -585,6 +592,7 @@ function renderHome(){
     contractRows.push({label:'JTBコード',value:m.jtb.code,field:'member.jtb.code'});
   }
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">契約情報</h2>'+contractRows.map(plainRow).join('')+'<div style="align-self:flex-start;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;display:inline-flex;align-items:center;gap:9px;cursor:not-allowed;opacity:.85;">解約手数料シミュレーター<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#E7EBEF;color:#7B8694;">次フェーズ</span></div><p style="margin:0;font-size:11px;color:#7B8694;">'+esc(m.contractNote)+'</p></section>';
+  h += snsCard();
   h += '</div>';
   return h;
 }
@@ -742,6 +750,32 @@ function renderYeArchive(){
   return h;
 }
 
+var SNS = [
+  { name:'Instagram', sub:'日々の留学情報', u:'https://www.instagram.com/yumekana.ryugaku/', bg:'linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)',
+    icon:'M7 3.2h10A3.8 3.8 0 0 1 20.8 7v10a3.8 3.8 0 0 1-3.8 3.8H7A3.8 3.8 0 0 1 3.2 17V7A3.8 3.8 0 0 1 7 3.2zM12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2M17.1 6.9h.01' },
+  { name:'TikTok', sub:'ショート動画', u:'https://www.tiktok.com/@yumekana.ryugaku', bg:'#111111',
+    icon:'M14.4 3.2v10.9a3.6 3.6 0 1 1-3.6-3.6c.4 0 .8.05 1.1.16M14.4 3.2c.5 2.5 2.5 4.3 4.9 4.5' },
+  { name:'YouTube', sub:'体験談・解説', u:'https://www.youtube.com/@ryugaku.yume-kana/', bg:'#FF0000',
+    icon:'M3.6 7.4a2.9 2.9 0 0 1 2-2C7.5 5 12 5 12 5s4.5 0 6.4.4a2.9 2.9 0 0 1 2 2c.4 1.8.4 4.6.4 4.6s0 2.8-.4 4.6a2.9 2.9 0 0 1-2 2C16.5 19 12 19 12 19s-4.5 0-6.4-.4a2.9 2.9 0 0 1-2-2C3.2 14.8 3.2 12 3.2 12s0-2.8.4-4.6zM10.3 9.4l4.5 2.6-4.5 2.6z' },
+  { name:'Spotify', sub:'夢カナPodcast', u:'https://open.spotify.com/show/2RDOC9Jlzx6G576JxTu7R8', bg:'#1DB954',
+    icon:'M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6M7.4 14.6c2.7-.8 5.6-.6 7.9.7M6.9 11.5c3.2-1 6.8-.7 9.6 1M6.7 8.4c3.8-1.2 8.1-.8 11.3 1.2' }
+];
+/* B: ホームの「フォローする」カード（ブランドカラー） */
+function snsCard(){
+  return '<section class="span2" style="'+SECTION+'gap:10px;"><div style="display:flex;flex-direction:column;gap:2px;"><h2 style="margin:0;font-size:15px;font-weight:700;">夢カナ留学 公式SNS</h2><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">最新情報・現地の様子・体験談を発信しています。ぜひフォローしてください。</p></div>'
+    + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">'
+    + SNS.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener" class="ms-shortcut" style="text-decoration:none;display:flex;align-items:center;gap:11px;border:1.5px solid #C9D2D9;background:#FFFFFF;border-radius:8px;padding:11px 12px;min-height:60px;"><span style="flex-shrink:0;width:36px;height:36px;border-radius:100px;background:'+s.bg+';display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+s.icon+'"></path></svg></span><span style="display:flex;flex-direction:column;gap:1px;min-width:0;"><span style="font-size:13.5px;font-weight:800;color:#2A3340;">'+esc(s.name)+'</span><span style="font-size:10.5px;color:#7B8694;">'+esc(s.sub)+'</span></span></a>'; }).join('')
+    + '</div></section>';
+}
+/* A: 全ページ共通フッター（モノクロ） */
+function snsFooter(){
+  return '<div style="border-top:1px solid #E7EBEF;margin-top:10px;padding:18px 18px 22px;background:#FAFCFC;display:flex;flex-direction:column;align-items:center;gap:10px;">'
+    + '<span style="font-size:10.5px;letter-spacing:.1em;font-weight:700;color:#9AA6B2;">夢カナ留学 公式SNS</span>'
+    + '<div style="display:flex;gap:12px;">'
+    + SNS.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener" class="ms-sns" aria-label="'+esc(s.name)+'" title="'+esc(s.name)+'（'+esc(s.sub)+'）" style="width:38px;height:38px;border-radius:100px;border:1px solid #E1E6EA;background:#FFFFFF;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#7B8694" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+s.icon+'"></path></svg></a>'; }).join('')
+    + '</div></div>';
+}
+
 var MAT_CATS = [
   { k:'handbook', label:'留学ハンドブック', icon:'M5 4h11l3 3v13H5zM8 9h7M8 12h7M8 15h4' },
   { k:'visa', label:'ビザ・渡航手続き', icon:'M4 6h16v12H4zM8 11h4M8 15h8' },
@@ -751,6 +785,7 @@ var MAT_CATS = [
   { k:'event', label:'イベント・説明会', icon:'M4 7h16v13H4zM4 11h16M8 3v4M16 3v4' },
   { k:'voice', label:'渡航者インタビュー', icon:'M5 5h14v9H9l-4 4zM9 9h6M9 11.5h4' },
   { k:'content', label:'コンテンツ', icon:'M4 5h16v14H4zM10 9l5 3-5 3z' },
+  { k:'sns', label:'公式SNS', icon:'M7 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0M22 6a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0M22 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0M6.8 10.8l10.5-3.6M6.8 13.2l10.5 3.6' },
   { k:'campaign', label:'キャンペーン', icon:'M4 12l15-7-4 15-4-6-7-2z' }
 ];
 function renderResources(){
@@ -1187,6 +1222,7 @@ function render(){
     h += '<div style="flex:1;min-width:0;display:flex;flex-direction:column;">';
     h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div style="display:flex;flex-direction:column;gap:2px;min-width:0;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div><div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">'+backBtn()+'<div style="text-align:right;font-size:12px;color:#7B8694;line-height:1.5;">'+esc(DATA.member.name)+' さま<br><span style="font-variant-numeric:tabular-nums;">ID '+esc(DATA.member.memberId)+'</span></div></div></header>';
     h += screenContent();
+    h += snsFooter();
     h += '</div></div>';
     if(state.devOpen) h += renderDev();
   } else {
@@ -1196,6 +1232,7 @@ function render(){
     h += '<header style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #E7EBEF;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;"><div class="ms-logo" data-act="go" data-screen="home" role="button" tabindex="0" aria-label="ホームへ" title="ホームへ" style="display:flex;align-items:center;gap:10px;"><img src="logo.webp" alt="夢カナ留学" style="height:22px;width:auto;display:block;pointer-events:none;" /><span style="font-size:11px;letter-spacing:.1em;color:#7B8694;border-left:1px solid #E7EBEF;padding-left:10px;pointer-events:none;">会員サイト</span></div><div style="display:flex;align-items:center;gap:9px;"><button data-act="nav" data-screen="notices" aria-label="お知らせ"'+(unreadNotices()>0?' class="ms-bell"':'')+' style="position:relative;border:1px solid #E7EBEF;background:#fff;border-radius:100px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="'+(state.screen==='notices'?'#1F7A72':'#5B6672')+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICON_BELL+'"></path></svg>'+(unreadNotices()>0?'<span class="ms-bell-dot" style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:100px;background:#E0453A;color:#fff;font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;">'+unreadNotices()+'</span>':'')+'</button><button data-act="toggleDev" style="border:1px dashed #C9D2D9;background:#F3F6F7;color:#7B8694;font-size:11px;font-weight:700;letter-spacing:.06em;padding:7px 11px;border-radius:100px;cursor:pointer;">DEV</button></div></header>';
     h += '<div style="padding:20px 18px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div style="display:flex;flex-direction:column;gap:6px;min-width:0;"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7B8694;">'+esc(t.en)+'</div><h1 style="margin:0;font-size:21px;font-weight:700;">'+esc(t.ja)+'</h1></div><div style="flex-shrink:0;">'+backBtn()+'</div></div>';
     h += screenContent();
+    h += snsFooter();
     if(state.devOpen) h += renderDev();
     h += '<nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:'+navW+';background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #E7EBEF;display:grid;grid-template-columns:repeat('+nav.length+',1fr);z-index:30;">';
     h += nav.map(function(n){var on=state.screen===n.key;var col=on?'#1F7A72':'#9AA6B2';return '<button data-act="nav" data-screen="'+n.key+'" style="border:none;background:none;cursor:pointer;padding:9px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="'+col+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+NAV_ICONS[n.key]+'"></path></svg><span style="font-size:11px;font-weight:'+(on?700:500)+';color:'+(on?'#2A3340':'#9AA6B2')+';white-space:nowrap;">'+esc(n.short||n.label)+'</span></button>';}).join('');
