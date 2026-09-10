@@ -592,7 +592,7 @@ function renderHome(){
     contractRows.push({label:'JTBコード',value:m.jtb.code,field:'member.jtb.code'});
   }
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">契約情報</h2>'+contractRows.map(plainRow).join('')+'<div style="align-self:flex-start;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;display:inline-flex;align-items:center;gap:9px;cursor:not-allowed;opacity:.85;">解約手数料シミュレーター<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#E7EBEF;color:#7B8694;">次フェーズ</span></div><p style="margin:0;font-size:11px;color:#7B8694;">'+esc(m.contractNote)+'</p></section>';
-  h += snsCard();
+  h += membersIgCard();
   h += '</div>';
   return h;
 }
@@ -760,12 +760,21 @@ var SNS = [
   { name:'Spotify', sub:'夢カナPodcast', u:'https://open.spotify.com/show/2RDOC9Jlzx6G576JxTu7R8', bg:'#1DB954',
     icon:'M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6M7.4 14.6c2.7-.8 5.6-.6 7.9.7M6.9 11.5c3.2-1 6.8-.7 9.6 1M6.7 8.4c3.8-1.2 8.1-.8 11.3 1.2' }
 ];
-/* B: ホームの「フォローする」カード（ブランドカラー） */
-function snsCard(){
-  return '<section class="span2" style="'+SECTION+'gap:10px;"><div style="display:flex;flex-direction:column;gap:2px;"><h2 style="margin:0;font-size:15px;font-weight:700;">夢カナ留学 公式SNS</h2><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">最新情報・現地の様子・体験談を発信しています。ぜひフォローしてください。</p></div>'
-    + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">'
-    + SNS.map(function(s){ return '<a href="'+esc(s.u)+'" target="_blank" rel="noopener" class="ms-shortcut" style="text-decoration:none;display:flex;align-items:center;gap:11px;border:1.5px solid #C9D2D9;background:#FFFFFF;border-radius:8px;padding:11px 12px;min-height:60px;"><span style="flex-shrink:0;width:36px;height:36px;border-radius:100px;background:'+s.bg+';display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+s.icon+'"></path></svg></span><span style="display:flex;flex-direction:column;gap:1px;min-width:0;"><span style="font-size:13.5px;font-weight:800;color:#2A3340;">'+esc(s.name)+'</span><span style="font-size:10.5px;color:#7B8694;">'+esc(s.sub)+'</span></span></a>'; }).join('')
-    + '</div></section>';
+/* B: ホームの「夢カナ生限定Instagram」カード（会員限定・申請フォーム→フォローの順） */
+function membersIgCard(){
+  var IG='https://www.instagram.com/yumekana_members_only/';
+  var FORM='https://docs.google.com/forms/d/e/1FAIpQLSfD_5knX9q_U6dlOBT6TGVCFIf49C8pTfRd3cgdUiORaXD2lA/viewform';
+  var step = function(n,title,sub,href,accent){
+    return '<a href="'+esc(href)+'" target="_blank" rel="noopener" class="ms-shortcut" style="text-decoration:none;display:flex;align-items:center;gap:12px;border:1.5px solid #C9D2D9;background:#FFFFFF;border-radius:8px;padding:12px 14px;min-height:62px;"><span style="flex-shrink:0;width:30px;height:30px;border-radius:100px;background:'+accent+';color:#FFFFFF;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">'+n+'</span><span style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0;"><span style="font-size:13.5px;font-weight:800;color:#2A3340;">'+esc(title)+'</span><span style="font-size:11px;color:#7B8694;line-height:1.6;">'+esc(sub)+'</span></span><span style="flex-shrink:0;color:#9AA6B2;font-size:15px;">↗</span></a>';
+  };
+  var h = '<section class="span2" style="'+SECTION+'gap:11px;">';
+  h += '<div style="display:flex;align-items:center;gap:11px;"><span style="flex-shrink:0;width:38px;height:38px;border-radius:100px;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);display:flex;align-items:center;justify-content:center;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+SNS[0].icon+'"></path></svg></span><div style="display:flex;flex-direction:column;gap:2px;min-width:0;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><h2 style="margin:0;font-size:15px;font-weight:700;">夢カナ生限定Instagram</h2><span style="flex-shrink:0;font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#EEF0FB;color:#4A56B8;">会員限定</span></div><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.6;">夢カナ生だけが見られる限定アカウントです。</p></div></div>';
+  h += '<p style="margin:0;font-size:11.5px;color:#B4522A;background:#FDF3E7;border-radius:6px;padding:9px 12px;line-height:1.7;">フォロー申請を承認するために、<b>先に申請フォームのご提出</b>が必要です。下記の順にお進みください。</p>';
+  h += '<div style="display:flex;flex-direction:column;gap:8px;">';
+  h += step('1','フォロー申請フォームを提出','はじめにこちらのフォームにご回答ください（Google フォーム）',FORM,'#EF7A48');
+  h += step('2','Instagramでフォロー申請','フォーム提出後、限定アカウントへフォロー申請をお送りください',IG,'#DD2A7B');
+  h += '</div></section>';
+  return h;
 }
 /* A: 全ページ共通フッター（モノクロ） */
 function snsFooter(){
