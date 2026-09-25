@@ -233,6 +233,35 @@
   .member-role{font-size:12px;color:var(--sub);margin:0}
 
   footer{text-align:center;font-size:11.5px;color:var(--sub);padding:20px 0 40px}
+  /* 承認用サマリー */
+  .approval{border:2px solid var(--orange);background:linear-gradient(180deg,#fff9f5,#fff)}
+  .apv-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .apv-badge{font-size:11px;font-weight:800;color:#fff;background:var(--orange);padding:4px 12px;border-radius:999px;letter-spacing:.04em}
+  .apv-title{font-size:19px;font-weight:800;margin:0;color:var(--navy)}
+  .apv-lead{font-size:13px;color:var(--sub);line-height:1.85;margin:0 0 16px}
+  .apv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:18px}
+  .apv-card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:4px}
+  .apv-card.apv-main{border:2px solid var(--teal);background:var(--teal-soft)}
+  .apv-k{font-size:11px;font-weight:800;color:var(--sub);letter-spacing:.05em}
+  .apv-v{font-size:21px;font-weight:800;color:var(--navy);font-family:'SF Mono',Consolas,monospace}
+  .apv-main .apv-v{color:var(--teal-dark)}
+  .apv-n{font-size:11px;color:var(--sub);line-height:1.65}
+  .apv-dec{border-top:1px dashed var(--line);padding-top:16px}
+  .apv-dec-t{font-size:14px;font-weight:800;margin:0 0 10px;color:var(--ink)}
+  .apv-dec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+  .apv-dec li{font-size:12.5px;line-height:1.85;color:var(--ink)}
+  .apv-foot{font-size:11.5px;color:var(--sub);margin:16px 0 0;font-style:italic;line-height:1.8}
+  /* DX連携項目 */
+  .lk-group{margin-bottom:18px}
+  .lk-gt{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+  .lk-gname{font-size:13.5px;font-weight:800;color:var(--ink)}
+  .lk-badge{font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:999px}
+  .lk-new{background:var(--orange-soft);color:#b4522a}
+  .lk-chk{background:var(--warn-soft);color:#9a6b12}
+  .lk-has{background:var(--ok-soft);color:#1f8b4c}
+  .lk-item{border-left:3px solid var(--line);padding:8px 0 8px 12px;margin-bottom:7px}
+  .lk-n{font-size:12.5px;font-weight:700;color:var(--ink);display:block}
+  .lk-d{font-size:11.5px;color:var(--sub);line-height:1.7;display:block;margin-top:2px}
 </style>
 </head>
 <body>
@@ -260,6 +289,40 @@
       </div>
       <div class="updated" data-ja="最終更新：2026年9月25日" data-en="Last updated: Sep 25, 2026">最終更新：2026年9月25日</div>
     </div>
+
+    <section class="panel approval">
+      <div class="apv-head">
+        <span class="apv-badge" data-ja="承認のお願い" data-en="Approval Requested">承認のお願い</span>
+        <h2 class="apv-title" data-ja="お客様公開スケジュール（改訂版）" data-en="Customer Launch Schedule (Revised)">お客様公開スケジュール（改訂版）</h2>
+      </div>
+      <p class="apv-lead" data-ja="DXチームの「VISA商談移行 9月30日完了」を受けて、スケジュールを見直しました。当初の「10月1日 お客様公開」は、ビザデータ連携の前提が整わないため変更します。10月は社内・限定パイロットに位置づけを変更し、お客様公開は11月とします。" data-en="Following the DX team's confirmation that the visa deal migration completes on Sep 30, we have revised the schedule. The original Oct 1 customer launch is not achievable because the visa data integration cannot be ready by then. October becomes an internal/limited pilot, and the customer launch moves to November.">DXチームの「VISA商談移行 9月30日完了」を受けて、スケジュールを見直しました。当初の「10月1日 お客様公開」は、ビザデータ連携の前提が整わないため変更します。10月は社内・限定パイロットに位置づけを変更し、お客様公開は11月とします。</p>
+      <div class="apv-grid">
+        <div class="apv-card apv-main">
+          <span class="apv-k" data-ja="新規顧客向け 公開" data-en="Launch — new customers">新規顧客向け 公開</span>
+          <span class="apv-v" data-ja="2026年11月" data-en="Nov 2026">2026年11月</span>
+          <span class="apv-n" data-ja="VISA商談移行9/30完了 → 10月に実装・結合" data-en="Visa migration done Sep 30 → build &amp; integrate in October">VISA商談移行9/30完了 → 10月に実装・結合</span>
+        </div>
+        <div class="apv-card">
+          <span class="apv-k" data-ja="全顧客（旧顧客含む）" data-en="All customers (incl. existing)">全顧客（旧顧客含む）</span>
+          <span class="apv-v" data-ja="2027年1月" data-en="Jan 2027">2027年1月</span>
+          <span class="apv-n" data-ja="12月の旧顧客移行が前提 ※判断事項②" data-en="Depends on the December data migration — see decision 2">12月の旧顧客移行が前提 ※判断事項②</span>
+        </div>
+        <div class="apv-card">
+          <span class="apv-k" data-ja="社内・限定パイロット" data-en="Internal / limited pilot">社内・限定パイロット</span>
+          <span class="apv-v" data-ja="2026年10月" data-en="Oct 2026">2026年10月</span>
+          <span class="apv-n" data-ja="UXテスト結果を反映し社内で確認" data-en="Internal review with UX test findings applied">UXテスト結果を反映し社内で確認</span>
+        </div>
+      </div>
+      <div class="apv-dec">
+        <p class="apv-dec-t" data-ja="ご承認・ご判断いただきたい3点" data-en="Three items for your approval / decision">ご承認・ご判断いただきたい3点</p>
+        <ol>
+          <li data-ja="① 公開スケジュール：新規顧客は2026年11月、全顧客は2027年1月とする案でよいか。" data-en="1. The launch schedule: November 2026 for new customers and January 2027 for all customers.">① 公開スケジュール：新規顧客は2026年11月、全顧客は2027年1月とする案でよいか。</li>
+          <li data-ja="② 旧顧客をスコープに含めるか：含めない場合、12月の旧顧客移行が不要となり全体が軽くなります（以前「旧顧客は会員サイトを使えなくてよいのでは」とのご意見をいただいています）。正式な方針をご判断ください。" data-en="2. Whether existing (pre-Zoho) customers are in scope. Excluding them removes the December migration and simplifies the whole plan — we previously heard the view that existing customers may not need the member site. We need a formal decision.">② 旧顧客をスコープに含めるか：含めない場合、12月の旧顧客移行が不要となり全体が軽くなります（以前「旧顧客は会員サイトを使えなくてよいのでは」とのご意見をいただいています）。正式な方針をご判断ください。</li>
+          <li data-ja="③ 第1弾のスコープ：「渡航までのToDo」と「夢カナロードマップ」はZoho側に対応項目が無く、新規構築が必要です（DXより「項目が無数にあり時間が掛かる可能性」との報告）。11月公開を優先する場合、簡易版とするか第2弾送りとするかをご判断ください。" data-en="3. Scope of the first release: the ToDo list and the Yumekana Roadmap have no counterpart in Zoho and must be built from scratch (DX notes there are many items and it may take time). To protect the November launch, we need a decision to either simplify them or defer them to the second release.">③ 第1弾のスコープ：「渡航までのToDo」と「夢カナロードマップ」はZoho側に対応項目が無く、新規構築が必要です（DXより「項目が無数にあり時間が掛かる可能性」との報告）。11月公開を優先する場合、簡易版とするか第2弾送りとするかをご判断ください。</li>
+        </ol>
+      </div>
+      <p class="apv-foot" data-ja="※ 9月30日（水）に、たっちゃんの帰国後にUXテストの前倒しを相談します（フロントエンドは完成済みのため、バックエンドの完成を待たずに実施可能）。確定後、本ページを更新のうえ再共有します。" data-en="Note: on Wednesday Sep 30, after Tatchan returns, we will discuss bringing the UX test forward — the frontend is already complete, so testing does not need to wait for the backend. We will update this page and re-share once confirmed.">※ 9月30日（水）に、たっちゃんの帰国後にUXテストの前倒しを相談します（フロントエンドは完成済みのため、バックエンドの完成を待たずに実施可能）。確定後、本ページを更新のうえ再共有します。</p>
+    </section>
 
     <section class="panel">
       <h2 class="sectit" data-ja="なぜ必要か" data-en="Why This Matters">なぜ必要か</h2>
@@ -316,10 +379,32 @@
             <div class="step-num">3</div>
             <div class="step-title" data-ja="本開発・データ連携" data-en="Build & Data Integration">本開発・データ連携</div>
           </div>
-          <div class="step-body" data-ja="各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続。まずは「閲覧のみ（read-only）」の高優先度機能を実装し、パイロットを公開します。Zoho「ビザモジュール」（VISA商談移行）は2026年9月30日に完了予定です。ビザ関連機能はその後に実装し、11月のリリースで接続します。" data-en="Building on each team's business-process / data-source mapping, we work with Nasu-san (backend & security) to connect to CRM/Zoho. We first implement the high-priority read-only features and launch a pilot; the Zoho Visa Module (visa deal migration) completes on Sep 30, 2026; visa-related features are built after that and connect at the November release.">各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続。まずは「閲覧のみ（read-only）」の高優先度機能を実装し、パイロットを公開します。Zoho「ビザモジュール」（VISA商談移行）は2026年9月30日に完了予定です。ビザ関連機能はその後に実装し、11月のリリースで接続します。</div>
+          <div class="step-body" data-ja="各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続します。VISA商談移行（DX・9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、社内・限定パイロットで確認します。" data-en="Building on each team's business-process / data-source mapping, we work with Nasu-san (backend & security) to connect to CRM/Zoho. We first implement the high-priority read-only features and launch a pilot; the Zoho Visa Module (visa deal migration) completes on Sep 30, 2026; visa-related features are built after that and connect at the November release.">各チームの業務プロセス・データ取得元のマッピングをもとに、奈須さん（バックエンド・セキュリティ担当）とともにCRM／Zohoへ接続します。VISA商談移行（DX・9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、社内・限定パイロットで確認します。</div>
           <div class="step-meta" style="padding-left:40px">
             <span class="tag upcoming" data-ja="予定" data-en="Planned">予定</span>
-            <span class="step-deadline" data-ja="期限：2026年10月1日（閲覧のみパイロット公開）" data-en="Due: Oct 1, 2026 (read-only pilot launch)">期限：2026年10月1日（閲覧のみパイロット公開）</span>
+            <span class="step-deadline" data-ja="期限：2026年10月（社内・限定パイロット）" data-en="Due: Oct 2026 (internal / limited pilot)">期限：2026年10月（社内・限定パイロット）</span>
+          </div>
+        </div>
+        <div class="step upcoming">
+          <div class="step-head">
+            <div class="step-num">4</div>
+            <div class="step-title" data-ja="新規顧客向けリリース" data-en="Launch — New Customers">新規顧客向けリリース</div>
+          </div>
+          <div class="step-body" data-ja="UXテストの改善を反映し、新規のお客様へ会員サイトを公開します。ビザ申請状況・必要書類・お知らせ・資料をご自身で確認いただけるようになります。" data-en="With the UX test improvements applied, the member site opens to new customers. They can check their visa status, required documents, notices and materials themselves.">UXテストの改善を反映し、新規のお客様へ会員サイトを公開します。ビザ申請状況・必要書類・お知らせ・資料をご自身で確認いただけるようになります。</div>
+          <div class="step-meta" style="padding-left:40px">
+            <span class="tag upcoming" data-ja="予定" data-en="Planned">予定</span>
+            <span class="step-deadline" data-ja="期限：2026年11月（お客様公開）" data-en="Due: Nov 2026 (customer launch)">期限：2026年11月（お客様公開）</span>
+          </div>
+        </div>
+        <div class="step upcoming">
+          <div class="step-head">
+            <div class="step-num">5</div>
+            <div class="step-title" data-ja="全顧客への展開" data-en="Roll-out to All Customers">全顧客への展開</div>
+          </div>
+          <div class="step-body" data-ja="Zoho導入前にスプレッドシートでビザ申請を行っていた旧顧客のデータをDXチームが移行します（12月完了予定）。これにより旧顧客も会員サイトでビザ申請状況を確認できるようになります。※旧顧客をスコープに含めるかは役員のご判断事項です。" data-en="The DX team migrates the data of existing customers whose visa applications were handled on spreadsheets before Zoho (due December), which lets them check their visa status on the member site too. Whether existing customers are in scope is an executive decision.">Zoho導入前にスプレッドシートでビザ申請を行っていた旧顧客のデータをDXチームが移行します（12月完了予定）。これにより旧顧客も会員サイトでビザ申請状況を確認できるようになります。※旧顧客をスコープに含めるかは役員のご判断事項です。</div>
+          <div class="step-meta" style="padding-left:40px">
+            <span class="tag upcoming" data-ja="役員判断待ち" data-en="Awaiting decision">役員判断待ち</span>
+            <span class="step-deadline" data-ja="期限：2027年1月（全顧客が利用可能）" data-en="Due: Jan 2027 (available to all customers)">期限：2027年1月（全顧客が利用可能）</span>
           </div>
         </div>
       </div>
@@ -343,7 +428,7 @@
       <div class="phase-overview">
         <div class="po-seg po-p1" style="flex-grow:34">
           <div class="po-name">Phase 1</div>
-          <div class="po-priority" data-ja="優先度：高 ／ 閲覧のみパイロット〜10月" data-en="Priority: High / read-only pilot through Oct">優先度：高 ／ 閲覧のみパイロット〜10月</div>
+          <div class="po-priority" data-ja="優先度：高 ／ お客様公開〜2026年11月" data-en="Priority: High / customer launch by Nov 2026">優先度：高 ／ お客様公開〜2026年11月</div>
         </div>
         <div class="po-seg po-p2" style="flex-grow:38">
           <div class="po-name">Phase 2</div>
@@ -356,15 +441,15 @@
       </div>
       <div class="po-dates">
         <span style="left:0%" data-ja="2026年7月〜" data-en="Jul 2026 —">2026年7月〜</span>
-        <span style="left:34%;transform:translateX(-50%)" data-ja="10月1日" data-en="Oct 1">10月1日</span>
+        <span style="left:34%;transform:translateX(-50%)" data-ja="2026年11月" data-en="Nov 2026">2026年11月</span>
         <span style="left:72%;transform:translateX(-50%)" data-ja="2027年1月14日" data-en="Jan 14, 2027">2027年1月14日</span>
         <span style="right:0;left:auto" data-ja="〜2027年3月31日" data-en="— Mar 31, 2027">〜2027年3月31日</span>
       </div>
       </div>
       </div>
 
-      <h3 class="subhead" data-ja="Phase 1 詳細スケジュール — 閲覧のみパイロット（〜10月1日）" data-en="Phase 1 Detail — Read-only Pilot (through Oct 1)">Phase 1 詳細スケジュール — 閲覧のみパイロット（〜10月1日）</h3>
-      <p class="lead" style="margin:-6px 0 14px" data-ja="第1弾は「閲覧のみ（read-only）」のパイロットです。ビザ関連機能は含まれません。Zoho「ビザモジュール」（VISA商談移行）は2026年9月30日に完了予定で、ビザ関連機能はその後に実装し、11月のリリースで接続します。" data-en="The first release is a read-only pilot. Visa-related features are not included. The Zoho Visa Module (visa deal migration) completes on Sep 30, 2026; visa features are built after that and connect at the November release.">第1弾は「閲覧のみ（read-only）」のパイロットです。ビザ関連機能は含まれません。Zoho「ビザモジュール」（VISA商談移行）は2026年9月30日に完了予定で、ビザ関連機能はその後に実装し、11月のリリースで接続します。</p>
+      <h3 class="subhead" data-ja="Phase 1 詳細スケジュール — お客様公開まで（〜2026年11月）" data-en="Phase 1 Detail — Through the Customer Launch (by Nov 2026)">Phase 1 詳細スケジュール — お客様公開まで（〜2026年11月）</h3>
+      <p class="lead" style="margin:-6px 0 14px" data-ja="第1弾は「閲覧のみ（read-only）」です。DXチームのVISA商談移行（9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、11月にお客様へ公開します。10月は社内・限定パイロットの位置づけです。" data-en="The first release is read-only. After the DX team completes the visa deal migration (due Sep 30), visa features are built and integrated during October, and the site launches to customers in November. October is an internal / limited pilot.">第1弾は「閲覧のみ（read-only）」です。DXチームのVISA商談移行（9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、11月にお客様へ公開します。10月は社内・限定パイロットの位置づけです。</p>
 
       <div class="steptl">
         <div class="stl-item">
@@ -409,7 +494,7 @@
           <div class="stl-rail"><div class="stl-num">6</div></div>
           <div class="stl-content">
             <div class="stl-main">
-              <div class="stl-title" data-ja="バックエンド開発" data-en="Backend development">バックエンド開発</div>
+              <div class="stl-title" data-ja="バックエンド開発（閲覧のみ・第1弾）" data-en="Backend development (read-only, 1st release)">バックエンド開発（閲覧のみ・第1弾）</div>
               <div class="stl-fix" data-ja="9月9日に開始（当初予定：9/1〜15）" data-en="Started Sep 9 (originally planned Sep 1–15)">9月9日に開始（当初予定：9/1〜15）</div>
             </div>
             <span class="stl-date" data-ja="9/9〜9/22" data-en="Sep 9–22">9/9〜9/22</span>
@@ -418,20 +503,196 @@
         <div class="stl-item">
           <div class="stl-rail"><div class="stl-num">7</div></div>
           <div class="stl-content">
-            <div class="stl-main"><div class="stl-title" data-ja="UXテスト計画・参加者募集" data-en="UX test planning &amp; recruiting participants">UXテスト計画・参加者募集</div></div>
+            <div class="stl-main">
+              <div class="stl-title" data-ja="UXテスト計画・参加者募集" data-en="UX test planning &amp; recruiting participants">UXテスト計画・参加者募集</div>
+            </div>
             <span class="stl-date" data-ja="9/1〜9/15" data-en="Sep 1–15">9/1〜9/15</span>
           </div>
         </div>
-        <div class="stl-item last">
+        <div class="stl-item">
           <div class="stl-rail"><div class="stl-num">8</div></div>
           <div class="stl-content">
-            <div class="stl-main"><div class="stl-title" data-ja="UXテスト実施" data-en="UX testing">UXテスト実施</div></div>
-            <span class="stl-date" data-ja="9/16〜9/30" data-en="Sep 16–30">9/16〜9/30</span>
+            <div class="stl-main">
+              <div class="stl-title" data-ja="VISA商談移行（DXチーム）" data-en="Visa deal migration (DX team)">VISA商談移行（DXチーム）</div>
+              <div class="stl-fix" data-ja="影響度：大 ／ 会員サイトのビザ機能の前提" data-en="High impact — prerequisite for the visa features">影響度：大 ／ 会員サイトのビザ機能の前提</div>
+            </div>
+            <span class="stl-date" data-ja="〜9/30" data-en="through Sep 30">〜9/30</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">9</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="UXテスト実施" data-en="UX testing">UXテスト実施</div>
+              <div class="stl-fix" data-ja="役員依頼により前倒し（9/30 たっちゃんと相談のうえ確定）" data-en="Brought forward at the executives’ request — to be confirmed with Tatchan on Sep 30">役員依頼により前倒し（9/30 たっちゃんと相談のうえ確定）</div>
+            </div>
+            <span class="stl-date" data-ja="10/5〜10/16" data-en="Oct 5–16">10/5〜10/16</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">10</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="DX連携項目の確定（項目・担当・期限）" data-en="Lock the DX integration items (item / owner / deadline)">DX連携項目の確定（項目・担当・期限）</div>
+              <div class="stl-fix" data-ja="課題②③への対応" data-en="Addresses issues 2 and 3">課題②③への対応</div>
+            </div>
+            <span class="stl-date" data-ja="10月上旬" data-en="Early Oct">10月上旬</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">11</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="ビザ関連機能の実装・結合" data-en="Build &amp; integrate the visa features">ビザ関連機能の実装・結合</div>
+            </div>
+            <span class="stl-date" data-ja="10月" data-en="October">10月</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">12</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="社内・限定パイロット" data-en="Internal / limited pilot">社内・限定パイロット</div>
+            </div>
+            <span class="stl-date" data-ja="10月下旬" data-en="Late Oct">10月下旬</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">13</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="新規顧客向けリリース" data-en="Launch — new customers">新規顧客向けリリース</div>
+              <div class="stl-fix" data-ja="お客様への公開（第1弾）" data-en="Customer-facing launch (1st release)">お客様への公開（第1弾）</div>
+            </div>
+            <span class="stl-date" data-ja="11月" data-en="November">11月</span>
+          </div>
+        </div>
+        <div class="stl-item">
+          <div class="stl-rail"><div class="stl-num">14</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="旧顧客移行（DXチーム）" data-en="Existing-customer data migration (DX team)">旧顧客移行（DXチーム）</div>
+              <div class="stl-fix" data-ja="影響度：大 ／ スコープに含めるかは役員判断" data-en="High impact — inclusion in scope is an executive decision">影響度：大 ／ スコープに含めるかは役員判断</div>
+            </div>
+            <span class="stl-date" data-ja="12月" data-en="December">12月</span>
+          </div>
+        </div>
+        <div class="stl-item last">
+          <div class="stl-rail"><div class="stl-num">15</div></div>
+          <div class="stl-content">
+            <div class="stl-main">
+              <div class="stl-title" data-ja="全顧客が利用可能" data-en="Available to all customers">全顧客が利用可能</div>
+            </div>
+            <span class="stl-date" data-ja="2027年1月" data-en="Jan 2027">2027年1月</span>
           </div>
         </div>
       </div>
 
-      <p class="gate-note" data-ja="8月中に機能とフロントエンドを確定（Fix）し、9月9日にバックエンド開発を開始しました（当初予定 9/1〜15 から約1週間の後ろ倒し／9/9〜22）。UXテスト（計画・参加者募集 9/1〜15／実施 9/16〜30）と並行して進め、10月1日の閲覧のみパイロット公開を目指します。Zoho「ビザモジュール」（VISA商談移行）は9月30日に完了予定で、ビザ関連機能はその後に実装し、11月のリリースで接続します。" data-en="Features and frontend were locked within August, and backend development started on Sep 9 (about a week later than the original Sep 1–15 plan; now Sep 9–22). It runs in parallel with UX testing (planning &amp; recruiting Sep 1–15; testing Sep 16–30), targeting the read-only pilot launch on Oct 1. The Zoho Visa Module (visa deal migration) completes on Sep 30, 2026; visa features are built after that and connect at the November release.">8月中に機能とフロントエンドを確定（Fix）し、9月9日にバックエンド開発を開始しました（当初予定 9/1〜15 から約1週間の後ろ倒し／9/9〜22）。UXテスト（計画・参加者募集 9/1〜15／実施 9/16〜30）と並行して進め、10月1日の閲覧のみパイロット公開を目指します。Zoho「ビザモジュール」（VISA商談移行）は9月30日に完了予定で、ビザ関連機能はその後に実装し、11月のリリースで接続します。</p>
+      <p class="gate-note" data-ja="VISA商談移行（DX・9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、社内・限定パイロットを経て11月に新規顧客へ公開します。旧顧客は12月の移行を経て2027年1月に利用可能となる想定です（スコープに含めるかは役員判断）。UXテストはフロントエンド完成済みのため、バックエンドを待たずに10月上旬へ前倒しします。" data-en="After the DX team completes the visa deal migration (due Sep 30), the visa features are built and integrated in October. Following an internal / limited pilot, the site launches to new customers in November. Existing customers would follow the December migration and come online in January 2027 (whether they are in scope is an executive decision). Because the frontend is already complete, UX testing is brought forward to early October rather than waiting for the backend.">VISA商談移行（DX・9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、社内・限定パイロットを経て11月に新規顧客へ公開します。旧顧客は12月の移行を経て2027年1月に利用可能となる想定です（スコープに含めるかは役員判断）。UXテストはフロントエンド完成済みのため、バックエンドを待たずに10月上旬へ前倒しします。</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="DX連携項目の洗い出し" data-en="DX Integration Items">DX連携項目の洗い出し</h2>
+      <p class="lead" style="margin-bottom:18px" data-ja="役員よりご指摘のあった「連携項目の洗い出し漏れ」に対応し、会員サイトの表示に必要なデータを棚卸ししました。10月上旬にDXチーム・伊藤さんと、項目ごとの担当と期限を確定します。" data-en="In response to the executives&#39; point that some integration items had been missed, we have taken stock of the data the member site needs. In early October we will agree an owner and a deadline for each item with the DX team and Ito-san.">役員よりご指摘のあった「連携項目の洗い出し漏れ」に対応し、会員サイトの表示に必要なデータを棚卸ししました。10月上旬にDXチーム・伊藤さんと、項目ごとの担当と期限を確定します。</p>
+
+      <div class="lk-group">
+        <div class="lk-gt">
+          <span class="lk-gname" data-ja="新規構築が必要（DXチームより指摘済み）" data-en="Needs new build — already flagged by DX">新規構築が必要（DXチームより指摘済み）</span>
+          <span class="lk-badge lk-new" data-ja="2件" data-en="2 items">2件</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="夢カナロードマップの裏側処理" data-en="Yumekana Roadmap back-end logic">夢カナロードマップの裏側処理</span>
+          <span class="lk-d" data-ja="現在地の判定ロジック。英語学習よりビザ申請が先に始まる場合など並列進行があるため、直列前提の設計は見直しが必要。" data-en="Logic to determine the current stage. Visa application can start before the English course, so a purely sequential design needs rethinking.">現在地の判定ロジック。英語学習よりビザ申請が先に始まる場合など並列進行があるため、直列前提の設計は見直しが必要。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="渡航までのToDo" data-en="Pre-departure ToDo list">渡航までのToDo</span>
+          <span class="lk-d" data-ja="項目マスタ＋条件分岐（必要書類・学校の有無）＋ステータスの自動更新。分岐が多く時間を要する見込み。" data-en="An item master plus conditional branching (required documents, whether a school is booked) and automatic status updates. Many branches, so it may take time.">項目マスタ＋条件分岐（必要書類・学校の有無）＋ステータスの自動更新。分岐が多く時間を要する見込み。</span>
+        </div>
+      </div>
+
+      <div class="lk-group">
+        <div class="lk-gt">
+          <span class="lk-gname" data-ja="新規構築・確認が必要（今回あらためて洗い出し）" data-en="Needs building or confirmation — newly identified">新規構築・確認が必要（今回あらためて洗い出し）</span>
+          <span class="lk-badge lk-chk" data-ja="12件" data-en="12 items">12件</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="ビザ必要書類の提出状況" data-en="Visa document submission status">ビザ必要書類の提出状況</span>
+          <span class="lk-d" data-ja="未提出／確認中／受領済み／要再提出＋提出日。現状Zohoでは管理されていないとAdminより指摘あり。" data-en="Not submitted / under review / received / resubmission required, plus the submission date. Admin has noted this is not currently managed in Zoho.">未提出／確認中／受領済み／要再提出＋提出日。現状Zohoでは管理されていないとAdminより指摘あり。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="書類ファイルの保管・アップロード基盤" data-en="Document storage &amp; upload infrastructure">書類ファイルの保管・アップロード基盤</span>
+          <span class="lk-d" data-ja="サーバー・セキュリティ・容量上限。UKはパスポート全ページの提出が必要でファイルサイズが大きい。" data-en="Server, security and file-size limits. The UK requires a scan of every passport page, so files can be large.">サーバー・セキュリティ・容量上限。UKはパスポート全ページの提出が必要でファイルサイズが大きい。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="お知らせ・リマインドの配信基盤" data-en="Notice &amp; reminder delivery">お知らせ・リマインドの配信基盤</span>
+          <span class="lk-d" data-ja="トリガー条件（期限1週間前・当日）、既読管理、宛先セグメント。" data-en="Trigger conditions (one week before and on the due date), read state, and audience segmentation.">トリガー条件（期限1週間前・当日）、既読管理、宛先セグメント。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="入金・支払い状況" data-en="Payment status">入金・支払い状況</span>
+          <span class="lk-d" data-ja="サポート料金・ビザ代・学校費用の入金確認日、未入金／ロボペイ失敗の通知。" data-en="Payment confirmation dates for the support fee, visa fees and school fees, plus alerts for non-payment and failed Robopay charges.">サポート料金・ビザ代・学校費用の入金確認日、未入金／ロボペイ失敗の通知。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="解約手数料の算定基礎" data-en="Cancellation-fee calculation basis">解約手数料の算定基礎</span>
+          <span class="lk-d" data-ja="サポート料金・契約日・渡航日（シミュレーターの自動計算に必要）。" data-en="Support fee, contract date and departure date — needed for the simulator to calculate automatically.">サポート料金・契約日・渡航日（シミュレーターの自動計算に必要）。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="夢カナEnglish 関連" data-en="Yumekana English data">夢カナEnglish 関連</span>
+          <span class="lk-d" data-ja="レベル、受講期間（グループ／マンツーマン）、休学期間、毎月の課題の提出状況。QM領域のためZoho項目の有無が未確認。" data-en="Level, enrolment period (group / private), leave of absence, and monthly assignment status. This sits with QM, so whether Zoho fields exist is unconfirmed.">レベル、受講期間（グループ／マンツーマン）、休学期間、毎月の課題の提出状況。QM領域のためZoho項目の有無が未確認。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="イベント" data-en="Events">イベント</span>
+          <span class="lk-d" data-ja="開催日程・定員・申込状況（初回オリエン／渡航前オリエン／Meetup／EBB 等）。" data-en="Dates, capacity and sign-up status (first orientation, pre-departure orientation, Meetup, EBB, etc.).">開催日程・定員・申込状況（初回オリエン／渡航前オリエン／Meetup／EBB 等）。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="面談予約" data-en="Counseling bookings">面談予約</span>
+          <span class="lk-d" data-ja="予約枠・予約状況・担当チームの面談URL。" data-en="Available slots, booking status and each team&#39;s meeting URL.">予約枠・予約状況・担当チームの面談URL。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="国別の必要書類リスト" data-en="Required-document lists by country">国別の必要書類リスト</span>
+          <span class="lk-d" data-ja="マスタをどこで保持するか（Zoho／会員サイト側）。" data-en="Where the master data lives — Zoho or the member site.">マスタをどこで保持するか（Zoho／会員サイト側）。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="ログイン認証" data-en="Login authentication">ログイン認証</span>
+          <span class="lk-d" data-ja="会員ID＋パスワードのZoho照合、パスワード再発行フロー。" data-en="Matching the member ID and password against Zoho, plus the password reset flow.">会員ID＋パスワードのZoho照合、パスワード再発行フロー。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="渡航国の追加" data-en="Additional destinations">渡航国の追加</span>
+          <span class="lk-d" data-ja="フィリピン・アメリカ（将来的にマルタ）。" data-en="Philippines and USA, with Malta in future.">フィリピン・アメリカ（将来的にマルタ）。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="旧顧客データの移行" data-en="Existing-customer data migration">旧顧客データの移行</span>
+          <span class="lk-d" data-ja="Zoho導入前にスプレッドシートで管理していた顧客分（DXは12月完了予定）。" data-en="Customers managed on spreadsheets before Zoho (DX expects to finish in December).">Zoho導入前にスプレッドシートで管理していた顧客分（DXは12月完了予定）。</span>
+        </div>
+      </div>
+
+      <div class="lk-group">
+        <div class="lk-gt">
+          <span class="lk-gname" data-ja="Zoho側に既存（接続のみ）" data-en="Already in Zoho — connection only">Zoho側に既存（接続のみ）</span>
+          <span class="lk-badge lk-has" data-ja="確認中" data-en="To confirm">確認中</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="接続のみで表示できる見込みの項目" data-en="Items expected to need only a connection">接続のみで表示できる見込みの項目</span>
+          <span class="lk-d" data-ja="会員ID・氏名・契約タイプ・学校/滞在先手配の有無・渡航日・学校情報・滞在先情報・ビザステータス・ビザ番号・ビザセンター予約日・ビザ有効期間・入国期限・JTB契約形態/期間/コード・サポート料金。" data-en="Member ID, name, contract type, whether school/accommodation is arranged, departure date, school details, accommodation details, visa status, visa number, visa centre appointment date, visa validity, entry deadline, JTB contract type/period/code, and the support fee.">会員ID・氏名・契約タイプ・学校/滞在先手配の有無・渡航日・学校情報・滞在先情報・ビザステータス・ビザ番号・ビザセンター予約日・ビザ有効期間・入国期限・JTB契約形態/期間/コード・サポート料金。</span>
+        </div>
+      </div>
+
+      <div class="lk-group" style="margin-bottom:0">
+        <div class="lk-gt">
+          <span class="lk-gname" data-ja="スケジュール共有の運用ルール" data-en="How we keep the schedule aligned">スケジュール共有の運用ルール</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="週次15分の定例を設定" data-en="A 15-minute weekly sync">週次15分の定例を設定</span>
+          <span class="lk-d" data-ja="会員サイトチーム・DXチーム・伊藤さん・役員（翼飛さん／中村さん）が同じ認識を持てるよう、都度こまめに共有します。" data-en="So that the member-site team, the DX team, Ito-san and the executives (Yifei-san and Nakamura-san) stay on the same page, we share updates as they happen.">会員サイトチーム・DXチーム・伊藤さん・役員（翼飛さん／中村さん）が同じ認識を持てるよう、都度こまめに共有します。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="スケジュールの正はこのページに一本化" data-en="This page is the single source of truth">スケジュールの正はこのページに一本化</span>
+          <span class="lk-d" data-ja="変更が出たら都度このページを更新し、全員が同じURLを参照します。" data-en="Whenever something changes we update this page, and everyone refers to the same URL.">変更が出たら都度このページを更新し、全員が同じURLを参照します。</span>
+        </div>
+        <div class="lk-item">
+          <span class="lk-n" data-ja="連携項目一覧を共有スプレッドシートで管理" data-en="Track integration items in a shared spreadsheet">連携項目一覧を共有スプレッドシートで管理</span>
+          <span class="lk-d" data-ja="項目／担当／状態／期限を明記し、洗い出し漏れの再発を防ぎます。" data-en="Item, owner, status and deadline are recorded so that nothing is missed again.">項目／担当／状態／期限を明記し、洗い出し漏れの再発を防ぎます。</span>
+        </div>
+      </div>
     </section>
 
     <section class="panel">
@@ -557,10 +818,10 @@
         <div class="phase-head">
           <span class="phase-badge">Phase 1</span>
           <h3 data-ja="必須機能" data-en="Must-have features">必須機能</h3>
-          <span class="phase-deadline" data-ja="〜2026年10月1日（閲覧のみパイロット）" data-en="Due Oct 1, 2026 (read-only pilot)">〜2026年10月1日（閲覧のみパイロット）</span>
+          <span class="phase-deadline" data-ja="〜2026年11月（新規顧客へ公開）" data-en="By Nov 2026 (launch to new customers)">〜2026年11月（新規顧客へ公開）</span>
         </div>
         <div class="phase-body">
-          <p style="font-size:12.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:8px;padding:10px 13px;margin:0 0 16px" data-ja="第1弾は「閲覧のみ（read-only）」パイロットとして〜10月に公開します。★印のビザ関連項目は、Zoho「ビザモジュール」（VISA商談移行・2026年9月30日完了予定）の後に実装し、11月のリリースで接続します。" data-en="The first release launches as a read-only pilot around October. Items marked ★ are visa-related: the Zoho Visa Module (visa deal migration) completes on Sep 30, 2026, and these are built after that and connect at the November release.">第1弾は「閲覧のみ（read-only）」パイロットとして〜10月に公開します。★印のビザ関連項目は、Zoho「ビザモジュール」（VISA商談移行・2026年9月30日完了予定）の後に実装し、11月のリリースで接続します。</p>
+          <p style="font-size:12.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-left:3px solid var(--orange);border-radius:8px;padding:10px 13px;margin:0 0 16px" data-ja="第1弾は「閲覧のみ（read-only）」として11月に新規顧客へ公開します。★印のビザ関連項目は、Zoho「ビザモジュール」（VISA商談移行・2026年9月30日完了予定）の後に実装し、11月のリリースで接続します。" data-en="The first release launches as a read-only release to new customers in November. Items marked ★ are visa-related: the Zoho Visa Module (visa deal migration) completes on Sep 30, 2026, and these are built after that and connect at the November release.">第1弾は「閲覧のみ（read-only）」として11月に新規顧客へ公開します。★印のビザ関連項目は、Zoho「ビザモジュール」（VISA商談移行・2026年9月30日完了予定）の後に実装し、11月のリリースで接続します。</p>
           <div class="phase-dept-grid">
             <div class="phase-dept">
               <h4 data-ja="SA（営業アシスタント）" data-en="SA (Sales Assistant)">SA（営業アシスタント）</h4>
@@ -697,6 +958,19 @@
 
       <div class="obstacle" style="border-left-color:var(--ok);background:var(--ok-soft)">
         <div class="ob-head">
+          <span class="ob-badge" style="background:var(--ok)" data-ja="確定" data-en="Confirmed">確定</span>
+          <b data-ja="VISA商談移行は9月30日完了 ─ 公開スケジュールを改訂" data-en="Visa deal migration completes Sep 30 — launch schedule revised">VISA商談移行は9月30日完了 ─ 公開スケジュールを改訂</b>
+        </div>
+        <ul>
+          <li data-ja="DXチームより、VISA商談移行が9月30日に完了予定との報告を受けました（従来の「ビザモジュール完成見込み：11月下旬」から前倒し）。" data-en="The DX team reported that the visa deal migration completes on Sep 30 — earlier than the previous estimate of late November for the visa module.">DXチームより、VISA商談移行が9月30日に完了予定との報告を受けました（従来の「ビザモジュール完成見込み：11月下旬」から前倒し）。</li>
+          <li data-ja="これを受けて10月にビザ関連機能を実装・結合し、お客様公開は11月とします。当初の「10月1日 お客様公開」は社内・限定パイロットに位置づけを変更します。" data-en="Visa features will therefore be built and integrated in October, with the customer launch in November. The original Oct 1 customer launch becomes an internal / limited pilot.">これを受けて10月にビザ関連機能を実装・結合し、お客様公開は11月とします。当初の「10月1日 お客様公開」は社内・限定パイロットに位置づけを変更します。</li>
+          <li data-ja="アイルランド・UK・カナダの業務フロー構築は10月1日〜11月末（影響度：小）、旧顧客移行は12月完了予定（影響度：大）との報告も受けています。" data-en="DX also reported that the Ireland/UK/Canada workflow build runs Oct 1 – end of Nov (low impact) and the existing-customer migration finishes in December (high impact).">アイルランド・UK・カナダの業務フロー構築は10月1日〜11月末（影響度：小）、旧顧客移行は12月完了予定（影響度：大）との報告も受けています。</li>
+        </ul>
+        <p class="ob-solution"><b data-ja="結果：" data-en="Outcome: ">結果：</b><span data-ja="改訂スケジュールをページ冒頭にまとめ、役員の承認をお願いしています。" data-en="The revised schedule is summarised at the top of this page for executive approval.">改訂スケジュールをページ冒頭にまとめ、役員の承認をお願いしています。</span></p>
+      </div>
+
+      <div class="obstacle" style="border-left-color:var(--ok);background:var(--ok-soft)">
+        <div class="ob-head">
           <span class="ob-badge" style="background:var(--ok)" data-ja="完了" data-en="Done">完了</span>
           <b data-ja="フロントエンド開発 完了" data-en="Frontend development complete">フロントエンド開発 完了</b>
         </div>
@@ -733,14 +1007,18 @@
         <p class="ob-solution"><b data-ja="決定：" data-en="Decision: ">決定：</b><span data-ja="ビザモジュールを優先し、会員サイトは閲覧のみのパイロットを先行。ビザ機能はモジュール完成後に接続します。" data-en="Prioritize the Visa Module; the member site leads with a read-only pilot and connects visa features once the module is ready.">ビザモジュールを優先し、会員サイトは閲覧のみのパイロットを先行。ビザ機能はモジュール完成後に接続します。</span></p>
       </div>
 
-      <h3 class="subhead" data-ja="現在進行中のステップ" data-en="Current Step (in progress)">現在進行中のステップ</h3>
+      <h3 class="subhead" data-ja="現在進行中のステップ" data-en="Current Steps (in progress)">現在進行中のステップ</h3>
       <div class="current-step">
         <p class="cs-title" data-ja="バックエンド開発（Matt・Koji）" data-en="Backend development (Matt, Koji)">バックエンド開発（Matt・Koji）</p>
-        <p class="cs-body" data-ja="9月9日より、Matt・Koji が奈須さんの支援のもと、CRM／Zohoへ接続する「閲覧のみ（read-only）」機能のバックエンド開発を開始しました（9/9〜9/22）。10月1日の公開に向けて、進捗はこのページで随時更新します。" data-en="On Sep 9, Matt and Koji — with Nasu-san's support — started backend development for the read-only features that connect to CRM/Zoho (Sep 9–22). Progress toward the Oct 1 launch will be updated on this page.">9月9日より、Matt・Koji が奈須さんの支援のもと、CRM／Zohoへ接続する「閲覧のみ（read-only）」機能のバックエンド開発を開始しました（9/9〜9/22）。10月1日の公開に向けて、進捗はこのページで随時更新します。</p>
+        <p class="cs-body" data-ja="9月9日より、Matt・Koji が奈須さんの支援のもと、CRM／Zohoへ接続する「閲覧のみ（read-only）」機能のバックエンド開発を進めています。ビザ関連機能は、VISA商談移行の完了（9月30日予定）後に10月中で実装・結合します。" data-en="Since Sep 9, Matt and Koji — with Nasu-san's support — have been building the backend for the read-only features that connect to CRM/Zoho. The visa features will be built and integrated during October, once the visa deal migration completes on Sep 30.">9月9日より、Matt・Koji が奈須さんの支援のもと、CRM／Zohoへ接続する「閲覧のみ（read-only）」機能のバックエンド開発を進めています。ビザ関連機能は、VISA商談移行の完了（9月30日予定）後に10月中で実装・結合します。</p>
       </div>
       <div class="current-step">
-        <p class="cs-title" data-ja="UXテスト計画・参加者募集（Jan・Michi・Chichi・Remi）" data-en="UX test planning &amp; recruiting (Jan, Michi, Chichi, Remi)">UXテスト計画・参加者募集（Jan・Michi・Chichi・Remi）</p>
-        <p class="cs-body" data-ja="Jan・Michi・Chichi・Remi が、閲覧のみパイロットのUXテスト計画の策定と参加者の募集を進めています（9/1〜9/15）。9/16〜9/30にUXテストを実施し、10月1日の公開に向けて改善点を洗い出します。" data-en="Jan, Michi, Chichi and Remi are planning the read-only pilot's UX test and recruiting participants (Sep 1–15). UX testing runs Sep 16–30 to surface improvements ahead of the Oct 1 launch.">Jan・Michi・Chichi・Remi が、閲覧のみパイロットのUXテスト計画の策定と参加者の募集を進めています（9/1〜9/15）。9/16〜9/30にUXテストを実施し、10月1日の公開に向けて改善点を洗い出します。</p>
+        <p class="cs-title" data-ja="DX連携項目の確定（会員サイトチーム × DXチーム × 伊藤さん）" data-en="Locking the DX integration items (member-site team × DX team × Ito-san)">DX連携項目の確定（会員サイトチーム × DXチーム × 伊藤さん）</p>
+        <p class="cs-body" data-ja="役員よりご指摘のあった洗い出し漏れに対応し、必要なデータ項目を棚卸ししました（本ページ「DX連携項目の洗い出し」参照）。10月上旬までに、項目ごとの担当・期限・新規構築の要否を確定します。" data-en="In response to the executives' point about missed items, we have taken stock of the data the site needs (see the DX Integration Items section). By early October we will fix an owner, a deadline and the build requirement for each item.">役員よりご指摘のあった洗い出し漏れに対応し、必要なデータ項目を棚卸ししました（本ページ「DX連携項目の洗い出し」参照）。10月上旬までに、項目ごとの担当・期限・新規構築の要否を確定します。</p>
+      </div>
+      <div class="current-step">
+        <p class="cs-title" data-ja="UXテストの前倒し調整（Jan → たっちゃん・9月30日）" data-en="Bringing the UX test forward (Jan → Tatchan, Sep 30)">UXテストの前倒し調整（Jan → たっちゃん・9月30日）</p>
+        <p class="cs-body" data-ja="フロントエンドは完成済みのため、バックエンドの完成を待たずにUXテストを実施できます。9月30日（水）にたっちゃんへ相談し、10月5日〜16日での実施を目指します。DX側の作業と並行できるため、11月公開のリスクを増やしません。" data-en="Because the frontend is already complete, UX testing does not need to wait for the backend. Jan will discuss this with Tatchan on Wednesday Sep 30, aiming to run the test Oct 5–16. It runs in parallel with the DX work, so it does not add risk to the November launch.">フロントエンドは完成済みのため、バックエンドの完成を待たずにUXテストを実施できます。9月30日（水）にたっちゃんへ相談し、10月5日〜16日での実施を目指します。DX側の作業と並行できるため、11月公開のリスクを増やしません。</p>
       </div>
 
       <h3 class="subhead" data-ja="今後対応する項目（後ほど検討）" data-en="To Be Addressed Later">今後対応する項目（後ほど検討）</h3>
