@@ -51,7 +51,7 @@
 "use strict";
 
 var DATA = {
-  "member": { "name":"山田 花奈", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "returnDate":"2027-09-04", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。",
+  "member": { "name":"山田 花奈", "nameRomaji":"YAMADA HANA", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "returnDate":"2027-09-04", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。",
     "jtb": { "type":"サポートあり", "months":12, "code":"JTB-2026-0431" } },
   "ye": {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
@@ -114,19 +114,17 @@ var DATA = {
   "lotteryCountries": ["CA","IE"],
   "commonVisa": { "visaNumber":"V-2026-88231", "status":"waiting", "docDeadline":"2026-08-10", "invoiceDue":"2026-07-20", "applyFrom":"2026-06-01" },
   "countryExtra": {
-    "UK": { "note":"イギリスは eVisa のオンライン申請とビザセンターでの生体認証予約に加え、財政証明（取引明細書・残高証明書）の提出が必要です。健康診断は該当者のみ受診します。", "fields": [
+    "UK": { "note":"イギリスは eVisa のオンライン申請とビザセンターでの生体認証予約に加え、財政証明（取引明細書・残高証明書）の提出が必要です。", "fields": [
       { "label":"ビザ申請番号", "value":"GWF-0294831", "field":"visa.applicationNo" },
       { "label":"eVisa確認", "value":"未確認", "tag":"warning", "field":"visa.evisaChecked", "note":"Zohoの値は「確認済み／未確認」の2値のみです。「確認済みでない」のか「そもそも不要」なのかは現在区別できないため、夢カナで確認のうえご案内します。" },
       { "label":"ビザ有効期間の最終日", "value":"2027-09-30", "field":"visa.validTo", "validTo":true, "note":"開始日はZohoに項目がないため、最終日のみ表示しています。" },
       { "label":"ビザセンター予約日", "value":"2026-07-15", "field":"visa.centerAppointmentAt" },
-      { "label":"財政証明", "value":"要提出", "field":"visa.financialProofStatus", "unmapped":true },
-      { "label":"健康診断の要否（該当者のみ）", "value":"要", "tag":"warning", "field":"visa.medicalRequired" },
-      { "label":"健康診断 予約日", "value":"2026-07-25", "field":"visa.medicalAppointmentAt" }
+      { "label":"財政証明", "value":"要提出", "field":"visa.financialProofStatus", "unmapped":true }
     ]},
     "CA": { "note":"カナダはビザ発行に数ヶ月かかるため、ビザセンター予約と健康診断（該当者のみ）の期限管理が重要です。無犯罪証明書は取得する国により手続きが異なります。", "fields": [
       { "label":"ビザセンター訪問期限", "value":"2026-07-30", "tag":"warning", "field":"visa.centerBookingDueDate" },
-      { "label":"健康診断の要否（該当者のみ）", "value":"要", "tag":"warning", "field":"visa.medicalRequired" },
-      { "label":"健康診断 予約日", "value":"2026-08-05", "field":"visa.medicalAppointmentAt" },
+      { "label":"健康診断の要否（該当者のみ）", "value":"要", "field":"visa.medicalRequired", "phase2":true },
+      { "label":"健康診断 予約日", "value":"2026-08-05", "field":"visa.medicalAppointmentAt", "phase2":true },
       { "label":"無犯罪証明書（該当者のみ）", "value":"要提出", "field":"visa.policeCertStatus", "unmapped":true },
       { "label":"入国期限", "value":"2027-01-15", "field":"visa.entryDeadline", "entryBy":true }
     ]},
@@ -586,11 +584,18 @@ function visaFitCheck(fields){
 }
 function docState(doc){ return state.docOverride[doc.id] || DOC_PATTERNS[state.docPattern] || doc.state; }
 
+/* 最終マッピング（ページごとのマッピング（項目単位））でPhase 2となった項目の共通表現 */
+var P2 = '<span style="flex-shrink:0;font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#E7EBEF;color:#7B8694;">次フェーズ</span>';
+function phase2Line(label, desc){
+  return '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:11px;opacity:.65;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:11.5px;color:#7B8694;">'+esc(label)+'</span>'+P2+'</div>'
+    +(desc?'<span style="font-size:11.5px;color:#9AA6B2;line-height:1.7;">'+esc(desc)+'</span>':'')+'</div>';
+}
 function rowNote(r){
   if(!r.note) return '';
   return '<span style="font-size:11px;color:#7B8694;line-height:1.6;background:#F9FBFB;border-left:2px solid #C9D2D9;padding:6px 10px;border-radius:0 4px 4px 0;">'+esc(r.note)+'</span>';
 }
 function fieldRow(r){
+  if(r.phase2) return phase2Line(r.label, r.note||'');
   var warn = r.tag==='warning';
   var showField = state.showFields && !!r.field;
   var h = '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:11px;">';
@@ -694,7 +699,7 @@ function renderHome(){
   var h = '<div class="appcontent">';
   /* member card */
   h += '<section class="span2" style="'+SECTION+'">';
-  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div>'+(state.cheer?'<div style="font-size:12.5px;font-weight:600;color:#2F9E93;margin-top:2px;">'+esc(state.cheer)+'</div>':'')+'</div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
+  h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div><div style="font-size:10.5px;letter-spacing:.08em;color:#9AA6B2;margin-top:1px;">'+esc(m.nameRomaji)+'</div>'+(state.cheer?'<div style="font-size:12.5px;font-weight:600;color:#2F9E93;margin-top:2px;">'+esc(state.cheer)+'</div>':'')+'</div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+(c.html||esc(c.text))+'</span>';}).join('')+'</div>';
   h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
   if(hasYE()) h += '<div style="display:flex;gap:20px 24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div>'+yePeriods().map(function(p){return '<div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">'+esc(p.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(p.start))+' 〜 '+esc(jd(p.end))+'</span></div>';}).join('')+'</div>';
@@ -921,6 +926,10 @@ function renderJourney(){
 }
 
 function renderYeArchive(){
+  /* 毎月の課題がPhase 2のため、アーカイブも次フェーズ扱い */
+  return '<div class="appcontent"><section class="span2" style="'+SECTION+'opacity:.75;"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><h2 style="margin:0;font-size:15px;font-weight:700;color:#7B8694;">アーカイブ（終えた課題）</h2>'+P2+'</div><p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.8;">終えた課題の振り返りは、毎月の課題と合わせて次フェーズで会員サイトに表示します。それまでは、これまでどおり Google Classroom からご覧ください。</p></section></div>';
+}
+function renderYeArchiveFull(){
   var y = DATA.ye;
   var doneTasks = y.tasks.filter(function(q){ return q.state==='done' && q.pdf; });
   var h = '<div class="appcontent">';
@@ -1078,7 +1087,7 @@ function renderVisa(){
       h += '<div style="border-top:1px solid #F3F6F7;padding-top:12px;"><div style="background:'+fc.bg+';border-left:3px solid '+fc.bd+';border-radius:0 6px 6px 0;padding:12px 14px;display:flex;flex-direction:column;gap:5px;"><span style="font-size:11px;font-weight:800;color:'+fc.fg+';">'+esc(fit.title)+'：'+fc.tag+'</span><span style="font-size:12.5px;color:#2A3340;line-height:1.7;">'+esc(fit.text)+'</span><span style="font-size:12px;color:'+fc.fg+';line-height:1.7;">'+esc(fit.action)+'</span></div></div>';
     }
     h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類 提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(d.commonVisa.docDeadline))+'</span></div>';
-    h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">ビザ請求書（PDF）</span><a href="#" style="font-size:14px;font-weight:600;">請求書を確認する →</a><span style="font-size:11px;color:#7B8694;">Adminがアップロードした請求書です。支払期限は請求書に記載されています。</span></div>';
+    h += phase2Line('ビザ請求書（PDF）','請求書の会員サイトでの表示は次フェーズでの対応です。それまでは、これまでどおりメールでお送りします。');
     h += '</section>';
     /* 書類の状況：完了 / 対応が必要 / 夢カナ確認中 を一目で分かるように（ToDoと同じ表現） */
     var DGROUPS = [
@@ -1281,12 +1290,20 @@ function renderEvents(){
     b += '<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.6;">'+esc(ev.desc)+'</p>';
     if(!locked){
       if(ev.recurring){ var rb=srow('開催','<span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.recurring.when)+'</span>'); if(ev.recurring.time) rb+=srow('時間','<span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.recurring.time)+'</span>'); if(ev.recurring.note) rb+='<div style="font-size:11.5px;color:#7B8694;line-height:1.5;">'+esc(ev.recurring.note)+'</div>'; b += box(rb); }
-      else if(ev.sessions){ b += ev.sessions.map(sessionBox).join(''); }
+      else if(ev.sessions){
+        /* 次回開催日・定員・予約数は最終マッピングでPhase 2。対象者の区分だけ残す */
+        b += ev.sessions.map(function(ss){
+          return box((ss.audience?srow('対象','<span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ss.audience)+'</span>'):'')
+            +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;opacity:.7;"><span style="font-size:12.5px;color:#7B8694;">次回の開催日・空き枠の表示</span>'+P2+'</div>'
+            +'<div style="font-size:11.5px;color:#9AA6B2;line-height:1.6;">日程と空き枠は、これまでどおりLINEとメールでご案内します。</div>');
+        }).join('');
+      }
     }
     /* action */
     if(ev.kind==='onboarding'){ b += joinBtn('参加を申し込む','toggleOri'); }
     else if(locked){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>'; }
     else if(ev.recurring){ b += linkBtn('予約する →', ev.link); }
+    else if(ev.kind==='coaching'){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:8px;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;cursor:not-allowed;">日程を見る・お申し込み'+P2+'</div><div style="font-size:11.5px;color:#9AA6B2;line-height:1.6;">日程と申込先は、これまでどおりLINEとメールでご案内します。</div>'; }
     else if(!ev.sessions){ b += joinBtn(ev.cta || (ev.kind==='anytime'?'空き枠を見て申し込む →':'日程を見る →')); }
     b += '</section>';
     return b;
@@ -1339,26 +1356,12 @@ function renderYe(){
   if(talks.length) h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">英会話イベント</h2>'+talks.map(function(ev){
     return linkRow({ ja:ev.name, sub:(ev.recurring?ev.recurring.when+(ev.recurring.time?' '+ev.recurring.time:''):'')+(ev.en?'（'+ev.en+'）':''), href:ev.link, icon:'M5 5h14v9H9l-4 4z' });
   }).join('')+'</section>';
-  /* 毎月の課題 — ミニクイズは自習用PDF＋Googleフォーム */
-  var miniBtn = function(label,href,icon,fill){ return '<a href="'+esc(href)+'" target="_blank" rel="noopener" class="ms-outline" style="'+OUTLINE_BTN+(fill?'background:#E7F5F3;':'background:#fff;')+'display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:9px 13px;min-height:42px;text-decoration:none;white-space:nowrap;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F7A72" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+icon+'"></path></svg>'+esc(label)+'</a>'; };
-  h += '<section style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">毎月の課題</h2><span style="font-size:11.5px;font-weight:700;color:#C2761F;">締め切り：毎月25日</span></div>';
-  h += '<p style="margin:0;font-size:12px;color:#7B8694;line-height:1.7;background:#F3F6F7;border-radius:6px;padding:9px 12px;">まず<b style="color:#1F7A72;">自習用PDF</b>で学習してから、<b style="color:#1F7A72;">Googleフォーム</b>のクイズにご回答ください。</p>';
-  h += y.tasks.map(function(q){
-    if(q.nextPhase){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding:13px 0;opacity:.55;"><span style="font-size:13.5px;font-weight:600;color:#7B8694;">'+esc(q.label)+'</span><span style="flex-shrink:0;font-size:10px;font-weight:800;padding:3px 8px;border-radius:100px;background:#E7EBEF;color:#7B8694;">次フェーズ</span></div>';
-    }
-    var done = q.state==='done';
-    var chip = done ? '<span style="flex-shrink:0;font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">回答済み</span>' : '<span style="flex-shrink:0;font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;background:#FDF3E7;color:#C2761F;">未回答</span>';
-    var b = '<div style="display:flex;flex-direction:column;gap:10px;border-left:3px solid '+(done?'#1F8B4C':'#EF7A48')+';background:'+(done?'#F4FBF7':'#FFFCF7')+';border-radius:0 8px 8px 0;padding:13px 14px;margin-top:10px;">';
-    b += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div style="display:flex;flex-direction:column;gap:2px;min-width:0;"><span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.04em;color:'+(done?'#1F8B4C':'#C2761F')+';">'+(done?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F8B4C" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"></path></svg>':'')+esc(q.label)+'</span><span style="font-size:14.5px;font-weight:800;color:'+(q.topic?'#2A3340':'#9AA6B2')+';">'+esc(q.topic||'学習テーマ（準備中）')+'</span></div>'+chip+'</div>';
-    if(q.intro) b += '<p style="margin:0;font-size:12px;color:#5B6672;line-height:1.75;">'+esc(q.intro)+'</p>';
-    if(q.goals && q.goals.length) b += '<div style="background:#F3F6F7;border-radius:6px;padding:10px 12px;"><div style="font-size:11px;font-weight:800;color:#1F7A72;margin-bottom:4px;">学習後にできるようになること</div><ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px;">'+q.goals.map(function(g){return '<li style="font-size:11.5px;color:#5B6672;line-height:1.6;">'+esc(g)+'</li>';}).join('')+'</ul></div>';
-    b += '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+miniBtn('自習用PDF', q.pdf, 'M7 3h7l4 4v14H7zM13 3v5h5M9 13h6M9 16h6', false)+miniBtn(done?'回答を確認':'クイズに回答', q.form, 'M9 11l3 3 8-8M20 12v7H5V4h10', !done)+'</div>';
-    return b+'</div>';
-  }).join('')+'</section>';
-  /* アーカイブは専用ページへ（件数が増えても見やすいように） */
-  var doneTasks = y.tasks.filter(function(q){ return q.state==='done' && q.pdf; });
-  h += '<section style="'+SECTION+'gap:10px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">アーカイブ（終えた課題）</h2><span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+doneTasks.length+' 件</span></div><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">提出が終わった課題は、あとから何度でも復習できます。</p><button class="ms-outline" data-act="go" data-screen="yearchive" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;">アーカイブを開く →</button></section>';
+  /* 毎月の課題・アーカイブ：最終マッピングでPhase 2（提出状況・教材PDF・回答フォームURLとも） */
+  h += '<section style="'+SECTION+'opacity:.7;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 style="margin:0;font-size:15px;font-weight:700;color:#7B8694;">毎月の課題</h2>'+P2+'</div>';
+  h += '<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.8;">ミニクイズ①〜④・採点付きクイズ・Speaking Exercise の提出状況と教材は、次フェーズで会員サイトに表示します。それまでは、これまでどおり Google Classroom と LINE からご利用ください。締め切りは毎月25日です。</p>';
+  h += '<div style="align-self:flex-start;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;display:inline-flex;align-items:center;cursor:not-allowed;">課題を開く</div>';
+  h += '</section>';
+  h += '<section style="'+SECTION+'gap:10px;opacity:.7;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><h2 style="margin:0;font-size:15px;font-weight:700;color:#7B8694;">アーカイブ（終えた課題）</h2>'+P2+'</div><p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;">終えた課題の振り返りは、毎月の課題と合わせて次フェーズで表示します。</p></section>';
   /* 将来的な移管の予定 */
   h += '<p class="span2" style="margin:0;font-size:11px;color:#9AA6B2;line-height:1.8;background:#F3F6F7;border-radius:6px;padding:10px 12px;">※ 将来的には、自習用PDFやGoogleフォームではなく<b style="color:#7B8694;">会員サイト内のコンテンツ</b>としてご提供する予定です（管理者側で登録・編集）。あわせて、AIによる自動採点・アドバイスや、学習状況のCRM（Zoho）連携も検討しています。</p>';
   /* 夢カナEnglishガイド — separate, last */
