@@ -291,18 +291,6 @@ var DATA = {
       "recommend":"推奨：渡航日の1か月前までにご参加",
       "backend":"航空券のご提出後に出す案。ご自身で申請・ビザなしの方への出し方は確認中" }
   ],
-  "journey": {
-    "current": 3,
-    "stages": [
-      { "ja":"ご契約", "en":"Contract", "start":"2026-04-12", "end":"2026-04-12", "todo":"お申込書・契約書のご提出" },
-      { "ja":"受講開始", "en":"Program start", "sub":"夢カナEnglish", "start":"2026-05-01", "end":"2027-04-30", "todo":"レッスンの受講・毎月の課題のご提出" },
-      { "ja":"ビザ・書類", "en":"Visa & docs", "sub":"申請・提出", "start":"2026-06-01", "end":"2026-08-10", "todo":"必要書類のご提出・ビザ代のお支払い" },
-      { "ja":"渡航準備", "en":"Trip prep", "sub":"航空券・保険", "start":"2026-08-11", "end":"2026-08-25", "todo":"航空券のご購入・海外保険のご加入" },
-      { "ja":"渡航前オリエン", "en":"Pre-departure", "start":"2026-08-26", "end":"2026-09-01", "todo":"渡航前オリエンテーションへのご参加" },
-      { "ja":"渡航・現地", "en":"Abroad", "start":"2026-09-05", "end":"2027-09-04", "todo":"現地サポートのご利用" },
-      { "ja":"帰国後サポート", "en":"After return", "sub":"夢カナキャリア", "start":"2027-09-05", "end":"", "todo":"キャリア面談のご予約" }
-    ]
-  },
   "documents": [
     { "id":"passport", "name":"パスポート（全ページ）", "state":"approved", "updatedAt":"2026-07-02" },
     { "id":"bankstatement", "name":"取引明細書（原本）", "state":"reviewing", "updatedAt":"2026-07-11" },
@@ -312,9 +300,6 @@ var DATA = {
   ],
   "notices": [
     { "id":"n-0708", "target":"docs", "date":"2026-07-08", "tag":"リマインド", "title":"本日が必要書類のご提出期限です", "body":"本日が必要書類のご提出期限です。まだご提出いただいていない方は、本日中にマイページの「必要書類の提出」よりアップロードをお願いします。提出が難しい場合は、担当コンサルタントまでご連絡ください。", "unread":true },
-    { "id":"n-ebb09", "target":"events", "date":"2026-07-07", "tag":"イベント", "title":"9月 English Beyond Borders!（EBB）の開催日を公開しました", "body":"9月の English Beyond Borders!（EBB）の開催日を公開しました。定員は8名です。毎月1回の開催で先着順のため、イベントページよりお早めにお申し込みください。※夢カナEnglish 受講者限定のイベントです。", "unread":true },
-    { "id":"n-meet07", "target":"events", "date":"2026-07-06", "tag":"イベント", "title":"夢カナMeetup 今月の開催日（月2回）が決定しました", "body":"今月の夢カナMeetupの開催日が決定しました。月2回・各回定員25名で開催します。イベントページの「この回に申し込む」からお申し込みいただけます。", "unread":true },
-    { "id":"n-task07", "target":"ye", "date":"2026-07-05", "tag":"夢カナEnglish", "title":"毎月の課題の提出期限は毎月25日です", "body":"毎月の課題（ミニクイズ①〜④・採点付きクイズ・Speaking Exercise）の提出期限は、毎月25日です。マイページの「夢カナEnglish」ページから各課題にアクセスし、期限までにご提出ください。", "unread":true },
     { "id":"n-0702", "target":"docs", "date":"2026-07-02", "tag":"担当者より", "title":"健康診断の提出期限が近づいています", "body":"健康診断証明書の提出期限が近づいています。指定病院での受診が必要なため、まだ受診されていない方はお早めにご予約ください。指定病院リストは資料ダウンロードよりご確認いただけます。", "unread":true },
     { "id":"n-0624", "target":"events", "date":"2026-06-24", "tag":"お知らせ", "title":"夢カナEnglish 7月のグループレッスン日程を更新しました", "body":"7月のグループレッスン日程を更新しました。Google Classroom よりご確認のうえ、ご希望の枠にお申し込みください。定員に達した枠は表示されません。", "unread":false }
   ],
@@ -457,7 +442,7 @@ var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
   viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
-  taskId:null, cancelStage:'s2', journeyStage:3, yePrivate:'yes', resCountry:'', jtbType:'support',
+  taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
   visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'',
@@ -832,29 +817,6 @@ function renderTask(){
   h += '<div style="border-top:1px dashed #E7EBEF;padding-top:12px;font-size:11.5px;color:#9AA6B2;">これは今後のデザイン参考用の簡易ページです。実際の手続き画面は次フェーズで実装予定です。</div>';
   h += '</section>';
   h += '<button class="span2" data-act="go" data-screen="todo" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← ToDo一覧へ</button>';
-  h += '</div>';
-  return h;
-}
-
-function renderCancelFee(){
-  var base = Number(String(DATA.member.supportFee||'').replace(/[^0-9]/g,'')) || 0;
-  var yen = function(n){ return '¥'+Number(n).toLocaleString('ja-JP'); };
-  var STAGES = [
-    { id:'s1', label:'ご契約〜クーリングオフ期間内', rate:0, note:'クーリングオフ対象期間内のため、サポート料金は全額が返金対象です。' },
-    { id:'s2', label:'渡航90日前まで', rate:0.2, note:'この時期の解約手数料は、サポート料金の20%です。' },
-    { id:'s3', label:'渡航89日前〜渡航前', rate:0.5, note:'渡航が近づくほど手配済みの費用が増えるため、手数料が高くなります。' },
-    { id:'s4', label:'渡航後', rate:null, note:'渡航開始後は、原則として返金の対象外となります。' }
-  ];
-  var cur = STAGES.filter(function(s){return s.id===state.cancelStage;})[0] || STAGES[1];
-  var curFee = (cur.rate===null) ? null : Math.round(base*cur.rate);
-  var h = '<div class="appcontent">';
-  h += '<section class="span2" style="'+SECTION+'"><h2 style="margin:0;font-size:17px;font-weight:700;">解約手数料シミュレーター</h2><p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">お客様の<b style="color:#2A3340;">サポート料金</b>をもとに、解約時期ごとの手数料を自動で計算します。解約タイミングを選択してください。</p>';
-  h += '<div style="background:#F3F6F7;border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><span style="font-size:11.5px;font-weight:700;color:#7B8694;">算定基礎：サポート料金</span><span style="font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;color:#2A3340;">'+esc(yen(base))+'</span></div><p style="margin:0;font-size:11px;color:#7B8694;line-height:1.7;">「サポート料金」とは、ビザ申請サポート・学校／滞在先の手配・渡航前サポート・夢カナEnglish など、夢カナ留学のサポート全体に対する料金です。航空券・学費・保険料などの実費は含みません。</p></div>';
-  h += '<div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid #F3F6F7;padding-top:14px;"><span style="font-size:11.5px;font-weight:700;color:#7B8694;">解約タイミング</span><div style="display:flex;flex-direction:column;gap:8px;">'+STAGES.map(function(s){var on=s.id===state.cancelStage;return '<button data-act="opt" data-key="cancelStage" data-value="'+s.id+'" style="text-align:left;border:1.5px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#E7F5F3':'#fff')+';color:'+(on?'#1F5C56':'#5B6672')+';font-size:13.5px;font-weight:'+(on?800:600)+';padding:13px 15px;border-radius:8px;cursor:pointer;min-height:48px;display:flex;justify-content:space-between;align-items:center;gap:10px;"><span>'+esc(s.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:800;color:'+(on?'#B4522A':'#9AA6B2')+';white-space:nowrap;">'+esc(s.rate===null?'原則返金なし':yen(Math.round(base*s.rate)))+'</span></button>';}).join('')+'</div></div>';
-  h += '<div style="border-top:1px solid #F3F6F7;padding-top:14px;display:flex;flex-direction:column;gap:8px;"><span style="font-size:11.5px;color:#7B8694;">解約手数料の目安</span><div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;"><span style="font-variant-numeric:tabular-nums;font-size:28px;font-weight:800;color:#B4522A;">'+esc(curFee===null?'原則返金なし':yen(curFee))+'</span>'+(curFee===null?'':'<span style="font-size:12px;font-weight:700;color:#7B8694;">（サポート料金の'+Math.round(cur.rate*100)+'%）</span>')+'</div>'+(curFee===null?'':'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px dashed #E7EBEF;padding-top:10px;"><span style="font-size:11.5px;color:#7B8694;">返金の目安</span><span style="font-variant-numeric:tabular-nums;font-size:15px;font-weight:800;color:#1F8B4C;">'+esc(yen(base-curFee))+'</span></div>')+'<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.7;">'+esc(cur.note)+'</p></div>';
-  h += '<div style="border-top:1px dashed #E7EBEF;padding-top:12px;font-size:11.5px;color:#9AA6B2;line-height:1.7;">※ 表示金額はお客様のサポート料金をもとにした<b>概算</b>です。実際の解約手数料は約款・契約書の定めに基づいて算出され、担当コンサルタントよりご案内します（確定金額ではありません）。</div>';
-  h += '</section>';
-  h += '<button class="span2" data-act="go" data-screen="home" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← マイページへ戻る</button>';
   h += '</div>';
   return h;
 }
@@ -1360,7 +1322,6 @@ function screenContent(){
   if(s==='todo') return renderTodo();
   if(s==='docs') return renderDocs();
   if(s==='task') return renderTask();
-  if(s==='cancelfee') return renderCancelFee();
   if(s==='resources') return renderResources();
   if(s==='visa') return renderVisa();
   if(s==='school') return renderSchool();
@@ -1398,7 +1359,7 @@ function render(){
   frame.className = 'm-'+mode;
   frame.style.maxWidth = (MODES[mode]||MODES.mobile).width;
 
-  var titles = { home:{en:'My page',ja:'マイページ'}, todo:{en:'Countdown',ja:'渡航までのToDo'}, docs:{en:'Documents',ja:'書類の提出'}, task:{en:'Task',ja:'手続きの詳細'}, cancelfee:{en:'Cancellation fee',ja:'解約手数料シミュレーター'}, resources:{en:'Resources',ja:'資料・ガイド'}, visa:{en:'Visa',ja:'ビザ情報'}, school:{en:'School & Accommodation',ja:'学校・滞在先情報'}, booking:{en:'Counseling',ja:'面談を予約する'}, events:{en:'Events',ja:'イベント'}, ye:{en:'Yumekana English',ja:'夢カナEnglish'}, notices:{en:'Notices',ja:'お知らせ'}, notice:{en:'Notice',ja:'お知らせ詳細'}, spec:{en:'For developers',ja:'API／フィールド仕様'} };
+  var titles = { home:{en:'My page',ja:'マイページ'}, todo:{en:'Countdown',ja:'渡航までのToDo'}, docs:{en:'Documents',ja:'書類の提出'}, task:{en:'Task',ja:'手続きの詳細'}, resources:{en:'Resources',ja:'資料・ガイド'}, visa:{en:'Visa',ja:'ビザ情報'}, school:{en:'School & Accommodation',ja:'学校・滞在先情報'}, booking:{en:'Counseling',ja:'面談を予約する'}, events:{en:'Events',ja:'イベント'}, ye:{en:'Yumekana English',ja:'夢カナEnglish'}, notices:{en:'Notices',ja:'お知らせ'}, notice:{en:'Notice',ja:'お知らせ詳細'}, spec:{en:'For developers',ja:'API／フィールド仕様'} };
   var t = titles[state.screen] || titles.home;
   var h = '';
 
