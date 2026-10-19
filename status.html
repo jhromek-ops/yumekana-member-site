@@ -118,6 +118,7 @@
   .phase-block{border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:16px}
   .phase-block:last-child{margin-bottom:0}
   .phase-block.phase-1{border-color:var(--teal);background:var(--teal-soft)}
+  .phase-note{margin:12px 0 0;font-size:12.5px;color:var(--sub);line-height:1.9}
   .phase-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   summary.phase-head{cursor:pointer;list-style:none}
   summary.phase-head::-webkit-details-marker{display:none}
@@ -425,24 +426,29 @@
       <div class="phase-overview-scroll">
       <div class="phase-overview-inner">
       <div class="phase-overview">
-        <div class="po-seg po-p1" style="flex-grow:40">
+        <div class="po-seg po-p1" style="flex-grow:45">
           <div class="po-name">Phase 1</div>
-          <div class="po-priority" data-ja="優先度：高 ／ お客様公開〜2026年11月" data-en="Priority: High / customer launch by Nov 2026">優先度：高 ／ お客様公開〜2026年11月</div>
+          <div class="po-priority" data-ja="優先度：高 ／ 全顧客へ公開 2026年11月19日" data-en="Priority: High / launch to all customers Nov 19, 2026">優先度：高 ／ 全顧客へ公開 2026年11月19日</div>
         </div>
-        <div class="po-seg po-p2" style="flex-grow:60">
+        <div class="po-seg po-p2" style="flex-grow:25">
           <div class="po-name">Phase 2</div>
-          <div class="po-priority" data-ja="優先度：中・低 ／ 〜2027年3月31日" data-en="Priority: Medium &amp; Low / through Mar 31, 2027">優先度：中・低 ／ 〜2027年3月31日</div>
+          <div class="po-priority" data-ja="優先度：中 ／ 〜2027年1月31日" data-en="Priority: Medium / through Jan 31, 2027">優先度：中 ／ 〜2027年1月31日</div>
+        </div>
+        <div class="po-seg po-p3" style="flex-grow:30">
+          <div class="po-name">Phase 3</div>
+          <div class="po-priority" data-ja="優先度：低 ／ 〜2027年3月31日" data-en="Priority: Low / through Mar 31, 2027">優先度：低 ／ 〜2027年3月31日</div>
         </div>
       </div>
       <div class="po-dates">
         <span style="left:0%" data-ja="2026年7月〜" data-en="Jul 2026 —">2026年7月〜</span>
-        <span style="left:40%;transform:translateX(-50%)" data-ja="2026年11月" data-en="Nov 2026">2026年11月</span>
+        <span style="left:45%;transform:translateX(-50%)" data-ja="11月19日" data-en="Nov 19">11月19日</span>
+        <span style="left:70%;transform:translateX(-50%)" data-ja="2027年1月31日" data-en="Jan 31, 2027">2027年1月31日</span>
         <span style="right:0;left:auto" data-ja="〜2027年3月31日" data-en="— Mar 31, 2027">〜2027年3月31日</span>
       </div>
       </div>
       </div>
 
-      <h3 class="subhead" data-ja="Phase 1 詳細スケジュール — お客様公開まで（〜2026年11月）" data-en="Phase 1 Detail — Through the Customer Launch (by Nov 2026)">Phase 1 詳細スケジュール — お客様公開まで（〜2026年11月）</h3>
+      <h3 class="subhead" data-ja="Phase 1 詳細スケジュール — 全顧客への公開まで（〜2026年11月19日）" data-en="Phase 1 Detail — Through the Launch to All Customers (by Nov 19, 2026)">Phase 1 詳細スケジュール — 全顧客への公開まで（〜2026年11月19日）</h3>
       <p class="lead" style="margin:-6px 0 14px" data-ja="第1弾は「閲覧のみ（read-only）」です。DXチームのVISA商談移行（9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、11月にお客様へ公開します。10月は社内・限定パイロットの位置づけです。" data-en="The first release is read-only. After the DX team completes the visa deal migration (due Sep 30), visa features are built and integrated during October, and the site launches to customers in November. October is an internal / limited pilot.">第1弾は「閲覧のみ（read-only）」です。DXチームのVISA商談移行（9月30日完了予定）の後、10月にビザ関連機能を実装・結合し、11月にお客様へ公開します。10月は社内・限定パイロットの位置づけです。</p>
 
       <div class="steptl">
@@ -905,6 +911,26 @@
               </ul>
             </div>
           </div>
+        </div>
+      </details>
+      <details class="phase-block phase-3">
+        <summary class="phase-head">
+          <span class="phase-badge">Phase 3</span>
+          <h3 data-ja="あると便利な機能" data-en="Nice-to-have features">あると便利な機能</h3>
+          <span class="phase-deadline" data-ja="〜2027年3月31日" data-en="Due Mar 31, 2027">〜2027年3月31日</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </summary>
+        <div class="phase-body">
+          <div class="phase-dept-grid">
+            <div class="phase-dept">
+              <h4 data-ja="会員サイト" data-en="Member site">会員サイト</h4>
+              <ul>
+                <li data-ja="チャットボット（よくあるご質問への自動応答）" data-en="Chatbot — automated answers to common questions">チャットボット（よくあるご質問への自動応答）</li>
+                <li data-ja="Googleカレンダー連携（手続きの予定を自動で追加）" data-en="Google Calendar integration — add deadlines to the member&#39;s own calendar">Googleカレンダー連携（手続きの予定を自動で追加）</li>
+              </ul>
+            </div>
+          </div>
+          <p class="phase-note" data-ja="Phase 3 は、無くてもご利用に支障はないものの、あればお客様の利便性が上がる機能です。Phase 1・2 の状況を見てから着手します。" data-en="Phase 3 covers features that are not required for the service to work, but make it easier to use. We will start them once Phase 1 and 2 are settled.">Phase 3 は、無くてもご利用に支障はないものの、あればお客様の利便性が上がる機能です。Phase 1・2 の状況を見てから着手します。</p>
         </div>
       </details>
     </section>
