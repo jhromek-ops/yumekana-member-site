@@ -124,10 +124,10 @@ var DATA = {
   },
   "requiredDocs": {
     "UK": ["パスポート（全ページ）","取引明細書（原本）","取引明細書（英訳）","残高証明書（原本）"],
-    "CA": ["パスポート（顔写真のページ）","証明写真（デジタルデータ）"],
-    "AU": ["パスポート（顔写真のページ）","残高証明書"],
-    "NZ": ["パスポート（顔写真のページ）","戸籍謄本または運転免許証"],
-    "IE": ["パスポートのコピー（顔写真・スタンプのページ）","履歴書","片道もしくは復路航空券（e-チケット）"],
+    "CA": ["パスポート","証明写真（デジタルデータ）"],
+    "AU": ["パスポート","残高証明書"],
+    "NZ": ["パスポート","戸籍謄本または運転免許証"],
+    "IE": ["パスポート","履歴書","片道もしくは復路航空券（e-チケット）"],
     "PH": ["パスポート"],
     "US": ["パスポート","DS-160 控え"]
   },
@@ -144,6 +144,79 @@ var DATA = {
       { "n":8, "at":"9/25 17:13", "page":"進み具合",   "what":"第2段階と第3段階を1つにまとめ（〜2027/3/31）、LINEのボタンは10月、夢カナEnglishの予約サイトへのリンクは11/1までに変更" },
       { "n":9, "at":"9/25 17:48", "page":"進み具合",   "what":"言葉の直し、日程の移動（手順を1〜17に振り直し）、第1段階の内容を試作の画面に合わせる" }
     ]
+  },
+  "docGuides": {
+    "passport": {
+      "lead":"ご渡航先のビザ申請に使う、いちばん基本の書類です。イギリスは空白ページを含む全ページ、その他の国は顔写真のページが必要です。",
+      "how":[
+        "スマートフォンでの撮影より、コンビニのコピー機でスキャンしたPDFが確実です",
+        "イギリスの方は、空白ページを含む全ページを見開きでご用意ください",
+        "イギリス以外の方は、顔写真のページのみで結構です",
+        "カラーでご用意ください（白黒は受け付けられません）"
+      ],
+      "cautions":[
+        "顔写真に光が反射していると無効になります。斜めから光が当たらない場所で撮影してください",
+        "文字がはっきり読めるかどうか、提出前にご確認ください",
+        "指や背景など、パスポート以外のものが写り込まないようにしてください",
+        "有効期限がご滞在予定期間より後であることをご確認ください"
+      ],
+      "where":"このページの「ファイルをアップロード」からご提出ください。"
+    },
+    "bankstatement": {
+      "lead":"ご自身の口座に、ビザ申請に必要な残高が一定期間あったことを示す書類です。銀行の窓口またはオンラインバンキングで発行できます。",
+      "how":[
+        "ご自身名義の普通預金口座のものをご用意ください",
+        "29日間（初日を1日目として数えます）分の取引が記載されたものが必要です",
+        "はじめから英文で取得できる銀行の場合は、日本語版のご提出は不要です"
+      ],
+      "cautions":[
+        "29日間を通して、必要額を一度も下回っていないことが条件です",
+        "29日の間に、入出金の記録が1回以上必要です",
+        "為替の変動があるため、必要額より1割ほど多めに残しておくことをおすすめします",
+        "ビザ申請の前に取得が必要です。残高をご準備のうえ、ビザ代のお支払いと同じタイミングでご提出ください"
+      ],
+      "checks":["発行日の記載があるか","ご自身のお名前の記載があるか","銀行名の記載があるか","必要額を29日間以上保持しているか","照会期間（◯年◯月◯日〜◯年◯月◯日）の記載があるか"],
+      "where":"このページの「ファイルをアップロード」からPDFでご提出ください。"
+    },
+    "bankstatement_en": {
+      "lead":"取引明細書を英訳したものです。夢カナ提携の翻訳会社をご紹介しますので、お客様から直接ご依頼ください。",
+      "how":[
+        "まず日本語の取引明細書（原本）をご用意ください",
+        "ご紹介する翻訳会社へ、お客様ご自身でご依頼ください",
+        "翻訳と一緒に「翻訳証明書」も必ずお受け取りください"
+      ],
+      "cautions":[
+        "ビザセンターへお越しいただく1週間前までには取得・ご提出をお願いします",
+        "翻訳証明書が無いと受け付けられません。受け取り忘れにご注意ください"
+      ],
+      "where":"このページの「ファイルをアップロード」からPDFでご提出ください。"
+    },
+    "balance": {
+      "lead":"ご自身の口座の残高を証明する書類です。取引明細書とあわせてご提出いただきます。",
+      "how":[
+        "銀行の窓口で発行をご依頼ください",
+        "発行までに時間がかかる銀行が多いため、早めに発行期間をお問い合わせください"
+      ],
+      "cautions":[
+        "取引明細書の照会期間と重なる日付で発行してください。期間が重ならないと、どちらかが使えなくなります",
+        "発行から3か月以内のものをご提出ください"
+      ],
+      "checks":["発行日の記載があるか","ご自身のお名前の記載があるか","銀行名の記載があるか","必要額以上であるか"],
+      "where":"このページの「ファイルをアップロード」からPDFでご提出ください。"
+    },
+    "medical": {
+      "lead":"移民局が指定する病院で受診する健康診断の証明書です。オーストラリア・カナダの方で、受診が必要と案内された方が対象です。",
+      "how":[
+        "ご予約の日時は、夢カナよりご案内します",
+        "受診後の流れは、病院から移民局へ直接お送りするケースと、お客様が受け取って夢カナへご提出いただくケースがあります",
+        "どちらになるかは、ご予約の際にあわせてご案内します"
+      ],
+      "cautions":[
+        "お客様が受け取るケースでは、受け取り次第このページからご提出ください",
+        "病院から直接送られるケースでは、お客様のご提出は不要です"
+      ],
+      "where":"お客様が受け取られた場合のみ、このページからご提出ください。"
+    }
   },
   "requiredDocsNote": "その国で必ず必要な書類のみを表示しています。お客様ごとに追加で必要になる書類（無犯罪証明書・健康診断証明書など）は、必要になった時点で夢カナが追加し、この一覧と「書類の状況」に表示されます。",
   "guides": {
@@ -260,7 +333,7 @@ var DATA = {
       "deadline":"2026-08-10", "state":"todo", "actor":"member", "action":"回答", "target":"task",
       "recommend":"推奨：期限の2週間前（2026年7月27日頃）までにご回答",
       "page":{ "desc":"ビザ申請用のフォームに、期限までにご回答ください。ご回答の内容に修正が必要な場合は、担当者からご案内のうえ、このToDoがもう一度表示されます。", "cta":"VISA申請フォームに回答する", "href":"#", "note":"渡航国ごとのフォームです。カナダの方には表示されません。" } },
-    { "id":"docs", "label":"必要書類の提出", "phase":"申請準備", "owner":"CRM・Admin", "when":"docsPending", "visaPrep":true,
+    { "id":"docs", "label":"必要書類の提出", "phase":"申請準備", "owner":"CRM・Admin", "when":"docsPending", "visaPrep":true, "expandDocs":true,
       "deadline":"2026-08-10", "state":"todo", "actor":"member", "action":"提出", "target":"docs",
       "recommend":"推奨：期限の2週間前（2026年7月27日頃）までにご提出" },
     { "id":"visafee", "label":"ビザ代のお支払い", "phase":"申請", "owner":"CRM・Admin", "when":"visaFee", "visaPrep":true,
@@ -291,7 +364,7 @@ var DATA = {
       "backend":"航空券のご提出後に出す案。ご自身で申請・ビザなしの方への出し方は確認中" }
   ],
   "documents": [
-    { "id":"passport", "name":"パスポート（全ページ）", "state":"approved", "updatedAt":"2026-07-02", "detail":"顔写真のページだけでなく、スタンプや査証のページを含めた全ページが必要です。見開きで撮影し、四隅が切れていないかご確認ください。" },
+    { "id":"passport", "name":"パスポート", "state":"approved", "updatedAt":"2026-07-02" },
     { "id":"bankstatement", "name":"取引明細書（原本）", "state":"reviewing", "updatedAt":"2026-07-11", "detail":"直近3か月ぶんの入出金が分かるものをご用意ください。銀行の窓口またはオンラインバンキングから発行できます。" },
     { "id":"bankstatement_en", "name":"取引明細書（英訳）", "state":"todo", "updatedAt":null, "detail":"原本と同じ内容を英語に翻訳したものです。公証が必要な場合がありますので、翻訳の前に担当コンサルタントへご確認ください。" },
     { "id":"balance", "name":"残高証明書（原本）", "state":"rejected", "updatedAt":"2026-07-09", "ngReason":"発行日が3ヶ月以上前のため、最新のものをご提出ください。", "detail":"ご本人名義の口座の残高が分かる証明書です。発行から3か月以内のものをご提出ください。" },
@@ -444,7 +517,7 @@ var state = {
   taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
-  visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'', docDetail:'',
+  visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'', docId:'',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
@@ -632,7 +705,21 @@ function todoVisible(t){
 }
 function computeTodos(){
   /* 期限の早い順に並べる。日付を持たないものは sortAt を使う */
-  var list = DATA.todos.filter(todoVisible).slice().sort(function(a,b){
+  /* 「必要書類の提出」は、ご提出が必要な書類ごとの項目に展開する（2026年10月19日のご要望） */
+  var base = [];
+  DATA.todos.filter(todoVisible).forEach(function(t){
+    if(!t.expandDocs){ base.push(t); return; }
+    DATA.documents.forEach(function(doc){
+      var st = docState(doc);
+      if(st!=='todo' && st!=='rejected') return;
+      base.push({ id:'doc-'+doc.id, docId:doc.id, label:doc.name, phase:t.phase, owner:t.owner,
+        deadline:doc.dueDate||t.deadline, sortAt:doc.dueDate||t.deadline,
+        state: st,
+        actor:'member', action: st==='rejected' ? '再提出' : '提出',
+        target:'docdetail', recommend:t.recommend });
+    });
+  });
+  var list = base.slice().sort(function(a,b){
     var ka=a.sortAt||a.deadline, kb=b.sortAt||b.deadline;
     return ka<kb?-1:(ka>kb?1:0);
   });
@@ -640,11 +727,12 @@ function computeTodos(){
     var done = !!state.todoDone[t.id];
     var isStaff = t.actor==='staff';
     var overdue = t.state==='overdue';
+    var rejected = t.state==='rejected';
     var key, stateLabel, bg, fg, who, whoBg, whoFg;
     if(done){ key='done'; stateLabel='完了'; bg=PALETTE.done.bg; fg=PALETTE.done.fg; who=''; }
     else if(isStaff){ key='staff'; stateLabel='夢カナ確認中'; bg='#EEF0FB'; fg='#4A56B8'; who='夢カナが対応中（お客様の操作は不要です）'; whoBg='#EEF0FB'; whoFg='#4A56B8'; }
-    else { key = overdue?'overdue':'todo'; stateLabel=(t.action||'ご対応')+'が必要'; if(overdue) stateLabel='期限超過・'+stateLabel; bg=(overdue?PALETTE.overdue.bg:PALETTE.todo.bg); fg=(overdue?PALETTE.overdue.fg:PALETTE.todo.fg); who='お客様のご対応が必要です'; whoBg='#FDF3E7'; whoFg='#B4522A'; }
-    return { id:t.id, label:t.label, phase:t.phase||'', owner:t.owner||'', backend:t.backend||'', deadlineLabel:'期限：'+(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline)), recommend:t.recommend||'', done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
+    else { key = overdue?'overdue':(rejected?'rejected':'todo'); stateLabel=(t.action||'ご対応')+'が必要'; if(overdue) stateLabel='期限超過・'+stateLabel; bg=(overdue?PALETTE.overdue.bg:(rejected?PALETTE.rejected.bg:PALETTE.todo.bg)); fg=(overdue?PALETTE.overdue.fg:(rejected?PALETTE.rejected.fg:PALETTE.todo.fg)); who='お客様のご対応が必要です'; whoBg='#FDF3E7'; whoFg='#B4522A'; }
+    return { id:t.id, docId:t.docId||'', label:t.label, phase:t.phase||'', owner:t.owner||'', backend:t.backend||'', deadlineLabel:'期限：'+(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline)), recommend:t.recommend||'', done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
       labelColor: done?'#7B8694':'#2A3340', labelDecoration: done?'line-through':'none' };
   });
 }
@@ -686,7 +774,7 @@ function renderHome(){
     ? {en:'School',ja:'学校・滞在先',icon:'M4 10l8-5 8 5v9H4z',screen:'school'}
     : {en:'Notices',ja:'お知らせ',icon:'M4 6h16v12H4zM4 6l8 6 8-6',screen:'notices'};
   var shortcuts = [
-    {en:'Visa',ja:'ビザ情報',icon:'M4 5h16v14H4zM8 10h4M8 14h8',screen:'visa'},
+    {en:'Visa',ja:'ビザ手続きの情報',icon:'M4 5h16v14H4zM8 10h4M8 14h8',screen:'visa'},
     sc2,
     {en:'Counseling',ja:'面談を予約',icon:'M4 6h16v10H4zM9 20h6M12 16v4',screen:'booking'},
     {en:'Events',ja:'イベント',icon:'M4 7h16v13H4zM4 11h16M8 3v4M16 3v4',screen:'events'},
@@ -766,6 +854,39 @@ function renderTodo(){
   return h;
 }
 
+function renderDocDetail(){
+  var doc = DATA.documents.filter(function(d){ return d.id===state.docId; })[0];
+  if(!doc) return '<div class="appcontent"><p style="margin:0;font-size:13px;color:#7B8694;">書類が見つかりませんでした。</p></div>';
+  var stt = docState(doc), pp = PALETTE[stt]||PALETTE.todo, lbl = DOC_STATUS_LABEL[stt]||pp.label;
+  var g = DATA.docGuides[doc.id] || null;
+  var nx = docNext(stt);
+  var h = '<div class="appcontent">';
+  /* いまの状態 */
+  h += '<section class="span2" style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:3px;min-width:0;"><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(doc.name)+'</h2>'+(doc.updatedAt?'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">最終更新 '+esc(jd(doc.updatedAt))+'</span>':'')+'</div><span style="flex-shrink:0;font-size:13px;font-weight:800;padding:6px 12px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(lbl)+'</span></div>';
+  if(doc.dueDate) h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">この書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#B4522A;">'+esc(jd(doc.dueDate))+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
+  if(stt==='rejected') h += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:10px 13px;font-size:12.5px;color:#B4522A;border-radius:0 4px 4px 0;line-height:1.75;">再提出のお願い：'+esc(doc.ngReason||'担当者からご案内します。')+'</div>';
+  h += '<div style="background:'+nx.bg+';border-radius:6px;padding:11px 13px;display:flex;flex-direction:column;gap:3px;"><span style="font-size:10.5px;font-weight:800;color:'+nx.fg+';">'+nx.title+'</span><span style="font-size:12.5px;color:#2A3340;line-height:1.75;">'+esc(nx.text)+'</span></div>';
+  if(stt==='todo'||stt==='rejected') h += '<button class="ms-teal" data-act="uploadDoc" data-id="'+esc(doc.id)+'" style="'+TEAL_BTN+'align-self:stretch;font-size:15px;padding:15px 20px;min-height:52px;">ファイルをアップロード</button>';
+  h += '</section>';
+  if(!g){
+    h += '<section class="span2" style="'+SECTION+'"><p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.85;">この書類の詳しいご案内は準備中です。ご不明な点は、契約者様専用LINEよりお問い合わせください。</p></section>';
+    h += '</div>'; return h;
+  }
+  h += '<section class="span2" style="'+SECTION+'gap:10px;"><p style="margin:0;font-size:13px;color:#2A3340;line-height:1.9;">'+esc(g.lead)+'</p></section>';
+  var block = function(title, items, color, icon){
+    return '<section style="'+SECTION+'gap:9px;"><div style="display:flex;align-items:center;gap:8px;"><span style="flex-shrink:0;width:26px;height:26px;border-radius:7px;background:'+color.bg+';display:inline-flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="'+color.fg+'" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="'+icon+'"></path></svg></span><h2 style="margin:0;font-size:14.5px;font-weight:700;">'+title+'</h2></div><ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;">'+items.map(function(x){return '<li style="font-size:12.5px;color:#5B6672;line-height:1.8;">'+esc(x)+'</li>';}).join('')+'</ul></section>';
+  };
+  if(g.how && g.how.length) h += block('ご用意のしかた', g.how, {bg:'#E7F5F3',fg:'#1F7A72'}, 'M5 4h11l3 3v13H5zM8 9h7M8 12h7M8 15h4');
+  if(g.cautions && g.cautions.length) h += block('お気をつけいただきたいこと', g.cautions, {bg:'#FDF3E7',fg:'#C2761F'}, 'M12 4l9 16H3zM12 10v4M12 17h.01');
+  if(g.checks && g.checks.length){
+    h += '<section style="'+SECTION+'gap:9px;"><div style="display:flex;align-items:center;gap:8px;"><span style="flex-shrink:0;width:26px;height:26px;border-radius:7px;background:#EAFAF0;display:inline-flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F8B4C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"></path></svg></span><h2 style="margin:0;font-size:14.5px;font-weight:700;">ご提出前のチェック</h2></div><div style="display:flex;flex-direction:column;gap:6px;">'+g.checks.map(function(x){return '<div style="display:flex;gap:9px;align-items:flex-start;background:#F9FBFB;border-radius:6px;padding:9px 11px;"><span style="flex-shrink:0;width:16px;height:16px;border:2px solid #C9D2D9;border-radius:4px;margin-top:1px;"></span><span style="font-size:12.5px;color:#5B6672;line-height:1.7;">'+esc(x)+'</span></div>';}).join('')+'</div></section>';
+  }
+  if(g.where) h += '<section class="span2" style="'+SECTION+'gap:8px;"><h2 style="margin:0;font-size:14.5px;font-weight:700;">ご提出先</h2><p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.85;">'+esc(g.where)+'</p></section>';
+  h += matSection('関連資料', matBy(state.country,['visa']));
+  h += '</div>';
+  return h;
+}
+
 function renderDocs(){
   var d = DATA;
   var h = '<div class="appcontent">';
@@ -782,8 +903,7 @@ function renderDocs(){
     if(doc.addedByStaff) b += '<span style="align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#F4ECF9;color:#8A5BB8;">お客様ごとに追加された書類</span>';
     if(doc.dueDate) b += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:11px;color:#7B8694;">この書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:#B4522A;">'+esc(jd(doc.dueDate))+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
     if(stt==='rejected') b += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:9px 12px;font-size:12px;color:#B4522A;border-radius:0 4px 4px 0;">再提出のお願い：'+esc(doc.ngReason||'担当者からご案内します。')+'</div>';
-    if(doc.detail) b += '<button data-act="docDetail" data-id="'+esc(doc.id)+'" style="align-self:flex-start;border:none;background:none;color:#2F9E93;font-size:12px;font-weight:700;cursor:pointer;padding:4px 0;min-height:32px;text-decoration:underline;">'+(state.docDetail===doc.id?'詳細を閉じる':'この書類について詳しく見る')+'</button>';
-    if(doc.detail && state.docDetail===doc.id) b += '<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.85;background:#F9FBFB;border-left:3px solid #39B3A6;padding:11px 13px;border-radius:0 6px 6px 0;">'+esc(doc.detail)+'</p>';
+    b += '<button data-act="openDoc" data-id="'+esc(doc.id)+'" class="ms-notice" style="align-self:flex-start;border:none;background:none;color:#2F9E93;font-size:12.5px;font-weight:700;cursor:pointer;padding:4px 0;min-height:32px;display:inline-flex;align-items:center;gap:5px;"><span class="ms-link">提出のしかた・注意点を見る</span><span style="font-size:13px;">›</span></button>';
     var nx = docNext(stt);
     b += '<div style="background:'+nx.bg+';border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;"><span style="font-size:10.5px;font-weight:800;color:'+nx.fg+';">'+nx.title+'</span><span style="font-size:12px;color:#2A3340;line-height:1.7;">'+esc(nx.text)+'</span></div>';
     if(showUpload) b += '<button class="ms-outline" data-act="uploadDoc" data-id="'+esc(doc.id)+'" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;white-space:nowrap;" title="書類種別「'+esc(doc.name)+'」を選んだ状態でフォームが開きます">ファイルをアップロード</button>';
@@ -1012,7 +1132,7 @@ function renderVisa(){
       b += '<div style="font-size:11px;color:'+g.tagFg+';">'+g.note+'</div>';
       b += items.map(function(x){
         var pp = PALETTE[x.st]||PALETTE.todo; var lbl = DOC_STATUS_LABEL[x.st]||pp.label;
-        return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;background:#F9FBFB;border-left:3px solid '+g.accent+';border-radius:0 6px 6px 0;padding:10px 12px;"><div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;">'+esc(x.doc.name)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11px;color:#7B8694;">'+(x.doc.updatedAt?'提出日 '+esc(jd(x.doc.updatedAt)):'未提出')+'</div></div><span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(lbl)+'</span></div>';
+        return '<button data-act="openDoc" data-id="'+esc(x.doc.id)+'" class="ms-notice" style="width:100%;text-align:left;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#F9FBFB;border-left:3px solid '+g.accent+';border-radius:0 6px 6px 0;padding:10px 12px;"><span style="min-width:0;display:flex;flex-direction:column;"><span class="ms-link" style="font-size:13.5px;font-weight:600;">'+esc(x.doc.name)+'</span><span style="font-variant-numeric:tabular-nums;font-size:11px;color:#7B8694;">'+(x.doc.updatedAt?'提出日 '+esc(jd(x.doc.updatedAt)):'未提出')+'</span></span><span style="flex-shrink:0;display:flex;align-items:center;gap:8px;"><span style="font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(lbl)+'</span><span style="color:#9AA6B2;font-size:15px;">›</span></span></button>';
       }).join('');
       return b+'</div>';
     }).join('');
@@ -1021,7 +1141,7 @@ function renderVisa(){
     else h += '<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">いまご提出をお願いする書類はありません。新しく必要になった書類は、こちらとお知らせでご案内します。</p>';
     h += '</section>';
     }
-    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">ビザ情報</h2>'+(shownFields.length?shownFields.map(fieldRow).join(''):'<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">この段階でお客様にご確認いただく項目はありません。ビザが発給されると、入国期限などをこちらに表示します。</p>');
+    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">ビザ手続きの情報</h2>'+(shownFields.length?shownFields.map(fieldRow).join(''):'<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">この段階でお客様にご確認いただく項目はありません。ビザが発給されると、入国期限などをこちらに表示します。</p>');
     h += '<p style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-left:3px solid #39B3A6;padding:11px 14px;border-radius:0 4px 4px 0;">'+esc(extra.note)+'</p>';
     h += '</section>';
     var guides = d.guides[code]||[];
@@ -1107,7 +1227,7 @@ function renderNotice(){
   var cur = DATA.notices.filter(function(n){return n.id===state.noticeId;})[0] || DATA.notices[0];
   var h = '<div class="appcontent">';
   h += '<section class="span2" style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;max-width:760px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(cur.date))+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(cur.tag)+'</span></div><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(cur.title)+'</h2><p style="margin:0;font-size:14px;color:#2A3340;text-wrap:pretty;">'+esc(cur.body)+'</p></section>';
-  var TGT_LABEL = { docs:'書類の提出', events:'イベント', ye:'夢カナEnglish', todo:'渡航までのToDo', visa:'ビザ情報', school:'学校・滞在先情報', booking:'面談を予約する', resources:'資料・ガイド', notices:'お知らせ' };
+  var TGT_LABEL = { docs:'書類の提出', events:'イベント', ye:'夢カナEnglish', todo:'渡航までのToDo', visa:'ビザ手続きの情報', school:'学校・滞在先情報', booking:'面談を予約する', resources:'資料・ガイド', notices:'お知らせ' };
   if(cur.target) h += '<button class="span2 ms-teal" data-act="go" data-screen="'+esc(cur.target)+'" style="'+TEAL_BTN+'align-self:flex-start;font-size:14.5px;padding:15px 22px;min-height:52px;">'+esc(TGT_LABEL[cur.target]||cur.target)+'のページを開く →</button>';
   h += '<button class="span2" data-act="go" data-screen="notices" style="align-self:flex-start;border:1px solid #E7EBEF;background:#fff;color:#7B8694;font-size:13px;font-weight:700;padding:12px 16px;border-radius:5px;cursor:pointer;min-height:44px;">← お知らせ一覧へ</button>';
   h += '</div>';
@@ -1330,6 +1450,7 @@ function screenContent(){
   if(s==='home') return renderHome();
   if(s==='todo') return renderTodo();
   if(s==='docs') return renderDocs();
+  if(s==='docdetail') return renderDocDetail();
   if(s==='task') return renderTask();
   if(s==='resources') return renderResources();
   if(s==='visa') return renderVisa();
@@ -1368,7 +1489,7 @@ function render(){
   frame.className = 'm-'+mode;
   frame.style.maxWidth = (MODES[mode]||MODES.mobile).width;
 
-  var titles = { home:{en:'My page',ja:'マイページ'}, todo:{en:'Countdown',ja:'渡航までのToDo'}, docs:{en:'Documents',ja:'書類の提出'}, task:{en:'Task',ja:'手続きの詳細'}, resources:{en:'Resources',ja:'資料・ガイド'}, visa:{en:'Visa',ja:'ビザ情報'}, school:{en:'School & Accommodation',ja:'学校・滞在先情報'}, booking:{en:'Counseling',ja:'面談を予約する'}, events:{en:'Events',ja:'イベント'}, ye:{en:'Yumekana English',ja:'夢カナEnglish'}, notices:{en:'Notices',ja:'お知らせ'}, notice:{en:'Notice',ja:'お知らせ詳細'}, spec:{en:'For developers',ja:'API／フィールド仕様'} };
+  var titles = { home:{en:'My page',ja:'マイページ'}, todo:{en:'Countdown',ja:'渡航までのToDo'}, docs:{en:'Documents',ja:'書類の提出'}, docdetail:{en:'Document',ja:'書類の詳しいご案内'}, task:{en:'Task',ja:'手続きの詳細'}, resources:{en:'Resources',ja:'資料・ガイド'}, visa:{en:'Visa',ja:'ビザ手続きの情報'}, school:{en:'School & Accommodation',ja:'学校・滞在先情報'}, booking:{en:'Counseling',ja:'面談を予約する'}, events:{en:'Events',ja:'イベント'}, ye:{en:'Yumekana English',ja:'夢カナEnglish'}, notices:{en:'Notices',ja:'お知らせ'}, notice:{en:'Notice',ja:'お知らせ詳細'}, spec:{en:'For developers',ja:'API／フィールド仕様'} };
   var t = titles[state.screen] || titles.home;
   var h = '';
 
@@ -1431,7 +1552,9 @@ document.getElementById('frame').addEventListener('click', function(e){
       if(scr==='booking') state.bookingStep=1;
       if(scr==='notices') state.noticeId=null;
       break;
-    case 'todoGo': { var tid=el.getAttribute('data-id'); var td=DATA.todos.filter(function(x){return x.id===tid;})[0]; state.devOpen=false; if(td && td.target==='task'){ state.screen='task'; state.taskId=tid; } else { state.screen=(td&&td.target)||'todo'; } break; }
+    case 'todoGo': { var tid=el.getAttribute('data-id'); state.devOpen=false;
+      if(tid.indexOf('doc-')===0){ state.screen='docdetail'; state.docId=tid.slice(4); break; }
+      var td=DATA.todos.filter(function(x){return x.id===tid;})[0]; if(td && td.target==='task'){ state.screen='task'; state.taskId=tid; } else { state.screen=(td&&td.target)||'todo'; } break; }
     case 'openNotice': { var nid=el.getAttribute('data-id'); var n=DATA.notices.filter(function(x){return x.id===nid;})[0]; if(n) n.unread=false; state.screen='notice'; state.noticeId=nid; state.devOpen=false; break; }
     case 'uploadDoc': state.docOverride[el.getAttribute('data-id')]='reviewing'; break;
     case 'preview': state.undecidedPreview=el.getAttribute('data-val'); break;
@@ -1441,7 +1564,7 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'setResCountry': state.resCountry=el.getAttribute('data-code')||''; break;
     case 'opt': state[el.getAttribute('data-key')]=el.getAttribute('data-value'); break;
     case 'toggleOri': state.oriDone=!state.oriDone; break;
-    case 'docDetail': state.docDetail = (state.docDetail===el.getAttribute('data-id')?'':el.getAttribute('data-id')); break;
+    case 'openDoc': state.screen='docdetail'; state.docId=el.getAttribute('data-id'); state.devOpen=false; break;
     case 'toggleFields': state.showFields=!state.showFields; break;
     case 'logout': state.screen='login'; state.devOpen=false; break;
     default: return;
