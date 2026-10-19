@@ -264,14 +264,15 @@ var DATA = {
     { "id":"docs", "label":"必要書類の提出", "phase":"申請準備", "owner":"CRM・Admin", "when":"docsPending", "visaPrep":true,
       "deadline":"2026-08-10", "state":"todo", "actor":"member", "action":"提出", "target":"docs",
       "recommend":"推奨：期限の2週間前（2026年7月27日頃）までにご提出" },
-    { "id":"docreview", "label":"ご提出書類の内容確認", "phase":"申請準備", "owner":"CRM・Admin", "when":"docsReviewing", "visaPrep":true,
-      "deadline":"2026-08-12", "state":"staff", "actor":"staff", "target":"docs" },
-    { "id":"visafee", "label":"ビザ代のお支払い", "phase":"申請", "owner":"CRM・Admin", "when":"hasVisa", "visaPrep":true,
+    { "id":"visafee", "label":"ビザ代のお支払い", "phase":"申請", "owner":"CRM・Admin", "when":"visaFee", "visaPrep":true,
       "deadline":"2026-07-20", "state":"todo", "actor":"member", "action":"お支払い", "target":"visa",
       "page":{ "desc":"請求書をご確認のうえ、期限までにお振込みください。", "cta":"請求書を確認する", "href":"#", "note":"お振込みの確認後、夢カナ側で入金日を登録します。" } },
-    { "id":"visacenter", "label":"ビザセンターの予約・訪問", "phase":"申請", "owner":"Admin", "when":"ukOnly", "visaPrep":true,
-      "deadline":"2026-07-25", "state":"todo", "actor":"member", "action":"ご連絡", "target":"task",
-      "page":{ "desc":"ビザセンターの訪問希望日を3つお知らせください。予約が取れ次第、予約日をこのページでご案内します。", "cta":"希望日を連絡する", "href":"#", "note":"イギリスの方のみ必要な手続きです。" } },
+    { "id":"visacenter", "label":"ビザセンターのご訪問", "phase":"申請", "owner":"Admin", "when":"visaCenterUK", "visaPrep":true,
+      "deadline":"2026-07-25", "state":"todo", "actor":"member", "action":"ご訪問", "target":"task",
+      "page":{ "desc":"ご予約は夢カナが代行します。予約が取れましたら日時をご案内しますので、当日ビザセンターへお越しください。", "cta":"訪問希望日を連絡する", "href":"#", "note":"イギリスの方のみ必要な手続きです。ご予約は夢カナ、ご訪問はお客様にご対応いただきます。" } },
+    { "id":"visacenterca", "label":"ビザセンターのご予約・ご訪問", "phase":"申請", "owner":"Admin", "when":"visaCenterCA", "visaPrep":true,
+      "deadline":"2026-07-30", "state":"todo", "actor":"member", "action":"ご予約・ご訪問", "target":"task",
+      "page":{ "desc":"ビザセンターのご予約とご訪問は、お客様ご自身でお願いします。予約が取れましたら、日時を担当コンサルタントへお知らせください。", "cta":"予約方法を確認する", "href":"#", "note":"カナダの方のみ必要な手続きです。ご予約・ご訪問ともにお客様にご対応いただきます。" } },
     { "id":"flight", "label":"航空券の購入・Eチケットの提出", "phase":"渡航準備", "owner":"CRM", "when":"visaIssued",
       "deadline":"2026-08-05", "state":"todo", "actor":"member", "action":"提出", "target":"task",
       "recommend":"推奨：渡航日の2か月前までにご購入",
@@ -605,10 +606,11 @@ function todoVisible(t){
     case 'visaForm':    return hv && ['AU','NZ','UK','IE'].indexOf(state.country)!==-1 && state.visaStatus==='notApplied';
     /* 未提出か要再提出が1つでもあれば出る。「準備中」は数えない */
     case 'docsPending': return hv && (some('todo')||some('rejected'));
-    /* チェック待ち（確認中）が1つでもあれば出る */
-    case 'docsReviewing': return hv && some('reviewing');
-    case 'hasVisa':     return hv;
-    case 'ukOnly':      return hv && state.country==='UK';
+    /* アイルランドはお客様が移民局へ直接お支払いになるため、夢カナへのお支払いは発生しない */
+    case 'visaFee':     return hv && state.country!=='IE';
+    /* ビザセンターが必要なのはイギリスとカナダのみ。イギリスは予約を夢カナが代行し、カナダは予約も訪問もお客様が対応する */
+    case 'visaCenterUK': return hv && state.country==='UK';
+    case 'visaCenterCA': return hv && state.country==='CA';
     case 'visaIssued':  return afterVisa;
     /* 連絡先「海外保険加入状況」＝OFF の方にだけ出す */
     case 'insurance':   return afterVisa && true;
@@ -745,7 +747,7 @@ function renderTodo(){
     var rail = '<div aria-hidden="true" style="flex-shrink:0;width:18px;display:flex;justify-content:center;padding-top:15px;">'+node+'</div>';
     return '<div data-act="todoGo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:stretch;border-top:1px solid #F3F6F7;cursor:pointer;">'+rail+'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;padding:13px 0;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:12.5px;font-weight:800;letter-spacing:.02em;padding:6px 11px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';white-space:nowrap;">'+esc(t.stateLabel)+'</span></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+phaseTag+whoTag+'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div>'+(t.recommend?'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#1F7A72;">'+esc(t.recommend)+'</span>':'')+(t.who?'<span style="font-size:11px;color:'+t.whoFg+';">'+esc(t.who)+'</span>':'')+(t.backend&&state.showFields?'<span style="font-size:10.5px;color:#8A5BB8;background:#F4ECF9;padding:4px 9px;border-radius:4px;line-height:1.6;">裏側：'+esc(t.backend)+'</span>':'')+'</div><div style="flex-shrink:0;display:flex;align-items:center;color:#9AA6B2;font-size:18px;">→</div></div>';
   }).join('')+'</div></section>';
-  h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;background:#F9FBFB;border-radius:8px;padding:12px 14px;">ご契約から渡航までに必要な手続きを、<b style="color:#2A3340;">期限の早い順</b>に並べています。各項目をタップすると手続きのページへ移動します。ステータスは、ご提出・ご対応や夢カナ側の確認に応じて<b style="color:#2A3340;">自動で更新</b>されます（お客様がチェックを付ける必要はありません）。</p>';
+  h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;background:#F9FBFB;border-radius:8px;padding:12px 14px;">お客様ご自身にご対応いただく手続きだけを、<b style="color:#2A3340;">期限の早い順</b>に並べています。夢カナ側で進める作業はこの一覧には出ません。各項目をタップすると手続きのページへ移動します。ステータスは、ご提出・ご対応や夢カナ側の確認に応じて<b style="color:#2A3340;">自動で更新</b>されます（お客様がチェックを付ける必要はありません）。</p>';
   h += matSection('関連資料', matBy(state.country,['visa','event']));
   h += '</div>';
   return h;
