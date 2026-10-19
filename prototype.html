@@ -93,34 +93,33 @@ var DATA = {
   "visaStageMap": {
     "note":"Zohoの「VISA申請」レコードのステージを、お客様向けの5ステップのどこに当てるかの対応表です。ステージの正式な一覧がまだ共有されていないため、下記は2026年10月9日・14日のMTGで実際に挙がった名称だけで組んだ暫定版です。空欄の行は一覧の共有待ちです。",
     "steps": [
-      { "label":"書類の準備", "stages":["ビザ申請待ち","未申請"] },
-      { "label":"お支払い",   "stages":[] },
-      { "label":"申請手続き", "stages":["確認中","申請中"] },
-      { "label":"移民局の審査", "stages":["発行待ち"] },
-      { "label":"発給済み",   "stages":["発行済み"] }
+      { "label":"書類のご準備", "who":"お客様", "stages":["ビザ申請待ち","未申請"] },
+      { "label":"ビザ代のお支払い", "who":"お客様", "stages":[] },
+      { "label":"夢カナが申請", "who":"夢カナ", "stages":["確認中","申請中"] },
+      { "label":"結果を待つ", "who":"待つだけ", "stages":["発行待ち"] },
+      { "label":"発給されました", "who":"", "stages":["発行済み"] }
     ]
   },
   "noVisaSupport": ["PH","US","MT"],
   "lotteryCountries": ["CA","IE"],
   "commonVisa": { "visaNumber":"V-2026-88231", "status":"waiting", "docDeadline":"2026-08-10", "invoiceDue":"2026-07-20", "applyFrom":"2026-06-01" },
   "countryExtra": {
-    "UK": { "note":"イギリスは eVisa のオンライン確認と、ビザセンターでの生体認証の予約が必要です。", "fields": [
-      { "label":"eVisa確認", "value":"未確認", "tag":"warning", "field":"visa.evisaChecked", "note":"eVisaの確認方法は、夢カナよりご案内します。" },
-      { "label":"ビザセンター予約日", "value":"2026-07-15", "field":"visa.centerAppointmentAt" },
-      { "label":"入国期限", "value":"2027-09-30", "field":"visa.entryDeadline", "entryBy":true }
+    "UK": { "note":"イギリスはビザセンターでの生体認証の予約が必要です。ビザが発給されると、オンラインでのeVisaのご確認をお願いします。", "fields": [
+      { "label":"ビザセンター予約日", "value":"2026-07-15", "field":"visa.centerAppointmentAt", "showWhen":"preIssue" },
+      { "label":"入国期限", "value":"2027-09-30", "field":"visa.entryDeadline", "entryBy":true, "showWhen":"postIssue" }
     ]},
     "CA": { "note":"カナダはビザ発行に数ヶ月かかるため、ビザセンターの訪問期限の管理が重要です。", "fields": [
-      { "label":"ビザセンター訪問期限", "value":"2026-07-30", "tag":"warning", "field":"visa.centerBookingDueDate" },
-      { "label":"入国期限", "value":"2027-01-15", "field":"visa.entryDeadline", "entryBy":true }
+      { "label":"ビザセンター訪問期限", "value":"2026-07-30", "tag":"warning", "field":"visa.centerBookingDueDate", "showWhen":"preIssue" },
+      { "label":"入国期限", "value":"2027-01-15", "field":"visa.entryDeadline", "entryBy":true, "showWhen":"postIssue" }
     ]},
     "AU": { "note":"オーストラリアは残高証明書の提出が必要です。健康診断は該当者のみ受診します。", "fields": [
-      { "label":"入国期限", "value":"2027-02-01", "field":"visa.entryDeadline", "entryBy":true }
+      { "label":"入国期限", "value":"2027-02-01", "field":"visa.entryDeadline", "entryBy":true, "showWhen":"postIssue" }
     ]},
     "NZ": { "note":"ニュージーランドは代行申請同意フォーム（INZ1225）の提出が必要です。書類は「書類の状況」からご確認いただけます。", "fields": [
-      { "label":"入国期限", "value":"2027-02-10", "field":"visa.entryDeadline", "entryBy":true }
+      { "label":"入国期限", "value":"2027-02-10", "field":"visa.entryDeadline", "entryBy":true, "showWhen":"postIssue" }
     ]},
     "IE": { "note":"アイルランドは申請時に履歴書と航空券（片道もしくは復路）の提出が必要です。書類は「書類の状況」からご確認いただけます。", "fields": [
-      { "label":"入国期限", "value":"2027-01-20", "field":"visa.entryDeadline", "entryBy":true }
+      { "label":"入国期限", "value":"2027-01-20", "field":"visa.entryDeadline", "entryBy":true, "showWhen":"postIssue" }
     ]}
   },
   "requiredDocs": {
@@ -273,6 +272,14 @@ var DATA = {
     { "id":"visacenterca", "label":"ビザセンターのご予約・ご訪問", "phase":"申請", "owner":"Admin", "when":"visaCenterCA", "visaPrep":true,
       "deadline":"2026-07-30", "state":"todo", "actor":"member", "action":"ご予約・ご訪問", "target":"task",
       "page":{ "desc":"ビザセンターのご予約とご訪問は、お客様ご自身でお願いします。予約が取れましたら、日時を担当コンサルタントへお知らせください。", "cta":"予約方法を確認する", "href":"#", "note":"カナダの方のみ必要な手続きです。ご予約・ご訪問ともにお客様にご対応いただきます。" } },
+    { "id":"schoolfee", "label":"学校・滞在先費用のお支払い", "phase":"申請", "owner":"Admin", "when":"schoolFee",
+      "deadline":"2026-07-18", "state":"todo", "actor":"member", "action":"お支払い", "target":"school",
+      "recommend":"推奨：期限の1週間前までにお振込み",
+      "page":{ "desc":"語学学校と滞在先の費用を、期限までにお振込みください。学校と滞在先がどちらもある場合は、請求書を1枚にまとめてお送りします。", "cta":"請求書を確認する", "href":"#", "note":"お振込みの確認後、学校・滞在先情報の「入金状況」が更新されます。" } },
+    { "id":"evisa", "label":"eVisaのご確認", "phase":"渡航準備", "owner":"Admin", "when":"evisaUK",
+      "deadline":"2026-08-20", "state":"todo", "actor":"member", "action":"ご確認", "target":"task",
+      "recommend":"推奨：ビザ開始日の2〜3週間前までにご確認",
+      "page":{ "desc":"イギリスのビザは、パスポートへシールを貼る方式から、オンラインでご確認いただく方式（eVisa）に変わりました。UKVIのアカウントにログインして内容をご確認のうえ、夢カナへご共有ください。", "cta":"eVisaを確認する", "href":"#", "note":"記載内容に誤りがあった場合は、お早めに担当コンサルタントへご連絡ください。期限を過ぎても手続きが止まることはありませんが、渡航前にご確認をお願いします。" } },
     { "id":"flight", "label":"航空券の購入・Eチケットの提出", "phase":"渡航準備", "owner":"CRM", "when":"visaIssued",
       "deadline":"2026-08-05", "state":"todo", "actor":"member", "action":"提出", "target":"task",
       "recommend":"推奨：渡航日の2か月前までにご購入",
@@ -284,11 +291,11 @@ var DATA = {
       "backend":"航空券のご提出後に出す案。ご自身で申請・ビザなしの方への出し方は確認中" }
   ],
   "documents": [
-    { "id":"passport", "name":"パスポート（全ページ）", "state":"approved", "updatedAt":"2026-07-02" },
-    { "id":"bankstatement", "name":"取引明細書（原本）", "state":"reviewing", "updatedAt":"2026-07-11" },
-    { "id":"bankstatement_en", "name":"取引明細書（英訳）", "state":"todo", "updatedAt":null },
-    { "id":"balance", "name":"残高証明書（原本）", "state":"rejected", "updatedAt":"2026-07-09", "ngReason":"発行日が3ヶ月以上前のため、最新のものをご提出ください。" },
-    { "id":"medical", "name":"健康診断証明書", "state":"todo", "updatedAt":null, "addedByStaff":true, "dueDate":"2026-08-05", "bookedAt":"2026-07-25" }
+    { "id":"passport", "name":"パスポート（全ページ）", "state":"approved", "updatedAt":"2026-07-02", "detail":"顔写真のページだけでなく、スタンプや査証のページを含めた全ページが必要です。見開きで撮影し、四隅が切れていないかご確認ください。" },
+    { "id":"bankstatement", "name":"取引明細書（原本）", "state":"reviewing", "updatedAt":"2026-07-11", "detail":"直近3か月ぶんの入出金が分かるものをご用意ください。銀行の窓口またはオンラインバンキングから発行できます。" },
+    { "id":"bankstatement_en", "name":"取引明細書（英訳）", "state":"todo", "updatedAt":null, "detail":"原本と同じ内容を英語に翻訳したものです。公証が必要な場合がありますので、翻訳の前に担当コンサルタントへご確認ください。" },
+    { "id":"balance", "name":"残高証明書（原本）", "state":"rejected", "updatedAt":"2026-07-09", "ngReason":"発行日が3ヶ月以上前のため、最新のものをご提出ください。", "detail":"ご本人名義の口座の残高が分かる証明書です。発行から3か月以内のものをご提出ください。" },
+    { "id":"medical", "name":"健康診断証明書", "state":"todo", "updatedAt":null, "addedByStaff":true, "dueDate":"2026-08-05", "bookedAt":"2026-07-25", "detail":"移民局が指定する病院で受診します。結果を病院から移民局へ直接お送りするケースと、お客様が受け取って夢カナへご提出いただくケースがあります。どちらになるかは、ご予約時にご案内します。" }
   ],
   "notices": [
     { "id":"n-0708", "target":"docs", "date":"2026-07-08", "tag":"リマインド", "title":"本日が必要書類のご提出期限です", "body":"本日が必要書類のご提出期限です。まだご提出いただいていない方は、本日中にマイページの「必要書類の提出」よりアップロードをお願いします。提出が難しい場合は、担当コンサルタントまでご連絡ください。", "unread":true },
@@ -437,7 +444,7 @@ var state = {
   taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
-  visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'',
+  visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'', docDetail:'',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
@@ -494,6 +501,7 @@ var VISA_STATUS = {
     next:'渡航先はビザの取得が不要です。' }
 };
 function visaSteps(){ return DATA.visaStageMap.steps.map(function(s){ return s.label; }); }
+function visaStepWho(){ return DATA.visaStageMap.steps.map(function(s){ return s.who||''; }); }
 /* Zohoの「VISA申請」ステージ名から、お客様向けのステップ番号を引く */
 function visaStageStep(stage){
   var n = 0;
@@ -600,18 +608,23 @@ function todoVisible(t){
   if(t.visaPrep && state.within12m!=='yes') return false;
   var ds = docStateList(), hv = hasVisaFlow();
   var some = function(k){ return ds.indexOf(k)!==-1; };
-  var afterVisa = !hv || state.visaStatus==='issued';
+  var issued = state.visaStatus==='issued';
+  var afterVisa = !hv || issued;
   switch(t.when){
     /* AU・NZ・UK・IE のみ（CAは対象外）。ビザステータス＝未申請のときに出す */
     case 'visaForm':    return hv && ['AU','NZ','UK','IE'].indexOf(state.country)!==-1 && state.visaStatus==='notApplied';
     /* 未提出か要再提出が1つでもあれば出る。「準備中」は数えない */
     case 'docsPending': return hv && (some('todo')||some('rejected'));
     /* アイルランドはお客様が移民局へ直接お支払いになるため、夢カナへのお支払いは発生しない */
-    case 'visaFee':     return hv && state.country!=='IE';
+    case 'visaFee':     return hv && state.country!=='IE' && !issued;
     /* ビザセンターが必要なのはイギリスとカナダのみ。イギリスは予約を夢カナが代行し、カナダは予約も訪問もお客様が対応する */
-    case 'visaCenterUK': return hv && state.country==='UK';
-    case 'visaCenterCA': return hv && state.country==='CA';
+    case 'visaCenterUK': return hv && state.country==='UK' && !issued;
+    case 'visaCenterCA': return hv && state.country==='CA' && !issued;
     case 'visaIssued':  return afterVisa;
+    /* 学校・滞在先の請求書は同じ日付にまとめるため、お支払いのToDoも1件にする */
+    case 'schoolFee':   return state.arrangement==='yes';
+    /* eVisaはイギリスのみ。ビザが発給されてからご確認いただく */
+    case 'evisaUK':     return state.country==='UK' && state.visaStatus==='issued';
     /* 連絡先「海外保険加入状況」＝OFF の方にだけ出す */
     case 'insurance':   return afterVisa && true;
     default: return true;
@@ -769,6 +782,8 @@ function renderDocs(){
     if(doc.addedByStaff) b += '<span style="align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#F4ECF9;color:#8A5BB8;">お客様ごとに追加された書類</span>';
     if(doc.dueDate) b += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:11px;color:#7B8694;">この書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:#B4522A;">'+esc(jd(doc.dueDate))+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
     if(stt==='rejected') b += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:9px 12px;font-size:12px;color:#B4522A;border-radius:0 4px 4px 0;">再提出のお願い：'+esc(doc.ngReason||'担当者からご案内します。')+'</div>';
+    if(doc.detail) b += '<button data-act="docDetail" data-id="'+esc(doc.id)+'" style="align-self:flex-start;border:none;background:none;color:#2F9E93;font-size:12px;font-weight:700;cursor:pointer;padding:4px 0;min-height:32px;text-decoration:underline;">'+(state.docDetail===doc.id?'詳細を閉じる':'この書類について詳しく見る')+'</button>';
+    if(doc.detail && state.docDetail===doc.id) b += '<p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.85;background:#F9FBFB;border-left:3px solid #39B3A6;padding:11px 13px;border-radius:0 6px 6px 0;">'+esc(doc.detail)+'</p>';
     var nx = docNext(stt);
     b += '<div style="background:'+nx.bg+';border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;"><span style="font-size:10.5px;font-weight:800;color:'+nx.fg+';">'+nx.title+'</span><span style="font-size:12px;color:#2A3340;line-height:1.7;">'+esc(nx.text)+'</span></div>';
     if(showUpload) b += '<button class="ms-outline" data-act="uploadDoc" data-id="'+esc(doc.id)+'" style="'+OUTLINE_BTN+'align-self:flex-start;font-size:13px;padding:11px 18px;min-height:46px;white-space:nowrap;" title="書類種別「'+esc(doc.name)+'」を選んだ状態でフォームが開きます">ファイルをアップロード</button>';
@@ -918,7 +933,14 @@ function renderVisa(){
   var status = visaStatus(code);
   var st = VISA_STATUS[status] || VISA_STATUS.waiting;
   var isLottery = d.lotteryCountries.indexOf(state.country)!==-1;
-  var fit = visaFitCheck(extra.fields);
+  /* ビザが発給される前と後で、お見せする項目が変わる（2026年10月19日のミーティングで確認） */
+  var issued = status==='issued';
+  var shownFields = extra.fields.filter(function(f){
+    if(f.showWhen==='preIssue')  return !issued;
+    if(f.showWhen==='postIssue') return issued;
+    return true;
+  });
+  var fit = visaFitCheck(shownFields);
 
   var h = '<div class="appcontent">';
 
@@ -951,7 +973,7 @@ function renderVisa(){
         var dot = done ? '<span style="width:20px;height:20px;border-radius:100px;background:#39B3A6;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"></path></svg></span>'
           : cur ? '<span style="width:22px;height:22px;border-radius:100px;background:#fff;border:3px solid #EF7A48;box-shadow:0 0 0 3px #FDECE5;flex-shrink:0;"></span>'
           : '<span style="width:20px;height:20px;border-radius:100px;background:#fff;border:2px solid #D8DEE4;color:#9AA6B2;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">'+n+'</span>';
-        return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;"><div style="display:flex;align-items:center;width:100%;"><div style="flex:1;height:3px;border-radius:2px;background:'+(i===0?'transparent':(n<=curStep?'#39B3A6':'#E1E6EA'))+';"></div>'+dot+'<div style="flex:1;height:3px;border-radius:2px;background:'+(i===visaSteps().length-1?'transparent':(n<curStep?'#39B3A6':'#E1E6EA'))+';"></div></div><span style="font-size:10.5px;text-align:center;line-height:1.35;color:'+(cur?'#B4522A':(done?'#2A3340':'#9AA6B2'))+';font-weight:'+(cur?800:600)+';">'+esc(sName)+'</span></div>';
+        return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;"><div style="display:flex;align-items:center;width:100%;"><div style="flex:1;height:3px;border-radius:2px;background:'+(i===0?'transparent':(n<=curStep?'#39B3A6':'#E1E6EA'))+';"></div>'+dot+'<div style="flex:1;height:3px;border-radius:2px;background:'+(i===visaSteps().length-1?'transparent':(n<curStep?'#39B3A6':'#E1E6EA'))+';"></div></div><span style="font-size:10.5px;text-align:center;line-height:1.35;color:'+(cur?'#B4522A':(done?'#2A3340':'#9AA6B2'))+';font-weight:'+(cur?800:600)+';">'+esc(sName)+'</span>'+(visaStepWho()[i]?'<span style="font-size:9.5px;color:#9AA6B2;text-align:center;line-height:1.3;">'+esc(visaStepWho()[i])+'</span>':'')+'</div>';
       }).join('')+'</div>';
       if(state.showFields) h += '<code style="font-size:10.5px;color:#9AA6B2;background:#F3F6F7;padding:2px 7px;border-radius:3px;align-self:flex-start;">VISA申請ステージ：'+esc(state.visaStage||'（未設定・ビザステータスから推定）')+'</code>';
       h += '</div>';
@@ -994,10 +1016,12 @@ function renderVisa(){
       }).join('');
       return b+'</div>';
     }).join('');
-    h += '<button class="ms-teal" data-act="go" data-screen="docs" style="'+TEAL_BTN+'align-self:stretch;font-size:15px;padding:16px 20px;min-height:52px;">必要書類を提出する →</button>';
+    /* ご提出が必要な書類が無いときはボタンを出さない（2026年10月19日のUX指摘） */
+    if(cntAct>0) h += '<button class="ms-teal" data-act="go" data-screen="docs" style="'+TEAL_BTN+'align-self:stretch;font-size:15px;padding:16px 20px;min-height:52px;">必要書類を提出する →</button>';
+    else h += '<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">いまご提出をお願いする書類はありません。新しく必要になった書類は、こちらとお知らせでご案内します。</p>';
     h += '</section>';
     }
-    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">ビザ情報</h2>'+extra.fields.map(fieldRow).join('');
+    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">ビザ情報</h2>'+(shownFields.length?shownFields.map(fieldRow).join(''):'<p style="margin:0;font-size:12.5px;color:#7B8694;line-height:1.7;">この段階でお客様にご確認いただく項目はありません。ビザが発給されると、入国期限などをこちらに表示します。</p>');
     h += '<p style="margin:0;font-size:12.5px;color:#7B8694;background:#F3F6F7;border-left:3px solid #39B3A6;padding:11px 14px;border-radius:0 4px 4px 0;">'+esc(extra.note)+'</p>';
     h += '</section>';
     var guides = d.guides[code]||[];
@@ -1417,6 +1441,7 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'setResCountry': state.resCountry=el.getAttribute('data-code')||''; break;
     case 'opt': state[el.getAttribute('data-key')]=el.getAttribute('data-value'); break;
     case 'toggleOri': state.oriDone=!state.oriDone; break;
+    case 'docDetail': state.docDetail = (state.docDetail===el.getAttribute('data-id')?'':el.getAttribute('data-id')); break;
     case 'toggleFields': state.showFields=!state.showFields; break;
     case 'logout': state.screen='login'; state.devOpen=false; break;
     default: return;
