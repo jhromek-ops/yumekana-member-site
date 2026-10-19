@@ -51,7 +51,7 @@
 "use strict";
 
 var DATA = {
-  "member": { "name":"山田 花奈", "nameRomaji":"YAMADA HANA", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "returnDate":"2027-09-04", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。",
+  "member": { "name":"山田 花奈", "nameRomaji":"YAMADA HANA", "memberId":"04317", "email":"hana.yamada@example.com", "contractType":"ワーホリ", "departureDate":"2026-09-05", "consultant":"中島（なかしま）", "supportFee":"¥420,000", "contractNote":"※一括の場合の総額です。分割（信販会社利用）の総額・残額は表示対象外です。",
     "jtb": { "type":"サポートあり", "months":12, "code":"JTB-2026-0431" } },
   "ye": {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
@@ -509,35 +509,24 @@ function visaStatus(code){
   if(DATA.noVisaSupport.indexOf(state.country)!==-1) return 'none';
   return state.visaStatus || DATA.commonVisa.status;
 }
-/* ビザの日付と渡航予定を突き合わせる。
-   イギリスはZohoに「ビザ有効期間の最終日」があるため 帰国予定日 と比較し、
-   その他の国は「入国期限」しかないため 渡航予定日 と比較する（軸が異なる）。 */
+/* 入国期限と渡航予定日を突き合わせる。
+   2026年10月19日の朝礼で、国ごとに名称が違っていた日付（イギリスの「ビザ有効期間の最終日」など）を
+   すべて「入国期限」に統一したため、判定軸も1本になった。 */
 function visaFitCheck(fields){
-  var validTo=null, entryBy=null;
-  fields.forEach(function(f){ if(f.validTo) validTo=f.value; if(f.entryBy) entryBy=f.value; });
-  if(!validTo && !entryBy) return null;
-  var isExpiry = !!validTo;
-  var limit = validTo || entryBy;
-  var title = isExpiry ? 'ビザの有効期間と滞在予定' : '入国期限と渡航予定日';
+  var limit = null;
+  fields.forEach(function(f){ if(f.entryBy) limit = f.value; });
+  if(!limit) return null;
+  var title = '入国期限と渡航予定日';
   if(state.visaFit==='unknown') return { kind:'unknown', title:title,
-    text:isExpiry
-      ? '帰国予定日がまだ登録されていません。登録されると、滞在中にビザが失効しないかを自動で判定します。'
-      : '渡航予定日がまだ登録されていません。登録されると、入国期限に間に合うかを自動で判定します。',
+    text:'渡航予定日がまだ登録されていません。登録されると、入国期限に間に合うかを自動で判定します。',
     action:'担当コンサルタントへご予定をお知らせください。' };
-  var mine = isExpiry ? DATA.member.returnDate : DATA.member.departureDate;
-  if(state.visaFit==='conflict') mine = isExpiry ? '2027-12-31' : '2027-12-31';
-  if(new Date(limit) >= new Date(mine)) return { kind:'ok', title:title,
-    text:isExpiry
-      ? 'ご予定の滞在期間（'+jd(DATA.member.departureDate)+' 〜 '+jd(mine)+'）は、ビザの有効期間（'+jd(limit)+'まで）に収まっています。'
-      : 'ご予定の渡航日（'+jd(mine)+'）は、入国期限（'+jd(limit)+'）に間に合っています。',
+  var dep = state.visaFit==='conflict' ? '2027-12-31' : DATA.member.departureDate;
+  if(new Date(limit) >= new Date(dep)) return { kind:'ok', title:title,
+    text:'ご予定の渡航日（'+jd(dep)+'）は、入国期限（'+jd(limit)+'）に間に合っています。',
     action:'このままご渡航いただけます。' };
   return { kind:'conflict', title:title,
-    text:isExpiry
-      ? 'ご予定の帰国日（'+jd(mine)+'）が、ビザの有効期限（'+jd(limit)+'）を過ぎています。このままでは滞在中にビザが失効します。'
-      : 'ご予定の渡航日（'+jd(mine)+'）が、入国期限（'+jd(limit)+'）を過ぎています。この期限までに入国しないとビザが無効になります。',
-    action:isExpiry
-      ? '帰国日を早めるか、ビザの延長・再申請が必要です。担当コンサルタントへご相談ください。'
-      : '渡航日を入国期限より前に変更する必要があります。担当コンサルタントへご相談ください。' };
+    text:'ご予定の渡航日（'+jd(dep)+'）が、入国期限（'+jd(limit)+'）を過ぎています。この期限までに入国しないとビザが無効になります。',
+    action:'渡航日を入国期限より前に変更する必要があります。担当コンサルタントへご相談ください。' };
 }
 function docState(doc){ return state.docOverride[doc.id] || DOC_PATTERNS[state.docPattern] || doc.state; }
 
