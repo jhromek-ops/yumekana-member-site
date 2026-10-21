@@ -57,7 +57,8 @@ var DATA = {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
     "leave":{ "start":"2026-10-01", "end":"2026-10-31" },
     "private":{ "has":true, "start":"2026-10-01", "end":"2027-03-31" },
-    "booking":"#", "materials":"#", "resumeForm":"#",
+    "booking":"#", "resumeForm":"https://classroom.google.com/",
+    "materialsByLevel":{ "入門":"https://tinyurl.com/26ym4pym", "初級":"https://tinyurl.com/mryk8t9z", "中級":"https://tinyurl.com/3xr78ucf", "上級":"https://tinyurl.com/ycxudmfe" },
     "milestones":"#",
     "manual":"https://sites.google.com/jstyle-yumekana.com/yumekana-english?usp=sharing",
     "tasks":[
@@ -75,8 +76,8 @@ var DATA = {
   },
   "eventPrograms": [
     { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "group":"start", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
-    { "name":"Coffee Talk", "en":"英語フリートーク", "tag":"英語", "kind":"yeOnly", "group":"english", "link":"#", "desc":"英語で自由に話せる、毎日開催のフリートークセッションです。", "recurring":{ "when":"毎日（1日に複数回）", "note":"開催時間はスケジュールでご確認ください" } },
-    { "name":"Tea Talk", "en":"日本語フリートーク", "tag":"日本語", "kind":"yeOnly", "group":"english", "link":"#", "desc":"日本語で気軽に相談・雑談できるフリートークセッション。水・土・日に開催します。", "recurring":{ "when":"毎週 水・土・日", "time":"12:00〜12:30" } },
+    { "name":"Coffee Talk", "en":"英語フリートーク", "tag":"英語", "kind":"yeOnly", "group":"english", "link":"https://classroom.google.com/", "desc":"英語で自由に話せる、毎日開催のフリートークセッションです。", "recurring":{ "when":"毎日（1日に複数回）", "note":"開催時間はスケジュールでご確認ください" } },
+    { "name":"Tea Talk", "en":"日本語フリートーク", "tag":"日本語", "kind":"yeOnly", "group":"english", "link":"https://classroom.google.com/", "desc":"日本語で気軽に相談・雑談できるフリートークセッション。水・土・日に開催します。", "recurring":{ "when":"毎週 水・土・日", "time":"12:00〜12:30" } },
     { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "group":"end", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
   ],
   "countries": [
@@ -93,11 +94,11 @@ var DATA = {
   "visaStageMap": {
     "note":"Zohoの「VISA申請」レコードのステージを、お客様向けの5ステップのどこに当てるかの対応表です。ステージの正式な一覧がまだ共有されていないため、下記は2026年10月9日・14日のMTGで実際に挙がった名称だけで組んだ暫定版です。空欄の行は一覧の共有待ちです。",
     "steps": [
-      { "label":"書類のご準備", "who":"お客様", "stages":["ビザ申請待ち","未申請"] },
-      { "label":"ビザ代のお支払い", "who":"お客様", "stages":[] },
-      { "label":"夢カナが申請", "who":"夢カナ", "stages":["確認中","申請中"] },
-      { "label":"結果を待つ", "who":"待つだけ", "stages":["発行待ち"] },
-      { "label":"発給されました", "who":"", "stages":["発行済み"] }
+      { "label":"書類のご準備", "who":"お客様", "status":"notApplied", "stages":["ビザ申請待ち","未申請"] },
+      { "label":"ビザ代のお支払い", "who":"お客様", "status":"notApplied", "stages":[] },
+      { "label":"夢カナが申請", "who":"夢カナ", "status":"waiting", "stages":["確認中","申請中"] },
+      { "label":"結果を待つ", "who":"待つだけ", "status":"waiting", "stages":["発行待ち"] },
+      { "label":"発給されました", "who":"", "status":"issued", "stages":["発行済み"] }
     ]
   },
   "noVisaSupport": ["PH","US","MT"],
@@ -373,7 +374,6 @@ var DATA = {
   "notices": [
     { "id":"n-0708", "target":"docs", "date":"2026-07-08", "tag":"リマインド", "title":"本日が必要書類のご提出期限です", "body":"本日が必要書類のご提出期限です。まだご提出いただいていない方は、本日中にマイページの「必要書類の提出」よりアップロードをお願いします。提出が難しい場合は、担当コンサルタントまでご連絡ください。", "unread":true },
     { "id":"n-0702", "target":"docs", "date":"2026-07-02", "tag":"担当者より", "title":"健康診断の提出期限が近づいています", "body":"健康診断証明書の提出期限が近づいています。指定病院での受診が必要なため、まだ受診されていない方はお早めにご予約ください。指定病院リストは資料ダウンロードよりご確認いただけます。", "unread":true },
-    { "id":"n-0624", "target":"events", "date":"2026-06-24", "tag":"お知らせ", "title":"夢カナEnglish 7月のグループレッスン日程を更新しました", "body":"7月のグループレッスン日程を更新しました。Google Classroom よりご確認のうえ、ご希望の枠にお申し込みください。定員に達した枠は表示されません。", "unread":false }
   ],
   "events": [
     { "id":"e-mtg", "title":"担当チームとの面談", "meta":"直近の予約なし", "action":"面談を予約する", "primary":true },
@@ -517,7 +517,7 @@ var state = {
   taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
-  visaStatus:'waiting', visaFit:'ok', docsReady:'yes', visaStage:'', docId:'',
+  visaFit:'ok', docsReady:'yes', visaStage:'発行待ち', docId:'', tripDay:'before',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
@@ -581,6 +581,12 @@ function visaStageStep(stage){
   DATA.visaStageMap.steps.forEach(function(s,i){ if(s.stages.indexOf(stage)!==-1) n = i+1; });
   return n;
 }
+/* VISA申請ステージから、お客様にお見せするビザステータスを決める */
+function visaStageStatus(){
+  var n = visaStageStep(state.visaStage);
+  var sp = DATA.visaStageMap.steps[n-1];
+  return (sp && sp.status) || DATA.commonVisa.status;
+}
 function visaAllStages(){
   var a = [];
   DATA.visaStageMap.steps.forEach(function(s){ s.stages.forEach(function(x){ a.push(x); }); });
@@ -589,7 +595,7 @@ function visaAllStages(){
 function visaStatus(code){
   if(state.visaHandling==='self') return 'self';
   if(DATA.noVisaSupport.indexOf(state.country)!==-1) return 'none';
-  return state.visaStatus || DATA.commonVisa.status;
+  return visaStageStatus();
 }
 /* 入国期限と渡航予定日を突き合わせる。
    2026年10月19日の朝礼で、国ごとに名称が違っていた日付（イギリスの「ビザ有効期間の最終日」など）を
@@ -681,11 +687,11 @@ function todoVisible(t){
   if(t.visaPrep && state.within12m!=='yes') return false;
   var ds = docStateList(), hv = hasVisaFlow();
   var some = function(k){ return ds.indexOf(k)!==-1; };
-  var issued = state.visaStatus==='issued';
+  var issued = visaStageStatus()==='issued';
   var afterVisa = !hv || issued;
   switch(t.when){
     /* AU・NZ・UK・IE のみ（CAは対象外）。ビザステータス＝未申請のときに出す */
-    case 'visaForm':    return hv && ['AU','NZ','UK','IE'].indexOf(state.country)!==-1 && state.visaStatus==='notApplied';
+    case 'visaForm':    return hv && ['AU','NZ','UK','IE'].indexOf(state.country)!==-1 && visaStageStatus()==='notApplied';
     /* 未提出か要再提出が1つでもあれば出る。「準備中」は数えない */
     case 'docsPending': return hv && (some('todo')||some('rejected'));
     /* アイルランドはお客様が移民局へ直接お支払いになるため、夢カナへのお支払いは発生しない */
@@ -697,7 +703,7 @@ function todoVisible(t){
     /* 学校・滞在先の請求書は同じ日付にまとめるため、お支払いのToDoも1件にする */
     case 'schoolFee':   return state.arrangement==='yes';
     /* eVisaはイギリスのみ。ビザが発給されてからご確認いただく */
-    case 'evisaUK':     return state.country==='UK' && state.visaStatus==='issued';
+    case 'evisaUK':     return state.country==='UK' && visaStageStatus()==='issued';
     /* 連絡先「海外保険加入状況」＝OFF の方にだけ出す */
     case 'insurance':   return afterVisa && true;
     default: return true;
@@ -744,7 +750,7 @@ function renderHome(){
   var openTodos = todos.filter(function(t){return !t.done && !t.isStaff;}).slice(0,3);
   var pct = todos.length ? Math.round(doneCount/todos.length*100) : 0;
   var alertCount = todos.filter(function(t){return !t.done && !t.isStaff;}).length;
-  var days = Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
+  var days = state.tripDay==='today' ? 0 : Math.max(0, Math.round((new Date(m.departureDate)-new Date('2026-07-08'))/86400000));
   var selMeta = countryMeta(state.country);
   var cityLabel = (selMeta.city && selMeta.city!=='—') ? selMeta.label+'・'+selMeta.city : selMeta.label;
   var chips = [{ html:flagSVG(state.country,20)+'<span>'+esc(cityLabel)+'</span>', bg:'#E7F5F3', fg:'#2F9E93' }];
@@ -755,7 +761,12 @@ function renderHome(){
   h += '<section class="span2" style="'+SECTION+'">';
   h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"><div><div style="font-size:17px;font-weight:700;">'+esc(m.name)+' さま</div><div style="font-size:10.5px;letter-spacing:.08em;color:#9AA6B2;margin-top:1px;">'+esc(m.nameRomaji)+'</div>'+(state.cheer?'<div style="font-size:12.5px;font-weight:600;color:#2F9E93;margin-top:2px;">'+esc(state.cheer)+'</div>':'')+'</div><div style="text-align:right;"><div style="font-size:10.5px;letter-spacing:.1em;color:#7B8694;">会員ID</div><div style="font-variant-numeric:tabular-nums;font-size:13px;">'+esc(m.memberId)+'</div></div></div>';
   h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+chips.map(function(c){return '<span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+(c.html||esc(c.text))+'</span>';}).join('')+'</div>';
-  h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
+  if(days===0){
+    /* 渡航当日。カウントダウンの代わりにお見送りのごあいさつをお見せする */
+    h += '<div style="border-top:1px solid #E7EBEF;padding-top:12px;display:flex;flex-direction:column;gap:5px;"><div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;"><span style="font-size:22px;font-weight:800;color:#1F7A72;letter-spacing:.02em;">いってらっしゃい！</span><span style="font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">本日ご出発</span></div><p style="margin:0;font-size:12.5px;color:#5B6672;line-height:1.85;">'+esc(jd(m.departureDate))+' のご出発です。'+esc(countryMeta(state.country).label)+'での毎日が、'+esc(m.name)+'さまにとって実りあるものになりますように。現地に着かれたら、契約者様専用LINEからひとことお知らせください。</p></div>';
+  } else {
+    h += '<div style="display:flex;align-items:baseline;gap:8px;border-top:1px solid #E7EBEF;padding-top:12px;"><span style="font-size:12px;color:#7B8694;">渡航まで</span><span style="font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1;">'+days+'</span><span style="font-size:12px;color:#7B8694;">日（'+esc(jd(m.departureDate))+'）</span></div>';
+  }
   if(hasYE()) h += '<div style="display:flex;gap:20px 24px;flex-wrap:wrap;border-top:1px solid #E7EBEF;padding-top:12px;"><div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">夢カナEnglish レベル</span><span style="font-size:14px;font-weight:800;color:#4A56B8;">'+esc(d.ye.level)+'</span></div>'+yePeriods().map(function(p){return '<div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:11px;color:#7B8694;">'+esc(p.label)+'</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:#2A3340;">'+esc(jd(p.start))+' 〜 '+esc(jd(p.end))+'</span></div>';}).join('')+'</div>';
   h += '</section>';
   /* alert */
@@ -1367,9 +1378,9 @@ function renderYe(){
   /* レッスン・教材 */
   var links = [
     {ja:'レッスン予約サイト',sub:'オンライン英会話レッスンの予約',href:y.booking,icon:'M4 6h16v10H4zM9 20h6M12 16v4'},
-    {ja:'スケジュール・教材サイト',sub:'レッスン日程と学習教材',icon:'M7 4h10v16H7zM10 9h4M10 13h4',disabled:true},
+    {ja:'スケジュール・教材サイト',sub:esc(y.level)+'クラスのレッスン日程と学習教材',href:(y.materialsByLevel||{})[y.level]||'',icon:'M7 4h10v16H7zM10 9h4M10 13h4'},
     {ja:'Learning Milestones',sub:'あなたの学習到達目標（受講生ごとに異なります）',href:y.milestones,icon:'M4 20V6l7 4 7-4v14M11 10v10'},
-    {ja:'履歴書・ワーホリ提出フォーム',sub:'外部フォームで提出',icon:'M6 3h9l3 3v15H6zM9 12l2 2 4-4',disabled:true}
+    {ja:'履歴書・ワーホリ提出フォーム',sub:'Google Classroom から提出',href:y.resumeForm,icon:'M6 3h9l3 3v15H6zM9 12l2 2 4-4'}
   ];
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">レッスン・教材</h2>'+links.map(linkRow).join('')+nextPhaseNote+'</section>';
   /* 英会話イベント (Coffee / Tea Talk — same links as the イベント page) */
@@ -1406,11 +1417,11 @@ function renderDev(){
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">学校・滞在先の手配 — member.arrangement</span><div style="display:flex;gap:6px;">'+optBtns('arrangement',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">※対象者は全体の約20%です</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">滞在先タイプ — member.stayType</span><div style="display:flex;gap:6px;">'+optBtns('stayType',[{label:'ホームステイ',value:'homestay'},{label:'寮',value:'dorm'},{label:'自己手配',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">連絡先ステータス — ToDoの大前提</span><div style="display:flex;gap:6px;">'+optBtns('contractStatus',[{label:'契約',value:'contract'},{label:'契約前',value:'prospect'}])+'</div><span style="font-size:11px;color:#7B8694;">ToDoはすべて「契約」の方にのみ表示します。</span></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航まで — ホームのカウントダウン</span><div style="display:flex;gap:6px;">'+optBtns('tripDay',[{label:'出発前（日数を表示）',value:'before'},{label:'出発当日（0日）',value:'today'}])+'</div><span style="font-size:11px;color:#7B8694;">「出発当日」にすると、カウントダウンの代わりに「いってらっしゃい！」のごあいさつを表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航日が12か月以内か</span><div style="display:flex;gap:6px;">'+optBtns('within12m',[{label:'12か月以内',value:'yes'},{label:'12か月より先',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">ビザ準備のToDo（VISA申請フォーム・必要書類・ビザ代・ビザセンター）は、12か月以内の方にのみ表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ご契約日 — 2025年5月以前かどうか</span><div style="display:flex;gap:6px;">'+optBtns('contractBefore202505',[{label:'2025年6月以降',value:'no'},{label:'2025年5月以前',value:'yes'}])+'</div><span style="font-size:11px;color:#7B8694;">2025年5月以前のご契約には、初回オリエンの参加記録に関する注意書きを表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">書類の状態パターン — document[].state</span><div style="display:flex;gap:6px;">'+optBtns('docPattern',[{label:'混在',value:'mixed'},{label:'全て未提出',value:'allTodo'},{label:'全て受領',value:'allApproved'}])+'</div></div>';
-  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザステータス — Zohoの選択肢</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+optBtns('visaStatus',[{label:'未申請',value:'notApplied'},{label:'発行待ち',value:'waiting'},{label:'発行済み',value:'issued'}])+'</div><span style="font-size:11px;color:#7B8694;">Zohoの実際の選択肢は「発行済み／未申請／ご自身で／発行待ち／ビザなし」です。「ご自身で」「ビザなし」はビザ手続き・渡航国の設定から自動で決まります。</span></div>';
-  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">VISA申請ステージ — ステップ表示の位置</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+[{label:'未設定',value:''}].concat(visaAllStages().map(function(x){return {label:x,value:x};})).map(function(o){var on=state.visaStage===o.value;return '<button data-act="opt" data-key="visaStage" data-value="'+esc(o.value)+'" style="border:1px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#39B3A6':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+esc(o.label)+'</button>';}).join('')+'</div><span style="font-size:11px;color:#7B8694;">ビザ情報ページの「ビザ申請の進み方」で、現在地をどのステップに置くかを決めます。ステージの正式な一覧は共有待ちのため、現在は暫定の対応表です。</span></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">VISA申請ステージ — ステップ表示の位置</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+[{label:'未設定',value:''}].concat(visaAllStages().map(function(x){return {label:x,value:x};})).map(function(o){var on=state.visaStage===o.value;return '<button data-act="opt" data-key="visaStage" data-value="'+esc(o.value)+'" style="border:1px solid '+(on?'#39B3A6':'#E7EBEF')+';background:'+(on?'#39B3A6':'#FFFFFF')+';color:'+(on?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+esc(o.label)+'</button>';}).join('')+'</div><span style="font-size:11px;color:#7B8694;">ビザ手続きの情報ページの「ビザ申請の進み方」で現在地が変わり、ビザステータス（未申請／発行待ち／発行済み）と、渡航までのToDoの内容もこれに連動します。ステージの正式な一覧は共有待ちのため、現在は暫定の対応表です。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ有効期限と滞在予定の判定</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+optBtns('visaFit',[{label:'期間内',value:'ok'},{label:'期限切れ',value:'conflict'},{label:'渡航予定日なし',value:'unknown'}])+'</div><span style="font-size:11px;color:#7B8694;">ビザ情報ページで、滞在中にビザが失効しないかの判定結果を切り替えます。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">書類の状況の公開可否</span><div style="display:flex;gap:6px;">'+optBtns('docsReady',[{label:'公開',value:'yes'},{label:'準備中（グレーアウト）',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">Googleドライブの整理が間に合わない場合、ビザ情報ページの「書類の状況」をグレーアウトし、公開予定日を表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:8px;border-top:1px dashed #C9D2D9;padding-top:14px;"><button data-act="toggleFields" style="border:1px solid #39B3A6;background:'+(state.showFields?'#39B3A6':'#FFFFFF')+';color:'+(state.showFields?'#FFFFFF':'#2F9E93')+';font-size:12.5px;font-weight:700;padding:12px;border-radius:5px;cursor:pointer;min-height:44px;">フィールド名の表示：'+(state.showFields?'ON':'OFF')+'</button><button data-act="go" data-screen="spec" style="border:1px solid #C9D2D9;background:#fff;color:#2A3340;font-size:12.5px;font-weight:700;padding:12px;border-radius:5px;cursor:pointer;min-height:44px;">API／フィールド仕様書を開く</button><button data-act="logout" style="border:1px solid #C9D2D9;background:#fff;color:#7B8694;font-size:12.5px;font-weight:700;padding:12px;border-radius:5px;cursor:pointer;min-height:44px;">ログイン画面に戻る</button></div>';
