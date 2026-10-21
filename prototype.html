@@ -359,10 +359,10 @@ var DATA = {
       "recommend":"推奨：渡航日の2か月前までにご購入",
       "backend":"出す条件を「ビザステータス＝発行済み」でよいか確認中。旅行会社経由で手配した方の扱いも未確定",
       "page":{ "desc":"航空券をご購入のうえ、Eチケットの控えをお送りください。", "cta":"Eチケットを提出する", "href":"#", "note":"ご提出後、夢カナで確認し「確認中」から「完了」に変わります。", "mats":[ { "t":"航空券手配代理店 MTCジャパン 説明会", "u":"https://drive.google.com/file/d/1giRyyB6C0cehDX9ZkQohMf_B4jkxUDmc/view" } ] } },
-    { "id":"orientation", "label":"渡航前オリエンテーションの参加", "phase":"渡航準備", "owner":"CRM", "when":"visaIssued",
+    { "id":"orientation", "label":"渡航前オリエンテーションの参加", "phase":"渡航準備", "owner":"CRM",
       "deadline":"2026-08-10", "state":"todo", "actor":"member", "action":"申込", "target":"events",
       "recommend":"推奨：渡航日の1か月前までにご参加",
-      "backend":"航空券のご提出後に出す案。ご自身で申請・ビザなしの方への出し方は確認中" }
+      "backend":"航空券のご提出後に出す案もあったが、ご自身で申請・ビザなしの方にも必要なため、現在はビザの状況にかかわらず表示している。出すタイミングはCRMに確認中" }
   ],
   "documents": [
     { "id":"passport", "name":"パスポート", "state":"approved", "updatedAt":"2026-07-02" },
@@ -1176,17 +1176,21 @@ function renderSchool(){
     h += '</div>'; return h;
   }
   var sc = d.school;
+  /* お支払いと申請の状況は、学校・滞在先に共通する情報なので上にまとめる */
+  var statusRows = [
+    {label:'請求書 支払期限',value:jd(sc.invoiceDue),field:'school.invoiceDue'},
+    {label:'支払状況',value:sc.invoicePaid?'入金確認済み':'未入金',field:'school.invoicePaid'},
+    {label:'申請状況',value:sc.applyStage,field:'school.applyStage',note:'語学学校と滞在先のお申し込みが、いまどの段階にあるかを表示しています。入学許可証を受領すると「完了」になります。'}
+  ];
   var schoolRows = [
     {label:'都市',value:sc.city,field:'school.city'},
     {label:'学校名',value:sc.name,field:'school.name'},
     {label:'コース',value:sc.course,field:'school.course'},
-    {label:'就学期間',value:jd(sc.start)+' 〜 '+jd(sc.end)+'（'+sc.weeks+'）',field:'school.start / end'},
-    {label:'請求書 支払期限',value:jd(sc.invoiceDue),field:'school.invoiceDue'},
-    {label:'入金状況',value:sc.invoicePaid?'入金確認済み（'+jd(sc.invoicePaid)+'）':'未入金',field:'school.invoicePaid'},
-    {label:'申請状況',value:sc.applyStage,field:'school.applyStage',note:'語学学校のお申し込みが、いまどの段階にあるかを表示しています。入学許可証を受領すると「完了」になります。'}
+    {label:'就学期間',value:jd(sc.start)+' 〜 '+jd(sc.end)+'（'+sc.weeks+'）',field:'school.start / end'}
   ];
   var stayLabel = state.stayType==='homestay'?'ホームステイ':(state.stayType==='dorm'?'寮':'自己手配');
   h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
+  h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;background:#F9FBFB;"><h2 style="margin:0;font-size:15px;font-weight:700;">お支払い・申請の状況</h2>'+statusRows.map(plainRow).join('')+'</section>';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">語学学校</h2>'+schoolRows.map(plainRow).join('')+'</section>';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">滞在先</h2><span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(stayLabel)+'</span></div>'+(d.stayFields[state.stayType]||[]).map(plainRow).join('')+'</section>';
   h += '</div></div>';
@@ -1265,6 +1269,11 @@ function renderSpec(){
   }).join('');
   h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.8;background:#F9FBFB;border-radius:6px;padding:11px 13px;">「ビザステータス」（発行済み／未申請／ご自身で／発行待ち／ビザなし）は確定済みの選択肢で、画面上部のバッジと「次にすること」に使っています。上の表は、それとは別に<b style="color:#2A3340;">VISA申請レコードのステージ</b>をステップのどこに置くかを決めるものです。ステージの一覧が共有され次第、空欄を埋めてください。</p>';
   h += '</section>';
+  /* 渡航予定日の決め方（2026年10月21日のミーティング） */
+  h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;"><h2 style="margin:0;font-size:14.5px;font-weight:700;">渡航予定日の決め方</h2>'
+    +'<p style="margin:0;font-size:12px;color:#7B8694;line-height:1.85;">ホームのカウントダウンと、ビザの期限判定に使う日付です。<b style="color:#2A3340;">決定渡航日に値が入っていればそちらを使い、空欄であれば仮渡航日を使います。</b></p>'
+    +'<p style="margin:0;font-size:12px;color:#7B8694;line-height:1.85;">渡航日はZohoの3か所（コンサル商談・連絡先・VISA申請）にあり、どれを最優先とするかはレオさんに確認中です。VISA申請モジュールの値がもっとも新しい可能性が高いと見ています。</p>'
+    +'</section>';
   /* マッピング完了後の3分類（2026年10月14日MTG） */
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;"><h2 style="margin:0;font-size:14.5px;font-weight:700;">項目の3分類</h2><p style="margin:0;font-size:12px;color:#7B8694;line-height:1.8;">1項目対1項目のマッピングが終わると、各項目は次の3つに分かれます。画面に出す／出さないとは別の軸なので、「非表示だがPhase 1で必要（裏側の処理が要る）」という項目に注意が必要です。</p>';
   h += [
