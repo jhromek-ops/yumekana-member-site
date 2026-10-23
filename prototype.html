@@ -101,6 +101,7 @@ var DATA = {
       { "label":"発給されました", "who":"", "status":"issued", "stages":["発行済み"] }
     ]
   },
+  "outsourcedPartner": { "name":"Edoca", "url":"https://edoca.ca/ja/", "countries":["CA"] },
   "noVisaSupport": ["PH","US","MT"],
   "lotteryCountries": ["CA","IE"],
   "commonVisa": { "visaNumber":"V-2026-88231", "status":"waiting", "docDeadline":"2026-08-10", "invoiceDue":"2026-07-20", "applyFrom":"2026-06-01" },
@@ -517,7 +518,7 @@ var state = {
   taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
-  visaFit:'ok', docsReady:'yes', visaStage:'発行待ち', docId:'', tripDay:'before',
+  visaFit:'ok', docsReady:'yes', visaStage:'発行待ち', docId:'', tripDay:'before', visaPipeline:'normal',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
@@ -681,7 +682,11 @@ function renderLogin(){
    ・すべてのToDoは 連絡先ステータス＝契約 の方にのみ表示する
    ・ビザ準備のToDo（visaPrep）は、さらに渡航日が12か月以内の方にのみ表示する */
 function docStateList(){ return DATA.documents.map(docState); }
-function hasVisaFlow(){ return state.visaHandling!=='self' && DATA.noVisaSupport.indexOf(state.country)===-1; }
+/* ビザ申請を外部の事業者へ委託しているお客様（2026年10月23日のミーティング）。
+   カナダはEdoca（https://edoca.ca/ja/）が申請を進めるため、会員サイトでは
+   パスポートと渡航予定日だけをお見せし、以降の進み具合はEdocaへご案内する。 */
+function isOutsourced(){ return state.visaPipeline==='edoca'; }
+function hasVisaFlow(){ return state.visaHandling!=='self' && DATA.noVisaSupport.indexOf(state.country)===-1 && !isOutsourced(); }
 function todoVisible(t){
   if(state.contractStatus!=='contract') return false;
   if(t.visaPrep && state.within12m!=='yes') return false;
@@ -693,7 +698,7 @@ function todoVisible(t){
     /* AU・NZ・UK・IE のみ（CAは対象外）。ビザステータス＝未申請のときに出す */
     case 'visaForm':    return hv && ['AU','NZ','UK','IE'].indexOf(state.country)!==-1 && visaStageStatus()==='notApplied';
     /* 未提出か要再提出が1つでもあれば出る。「準備中」は数えない */
-    case 'docsPending': return hv && (some('todo')||some('rejected'));
+    case 'docsPending': return (hv || isOutsourced()) && (some('todo')||some('rejected'));
     /* アイルランドはお客様が移民局へ直接お支払いになるため、夢カナへのお支払いは発生しない */
     case 'visaFee':     return hv && state.country!=='IE' && !issued;
     /* ビザセンターが必要なのはイギリスとカナダのみ。イギリスは予約を夢カナが代行し、カナダは予約も訪問もお客様が対応する */
@@ -718,6 +723,8 @@ function computeTodos(){
     DATA.documents.forEach(function(doc){
       var st = docState(doc);
       if(st!=='todo' && st!=='rejected') return;
+      /* 外部委託の場合、会員サイトでお預かりするのはパスポートのみ */
+      if(isOutsourced() && doc.id!=='passport') return;
       base.push({ id:'doc-'+doc.id, docId:doc.id, label:doc.name, phase:t.phase, owner:t.owner,
         deadline:doc.dueDate||t.deadline, sortAt:doc.dueDate||t.deadline,
         state: st,
@@ -1075,6 +1082,20 @@ function renderVisa(){
 
   var h = '<div class="appcontent">';
 
+  if(isOutsourced()){
+    var pass = d.documents.filter(function(x){ return x.id==='passport'; })[0];
+    var ps = pass ? docState(pass) : 'todo';
+    var pp = PALETTE[ps]||PALETTE.todo;
+    h += '<section class="span2" style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;"><div style="display:flex;flex-direction:column;gap:6px;"><span style="font-size:11.5px;color:#7B8694;">ビザ申請の進め方</span><span style="font-size:17px;font-weight:800;padding:9px 18px;border-radius:8px;background:#EEF0FB;color:#4A56B8;align-self:flex-start;">提携事業者が代行します</span></div>'+flagSVG(state.country,72)+'</div>';
+    h += '<p style="margin:0;font-size:12.5px;color:#2A3340;line-height:1.9;">'+esc(selMeta.label)+'のビザ申請は、夢カナの提携先である '+esc(DATA.outsourcedPartner.name)+' が進めます。申請の進み具合や必要書類のご案内は '+esc(DATA.outsourcedPartner.name)+' から直接ご連絡しますので、会員サイトではお預かりするパスポートとご渡航予定日のみ表示しています。</p>';
+    h += '<a href="'+esc(DATA.outsourcedPartner.url)+'" target="_blank" rel="noopener" class="ms-teal" style="'+TEAL_BTN+'align-self:flex-start;font-size:14px;padding:13px 20px;min-height:48px;text-decoration:none;display:inline-flex;align-items:center;">'+esc(DATA.outsourcedPartner.name)+'のサイトを見る →</a>';
+    h += '<div style="display:flex;flex-direction:column;gap:3px;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">ご渡航予定日</span><span style="font-variant-numeric:tabular-nums;font-size:14px;">'+esc(jd(d.member.departureDate))+'</span></div>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #F3F6F7;padding-top:12px;"><div style="min-width:0;"><div style="font-size:11.5px;color:#7B8694;">パスポート</div><div style="font-variant-numeric:tabular-nums;font-size:11px;color:#7B8694;">'+(pass&&pass.updatedAt?'提出日 '+esc(jd(pass.updatedAt)):'未提出')+'</div></div><span style="flex-shrink:0;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(DOC_STATUS_LABEL[ps]||'未提出')+'</span></div>';
+    h += '<p style="margin:0;font-size:11.5px;color:#9AA6B2;line-height:1.8;">ご不明な点は、まず '+esc(DATA.outsourcedPartner.name)+' へお問い合わせください。ご連絡がつかない場合は、契約者様専用LINEまでお知らせください。</p>';
+    h += '</section></div>';
+    return h;
+  }
+
   if(isUndecided){
     h += '<div class="span2" style="background:#E7E9EE;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;"><p style="margin:0;font-size:12.5px;">渡航先が未定のため、参考として表示パターンをプレビューしています。</p><div style="display:flex;gap:8px;">';
     h += '<button data-act="preview" data-val="UK" style="flex:1;border:1px solid #1F2A44;background:'+(state.undecidedPreview==='UK'?'#1F2A44':'#FFFFFF')+';color:'+(state.undecidedPreview==='UK'?'#FFFFFF':'#1F2A44')+';font-size:12px;font-weight:700;padding:9px;border-radius:4px;cursor:pointer;min-height:40px;">イギリス例</button>';
@@ -1418,6 +1439,7 @@ function renderDev(){
   h += '<p style="margin:0;font-size:11.5px;color:#7B8694;">本番では CRM／Zoho の登録情報から自動で切り替わります。</p>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;border-bottom:1px dashed #C9D2D9;padding-bottom:14px;"><span style="font-size:11.5px;font-weight:700;">表示モード — mobile / tablet / desktop</span><div style="display:flex;gap:6px;">'+optBtns('viewMode',[{label:'モバイル',value:'mobile'},{label:'タブレット',value:'tablet'},{label:'デスクトップ',value:'desktop'}])+'</div><span style="font-size:11px;color:#7B8694;">モバイル：1カラム＋下部ナビ／タブレット：2カラム／デスクトップ：左サイドナビ＋2カラム</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航国 — member.country</span><div style="display:flex;flex-wrap:wrap;gap:6px;">'+DATA.countries.map(function(c){var active=state.country===c.code;return '<button data-act="setCountry" data-code="'+esc(c.code)+'" style="border:1px solid '+(active?'#39B3A6':'#E7EBEF')+';background:'+(active?'#39B3A6':'#FFFFFF')+';color:'+(active?'#FFFFFF':'#7B8694')+';font-size:12px;font-weight:700;padding:8px 11px;border-radius:4px;cursor:pointer;min-height:40px;">'+esc(c.label)+'</button>';}).join('')+'</div></div>';
+  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ申請のパイプライン</span><div style="display:flex;gap:6px;">'+optBtns('visaPipeline',[{label:'夢カナが代行',value:'normal'},{label:'提携事業者（Edoca）',value:'edoca'}])+'</div><span style="font-size:11px;color:#7B8694;">「提携事業者」にすると、ビザ手続きの情報はパスポートとご渡航予定日のみになり、ビザ関連のToDoも出なくなります。カナダが対象です。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ビザ手続き — member.visaHandling</span><div style="display:flex;gap:6px;">'+optBtns('visaHandling',[{label:'代行',value:'agency'},{label:'ご自身で申請',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">夢カナEnglish 契約 — member.ye.has</span><div style="display:flex;gap:6px;">'+optBtns('yeContract',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">「あり」のとき、契約情報に受講期間・メニューに夢カナEnglishを表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">受講期間の補足（休学期間） — member.ye.leave</span><div style="display:flex;gap:6px;">'+optBtns('yeLeave',[{label:'あり',value:'yes'},{label:'なし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">夢カナEnglishページの受講期間に「休学期間」を表示します。</span></div>';
