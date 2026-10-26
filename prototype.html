@@ -526,7 +526,7 @@ var state = {
   devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
   slotId:null, noticeId:null, cheer:'',
   visaFit:'ok', docsReady:'yes', visaStage:'発行待ち', docId:'', tripDay:'before', visaPipeline:'normal',
-  departureFixed:'tentative', driveFolder:'yes',
+  driveFolder:'yes',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
 };
 DATA.todos.forEach(function(t){ state.todoDone[t.id] = t.state === 'done'; });
@@ -706,13 +706,6 @@ function driveUpload(doc){
   var d = DATA.driveSubmission;
   return { label:d.label, note:d.note, noFolder:d.noFolder, url: state.driveFolder==='yes' ? d.url : '' };
 }
-/* ご渡航予定日が確定するのは航空券をお預かりしたあと（ビザ申請より後）のため、
-   書類まわりの期限は仮のご渡航予定日をもとに決まる。2026年10月26日のCRM・Adminとの
-   ミーティングで、新しい「仮目安」項目は作らず、CRMが初回オリエンのヒアリング後に入れる
-   VISA申請の「必要書類提出期限」をそのまま出すと決めた。ご渡航予定日が仮のあいだは
-   その旨が伝わるよう「（目安）」を添える。 */
-function isEstimated(){ return state.departureFixed==='tentative'; }
-function estTag(){ return isEstimated() ? '（目安）' : ''; }
 /* 書類の提出期限は、VISA申請の「必要書類提出期限」（Required_Documents_Submission_Deadline）
    ひとつを全書類で共有する。CRMが初回オリエンのヒアリングを経て入れる値で、書類が何件でも
    まとめてこの1日付になる（2026年10月26日のCRM・Adminとのミーティングで決定）。
@@ -722,7 +715,7 @@ function docDue(doc){ return (doc && doc.deadlineSource==='visaFee') ? DATA.comm
 /* ビザページの書類行。ご提出がまだなら期限、お預かり済みなら「提出済み」。
    「未提出」「提出日」は出さない（2026年10月26日のご指摘。ToDoと同じ見え方にする） */
 function docDueLine(doc, st){
-  return (st==='approved' || st==='reviewing') ? '提出済み' : '提出期限 '+jd(docDue(doc))+estTag();
+  return (st==='approved' || st==='reviewing') ? '提出済み' : '提出期限 '+jd(docDue(doc));
 }
 function hasVisaFlow(){ return state.visaHandling!=='self' && DATA.noVisaSupport.indexOf(state.country)===-1 && !isOutsourced(); }
 function todoVisible(t){
@@ -783,9 +776,7 @@ function computeTodos(){
     if(done){ key='done'; stateLabel='完了'; bg=PALETTE.done.bg; fg=PALETTE.done.fg; who=''; }
     else if(isStaff){ key='staff'; stateLabel='夢カナ確認中'; bg='#EEF0FB'; fg='#4A56B8'; who='夢カナが対応中（お客様の操作は不要です）'; whoBg='#EEF0FB'; whoFg='#4A56B8'; }
     else { key = overdue?'overdue':(rejected?'rejected':'todo'); stateLabel=(t.action||'ご対応')+'が必要'; if(overdue) stateLabel='期限超過・'+stateLabel; bg=(overdue?PALETTE.overdue.bg:(rejected?PALETTE.rejected.bg:PALETTE.todo.bg)); fg=(overdue?PALETTE.overdue.fg:(rejected?PALETTE.rejected.fg:PALETTE.todo.fg)); who='お客様のご対応が必要です'; whoBg='#FDF3E7'; whoFg='#B4522A'; }
-    /* 日付の期限だけが逆算の対象。「契約後2週間以内」のような文言には目安を付けない */
-    var est = !!t.visaPrep && isEstimated() && t.deadline.indexOf('-')!==-1;
-    return { id:t.id, docId:t.docId||'', label:t.label, phase:t.phase||'', owner:t.owner||'', backend:t.backend||'', deadlineLabel:'期限：'+(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline))+(est?'（目安）':''), estimated:est, recommend:t.recommend||'', done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
+    return { id:t.id, docId:t.docId||'', label:t.label, phase:t.phase||'', owner:t.owner||'', backend:t.backend||'', deadlineLabel:'期限：'+(t.deadline.indexOf('-')===-1?t.deadline:jd(t.deadline)), recommend:t.recommend||'', done:done, state:key, stateLabel:stateLabel, bg:bg, fg:fg, who:who, whoBg:whoBg, whoFg:whoFg, isStaff:isStaff,
       labelColor: done?'#7B8694':'#2A3340', labelDecoration: done?'line-through':'none' };
   });
 }
@@ -875,7 +866,7 @@ var DOC_STATUS_LABEL = { todo:'未提出', reviewing:'確認中', approved:'受�
 var DOC_BADGE_VISA = { todo:'提出が必要', rejected:'要再提出', reviewing:'確認中', approved:'受領済み', preparing:'準備中', optional:'該当者のみ' };
 /* ステータスごとに「いつまでに・どこで・何をするか」を示し、CRMへのお問い合わせを減らす */
 function docNext(stt, doc){
-  var dl = jd(DATA.commonVisa.docDeadline)+estTag();
+  var dl = jd(DATA.commonVisa.docDeadline);
   var drv = doc ? driveUpload(doc) : null;
   if(stt==='todo') return { bg:'#FDF3E7', fg:'#B4522A', title:'次にすること',
     text: !drv
@@ -914,7 +905,9 @@ function renderTodo(){
     var rail = '<div aria-hidden="true" style="flex-shrink:0;width:18px;display:flex;justify-content:center;padding-top:15px;">'+node+'</div>';
     return '<div data-act="todoGo" data-id="'+esc(t.id)+'" style="display:flex;gap:12px;align-items:stretch;border-top:1px solid #F3F6F7;cursor:pointer;">'+rail+'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;padding:13px 0;"><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><span style="font-size:14px;font-weight:600;color:'+t.labelColor+';text-decoration:'+t.labelDecoration+';">'+esc(t.label)+'</span><span style="flex-shrink:0;font-size:12.5px;font-weight:800;letter-spacing:.02em;padding:6px 11px;border-radius:6px;background:'+t.bg+';color:'+t.fg+';white-space:nowrap;">'+esc(t.stateLabel)+'</span></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+phaseTag+whoTag+'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(t.deadlineLabel)+'</span></div>'+(t.recommend?'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#1F7A72;">'+esc(t.recommend)+'</span>':'')+(t.who?'<span style="font-size:11px;color:'+t.whoFg+';">'+esc(t.who)+'</span>':'')+(t.backend&&state.showFields?'<span style="font-size:10.5px;color:#8A5BB8;background:#F4ECF9;padding:4px 9px;border-radius:4px;line-height:1.6;">裏側：'+esc(t.backend)+'</span>':'')+'</div><div style="flex-shrink:0;display:flex;align-items:center;color:#9AA6B2;font-size:18px;">→</div></div>';
   }).join('')+'</div></section>';
-  if(todos.some(function(t){ return t.estimated; })) h += '<p style="margin:0;font-size:11.5px;color:#B4522A;line-height:1.75;background:#FDF3E7;border-radius:8px;padding:12px 14px;">ご渡航予定日がまだ確定していないため、<b>（目安）</b>と付いている期限は、現在のご渡航予定日から逆算したおおよその時期です。ご渡航予定日が確定しましたら自動で更新し、お知らせでご案内します。お手続きの条件によって前後する場合も、夢カナからご連絡しますのでご安心ください。</p>';
+  /* 期限が動くことはあるので、その場合はこちらから連絡する旨を添える
+     （2026年10月23日の中村さんのご提案。10月26日に「目安」の表記はやめた） */
+  h += '<p style="margin:0;font-size:11.5px;color:#B4522A;line-height:1.75;background:#FDF3E7;border-radius:8px;padding:12px 14px;">書類の提出期限は、ご渡航予定日の変更やお手続きの条件によって前後する場合があります。変更がある場合は夢カナからご連絡し、この画面の期限も自動で更新しますので、ご安心ください。</p>';
   h += '<p style="margin:0;font-size:11.5px;color:#7B8694;line-height:1.7;background:#F9FBFB;border-radius:8px;padding:12px 14px;">お客様ご自身にご対応いただく手続きだけを、<b style="color:#2A3340;">期限の早い順</b>に並べています。夢カナ側で進める作業はこの一覧には出ません。各項目をタップすると手続きのページへ移動します。ステータスは、ご提出・ご対応や夢カナ側の確認に応じて<b style="color:#2A3340;">自動で更新</b>されます（お客様がチェックを付ける必要はありません）。</p>';
   h += matSection('関連資料', matBy(state.country,['visa','event']));
   h += '</div>';
@@ -930,7 +923,7 @@ function renderDocDetail(){
   var h = '<div class="appcontent">';
   /* いまの状態 */
   h += '<section class="span2" style="'+SECTION+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;"><div style="display:flex;flex-direction:column;gap:3px;min-width:0;"><h2 style="margin:0;font-size:17px;font-weight:700;">'+esc(doc.name)+'</h2>'+(doc.updatedAt?'<span style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">最終更新 '+esc(jd(doc.updatedAt))+'</span>':'')+'</div><span style="flex-shrink:0;font-size:13px;font-weight:800;padding:6px 12px;border-radius:6px;background:'+pp.bg+';color:'+pp.fg+';">'+esc(lbl)+'</span></div>';
-  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#B4522A;">'+esc(jd(docDue(doc)))+estTag()+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
+  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid #F3F6F7;padding-top:12px;"><span style="font-size:11.5px;color:#7B8694;">必要書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:#B4522A;">'+esc(jd(docDue(doc)))+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
   if(stt==='rejected') h += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:10px 13px;font-size:12.5px;color:#B4522A;border-radius:0 4px 4px 0;line-height:1.75;">再提出のお願い：'+esc(doc.ngReason||'担当者からご案内します。')+'</div>';
   h += '<div style="background:'+nx.bg+';border-radius:6px;padding:11px 13px;display:flex;flex-direction:column;gap:3px;"><span style="font-size:10.5px;font-weight:800;color:'+nx.fg+';">'+nx.title+'</span><span style="font-size:12.5px;color:#2A3340;line-height:1.75;">'+esc(nx.text)+'</span></div>';
   if(stt==='todo'||stt==='rejected'){
@@ -976,7 +969,7 @@ function renderDocs(){
     b += '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div style="font-size:14px;font-weight:600;">'+esc(doc.name)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+(doc.updatedAt?'更新 '+esc(jd(doc.updatedAt)):'未提出')+'</div></div><span style="flex-shrink:0;font-size:13px;font-weight:800;letter-spacing:.02em;padding:6px 12px;border-radius:6px;background:'+p.bg+';color:'+p.fg+';">'+esc(lbl)+'</span></div>';
     if(who) b += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:'+who.bg+';color:'+who.fg+';">'+who.tag+'</span><span style="font-size:11px;color:'+who.fg+';">'+who.text+'</span></div>';
     if(doc.addedByStaff) b += '<span style="align-self:flex-start;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:#F4ECF9;color:#8A5BB8;">お客様ごとに追加された書類</span>';
-    b += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:11px;color:#7B8694;">必要書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:#B4522A;">'+esc(jd(docDue(doc)))+estTag()+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
+    b += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:11px;color:#7B8694;">必要書類の提出期限</span><span style="font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:#B4522A;">'+esc(jd(docDue(doc)))+'</span>'+(doc.bookedAt?'<span style="font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:#EAFAF0;color:#1F8B4C;">予約済み '+esc(jd(doc.bookedAt))+'</span>':'')+'</div>';
     if(stt==='rejected') b += '<div style="background:#FDECE5;border-left:3px solid #EF7A48;padding:9px 12px;font-size:12px;color:#B4522A;border-radius:0 4px 4px 0;">再提出のお願い：'+esc(doc.ngReason||'担当者からご案内します。')+'</div>';
     b += '<button data-act="openDoc" data-id="'+esc(doc.id)+'" class="ms-notice" style="align-self:flex-start;border:none;background:none;color:#2F9E93;font-size:12.5px;font-weight:700;cursor:pointer;padding:4px 0;min-height:32px;display:inline-flex;align-items:center;gap:5px;"><span class="ms-link">提出のしかた・注意点を見る</span><span style="font-size:13px;">›</span></button>';
     var nx = docNext(stt, doc);
@@ -1517,7 +1510,6 @@ function renderDev(){
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">滞在先タイプ — member.stayType</span><div style="display:flex;gap:6px;">'+optBtns('stayType',[{label:'ホームステイ',value:'homestay'},{label:'寮',value:'dorm'},{label:'自己手配',value:'self'}])+'</div></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">連絡先ステータス — ToDoの大前提</span><div style="display:flex;gap:6px;">'+optBtns('contractStatus',[{label:'契約',value:'contract'},{label:'契約前',value:'prospect'}])+'</div><span style="font-size:11px;color:#7B8694;">ToDoはすべて「契約」の方にのみ表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航まで — ホームのカウントダウン</span><div style="display:flex;gap:6px;">'+optBtns('tripDay',[{label:'出発前（日数を表示）',value:'before'},{label:'出発当日（0日）',value:'today'}])+'</div><span style="font-size:11px;color:#7B8694;">「出発当日」にすると、カウントダウンの代わりに「いってらっしゃい！」のごあいさつを表示します。</span></div>';
-  h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ご渡航予定日の状態 — 期限の目安表示</span><div style="display:flex;gap:6px;">'+optBtns('departureFixed',[{label:'仮渡航日',value:'tentative'},{label:'確定渡航日',value:'fixed'}])+'</div><span style="font-size:11px;color:#7B8694;">「仮渡航日」のあいだは、ビザ準備の期限に「（目安）」を付け、ToDoページに注記を出します。確定渡航日は航空券をお預かりしたあとに登録されるため、書類のご提出時点では通常「仮渡航日」です。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">Driveフォルダ — Drive_Submission_Folder_URL</span><div style="display:flex;gap:6px;">'+optBtns('driveFolder',[{label:'URLあり',value:'yes'},{label:'URLなし',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">イギリスのパスポートの提出先です。URLが入っていればボタン、空なら「担当者からLINEでご案内したフォルダへ」の文言だけを出します（連携仕様 2-4）。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">渡航日が12か月以内か</span><div style="display:flex;gap:6px;">'+optBtns('within12m',[{label:'12か月以内',value:'yes'},{label:'12か月より先',value:'no'}])+'</div><span style="font-size:11px;color:#7B8694;">ビザ準備のToDo（VISA申請フォーム・必要書類・ビザ代・ビザセンター）は、12か月以内の方にのみ表示します。</span></div>';
   h += '<div style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11.5px;font-weight:700;">ご契約日 — 2025年5月以前かどうか</span><div style="display:flex;gap:6px;">'+optBtns('contractBefore202505',[{label:'2025年6月以降',value:'no'},{label:'2025年5月以前',value:'yes'}])+'</div><span style="font-size:11px;color:#7B8694;">2025年5月以前のご契約には、初回オリエンの参加記録に関する注意書きを表示します。</span></div>';
