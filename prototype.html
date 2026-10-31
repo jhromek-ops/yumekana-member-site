@@ -335,9 +335,12 @@ var DATA = {
     "self": [ { "label":"滞在手配", "value":"自己手配", "field":"stay.arrangedBy" } ]
   },
   "todos": [
-    { "id":"orientation1", "label":"初回オリエンテーションの予約", "phase":"契約直後", "owner":"CRM",
-      "deadline":"契約後2週間以内", "sortAt":"2026-04-26", "state":"done", "actor":"member", "action":"予約", "target":"events",
-      "page":{ "desc":"予約リンクから初回オリエンテーションをご予約ください。ご予約が済むと、ビザのご案内に進みます。", "cta":"初回オリエンを予約する", "href":"#", "note":"ご予約はeeasyから承ります。予約が入ると自動で反映されます。" } },
+    /* 会員サイトのアカウントは初回オリエンテーションにご参加いただいたあとに付与する
+       （2026年10月31日、コンサルに確認）。お客様が初めてログインした時点でご参加は
+       済んでいるため、予約の導線（cta・href）は置かない。 */
+    { "id":"orientation1", "label":"初回オリエンテーションのご参加", "phase":"契約直後", "owner":"CRM",
+      "deadline":"契約後2週間以内", "sortAt":"2026-04-26", "state":"done", "actor":"member", "action":"ご参加", "target":"events",
+      "page":{ "desc":"ご契約後にまず1回ご参加いただく、留学準備の全体説明会です。ご予約とご参加は、担当コンサルタントよりご案内します。", "note":"会員サイトは、初回オリエンテーションにご参加いただいたあとにご利用いただけます。ご参加の記録は自動で反映されます。" } },
     { "id":"visaform", "label":"国別VISA申請フォームの回答", "phase":"申請準備", "owner":"CRM・Admin", "when":"visaForm", "visaPrep":true,
       "deadline":"2026-08-10", "state":"todo", "actor":"member", "action":"回答", "target":"task",
       "recommend":"推奨：期限の2週間前（2026年7月27日頃）までにご回答",
