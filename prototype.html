@@ -57,7 +57,8 @@ var DATA = {
     "has": true, "start":"2026-09-01", "end":"2026-11-30", "months":3, "level":"中級",
     "leave":{ "start":"2026-10-01", "end":"2026-10-31" },
     "private":{ "has":true, "start":"2026-10-01", "end":"2027-03-31" },
-    "booking":"#", "resumeForm":"https://classroom.google.com/",
+    "booking":"https://reserve.yume-kana.com/", "resumeForm":"https://classroom.google.com/",
+    "monthlyTask":"https://classroom.google.com/",
     "materialsByLevel":{ "入門":"https://tinyurl.com/26ym4pym", "初級":"https://tinyurl.com/mryk8t9z", "中級":"https://tinyurl.com/3xr78ucf", "上級":"https://tinyurl.com/ycxudmfe" },
     "milestones":"#",
     "manual":"https://sites.google.com/jstyle-yumekana.com/yumekana-english?usp=sharing",
@@ -329,6 +330,11 @@ var DATA = {
     ]
   },
   "school": { "city":"ロンドン", "name":"Language Link London", "course":"ジェネラル英語コース（General English）", "start":"2026-09-07", "end":"2026-11-27", "weeks":"12週間", "invoiceDue":"2026-07-18", "invoicePaid":"2026-07-10", "tuitionPaidStatus":"支払済み", "applyStage":"完了（入学許可証 受領済み）" },
+  /* 面談のご予約はeeasyで受け付ける。担当チームごとに予約ページが分かれている */
+  "counselingTeams": [
+    { "name":"個別面談を予約する（Violetチーム）", "url":"https://jstyle-yumekana.eeasy.jp/violetteam" },
+    { "name":"個別面談を予約する（Pinkチーム）", "url":"https://jstyle-yumekana.eeasy.jp/pinkteam" }
+  ],
   "stayFields": {
     "homestay": [ { "label":"滞在手配会社", "value":"Home Stay UK Ltd.", "field":"stay.providerName" }, { "label":"チェックイン", "value":"2026-09-05", "field":"stay.checkInDate" }, { "label":"チェックアウト", "value":"2026-11-29", "field":"stay.checkOutDate" }, { "label":"滞在期間", "value":"12週間", "field":"stay.durationWeeks" }, { "label":"食事プラン", "value":"2食付（朝・夕）", "field":"stay.mealPlan" }, { "label":"空港送迎", "value":"あり", "field":"stay.airportPickup" } ],
     "dorm": [ { "label":"滞在手配会社", "value":"City Student Residence", "field":"stay.providerName" }, { "label":"チェックイン", "value":"2026-09-05", "field":"stay.checkInDate" }, { "label":"チェックアウト", "value":"2026-11-29", "field":"stay.checkOutDate" }, { "label":"滞在期間", "value":"12週間", "field":"stay.durationWeeks" }, { "label":"部屋タイプ", "value":"個室（バス・トイレ共有）", "field":"stay.roomType" }, { "label":"空港送迎", "value":"なし", "field":"stay.airportPickup" } ],
@@ -390,13 +396,6 @@ var DATA = {
     { "id":"e-mtg", "title":"担当チームとの面談", "meta":"直近の予約なし", "action":"面談を予約する", "primary":true },
     { "id":"e-orientation", "title":"渡航前オリエンテーション", "meta":"2026-08-02（日）14:00〜", "action":"申し込む", "primary":false },
     { "id":"e-country", "title":"国別相談会", "meta":"UK・カナダ・オーストラリア 他", "action":"申し込む（Google Form）", "primary":false }
-  ],
-  "slots": [
-    { "id":"s1", "date":"2026-07-22（火）", "time":"11:00〜11:45", "available":true },
-    { "id":"s2", "date":"2026-07-22（火）", "time":"19:00〜19:45", "available":true },
-    { "id":"s3", "date":"2026-07-23（水）", "time":"14:00〜14:45", "available":false },
-    { "id":"s4", "date":"2026-07-24（木）", "time":"10:00〜10:45", "available":true },
-    { "id":"s5", "date":"2026-07-25（金）", "time":"20:00〜20:45", "available":true }
   ],
   "spec": [
     { "group":"member — 会員基本情報", "note":"ログイン後に一度取得。CRM（Zoho）の顧客レコードが正。", "rows":[
@@ -524,10 +523,10 @@ var MODES = { mobile:{label:'モバイル',width:'480px'}, tablet:{label:'タブ
 var state = {
   screen:'login', country:'UK', undecidedPreview:'UK', visaHandling:'agency',
   arrangement:'yes', stayType:'homestay', docPattern:'mixed', showFields:true,
-  viewMode:'mobile', yeContract:'yes', oriDone:false, yeLeave:'yes', chatOpen:false,
+  viewMode:'mobile', yeContract:'yes', yeLeave:'yes', chatOpen:false,
   taskId:null, yePrivate:'yes', resCountry:'', jtbType:'support',
-  devOpen:false, loginError:false, todoDone:{}, docOverride:{}, bookingStep:1,
-  slotId:null, noticeId:null, cheer:'',
+  devOpen:false, loginError:false, todoDone:{}, docOverride:{},
+  noticeId:null, cheer:'',
   visaFit:'ok', docsReady:'yes', visaStage:'発行待ち', docId:'', tripDay:'before', visaPipeline:'normal',
   driveFolder:'yes',
   contractStatus:'contract', within12m:'yes', contractBefore202505:'no'
@@ -546,14 +545,13 @@ var CHEERS = [
 function pickCheer(){ return CHEERS[Math.floor(Math.random()*CHEERS.length)]; }
 
 /* ブラウザの「戻る」を有効にする（画面遷移を履歴に積む） */
-function histState(){ return { screen:state.screen, taskId:state.taskId, noticeId:state.noticeId, bookingStep:state.bookingStep }; }
+function histState(){ return { screen:state.screen, taskId:state.taskId, noticeId:state.noticeId }; }
 function pushHist(){ try{ history.pushState(histState(), '', '#'+state.screen); }catch(err){} }
 function replaceHist(){ try{ history.replaceState(histState(), '', '#'+state.screen); }catch(err){} }
 window.addEventListener('popstate', function(e){
   var st = e.state;
   if(st && st.screen){
     state.screen = st.screen; state.taskId = st.taskId || null; state.noticeId = st.noticeId || null;
-    if(st.bookingStep) state.bookingStep = st.bookingStep;
   } else { state.screen = 'login'; }
   state.devOpen = false; state.chatOpen = false;
   render();
@@ -1277,45 +1275,24 @@ function renderSchool(){
   h += '<div class="span2" style="display:flex;flex-direction:column;gap:16px;">';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;background:#F9FBFB;"><h2 style="margin:0;font-size:15px;font-weight:700;">お支払い・申請の状況</h2>'+statusRows.map(plainRow).join('')+'</section>';
   h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">語学学校</h2>'+schoolRows.map(plainRow).join('')+'</section>';
-  h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">滞在先</h2><span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(stayLabel)+'</span></div>'+(d.stayFields[state.stayType]||[]).map(plainRow).join('')+'</section>';
+  h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:baseline;gap:10px;"><h2 style="margin:0;font-size:15px;font-weight:700;">滞在先</h2><span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:100px;background:#E7F5F3;color:#2F9E93;">'+esc(stayLabel)+'</span></div>'+(d.stayFields[state.stayType]||[]).map(plainRow).join('')+'</section>';
   h += '</div></div>';
   return h;
 }
 
+/* ご予約はeeasyのチーム別ページで受け付ける。会員サイト内では日程を選ばない
+   （2026年11月2日のご指示）。 */
 function renderBooking(){
-  var d = DATA;
   var h = '<div class="appcontent">';
-  h += '<div class="span2" style="display:flex;gap:6px;align-items:center;">'+[1,2,3].map(function(n){var on=state.bookingStep>=n;return '<div style="flex:1;display:flex;flex-direction:column;gap:6px;"><div style="height:4px;border-radius:100px;background:'+(on?'#39B3A6':'#E7EBEF')+';"></div><span style="font-size:11px;font-weight:700;color:'+(on?'#2A3340':'#9AA6B2')+';">'+(n===1?'① 日程':n===2?'② 確認':'③ 完了')+'</span></div>';}).join('')+'</div>';
-
-  if(state.bookingStep===1){
-    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:12px;"><h2 style="margin:0;font-size:15px;font-weight:700;">日程を選ぶ</h2><p style="margin:0;font-size:12.5px;color:#7B8694;">サポートチームとのオンライン面談です。</p><div style="display:flex;flex-direction:column;gap:8px;">';
-    h += d.slots.map(function(sl){
-      var active = state.slotId===sl.id;
-      var border = active?'#39B3A6':'#E7EBEF';
-      var bg = sl.available?(active?'#E7F5F3':'#FFFFFF'):'#F3F6F7';
-      var fg = sl.available?'#2A3340':'#9AA6B2';
-      var tag = sl.available?(active?'選択中':'空きあり'):'満席';
-      var tagColor = sl.available?(active?'#2F9E93':'#7B8694'):'#9AA6B2';
-      return '<button '+(sl.available?'data-act="selectSlot" data-id="'+esc(sl.id)+'"':'disabled')+' style="text-align:left;border:1px solid '+border+';background:'+bg+';border-radius:6px;padding:13px 14px;min-height:56px;cursor:'+(sl.available?'pointer':'not-allowed')+';display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="display:flex;flex-direction:column;"><span style="font-size:13.5px;font-weight:700;color:'+fg+';">'+esc(jd(sl.date))+'</span><span style="font-variant-numeric:tabular-nums;font-size:12px;color:#7B8694;">'+esc(sl.time)+'</span></span><span style="font-size:11.5px;font-weight:700;color:'+tagColor+';">'+esc(tag)+'</span></button>';
-    }).join('');
-    h += '</div><button '+(state.slotId?'data-act="step" data-step="2"':'disabled')+' style="border:none;background:'+(state.slotId?'#2AA096':'#C9D2D9')+';color:#fff;font-size:15.5px;font-weight:800;padding:17px;border-radius:8px;cursor:pointer;min-height:52px;letter-spacing:.03em;box-shadow:'+(state.slotId?'0 6px 14px rgba(42,160,150,.3)':'none')+';">確認画面へ</button></section>';
-  }
-  var selected = d.slots.filter(function(sl){return sl.id===state.slotId;})[0];
-  var selLabel = selected ? jd(selected.date)+' '+selected.time : '—';
-  if(state.bookingStep===2){
-    h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">内容の確認</h2><div style="display:flex;flex-direction:column;gap:3px;background:#F9FBFB;border-radius:6px;padding:14px;"><span style="font-size:11.5px;color:#7B8694;">ご希望日時</span><span style="font-variant-numeric:tabular-nums;font-size:15px;">'+esc(selLabel)+'</span></div>';
-    h += '<label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#7B8694;">相談したいこと（任意）<textarea rows="4" placeholder="例：ビザ申請の進捗と、滞在先の延長について相談したいです。" style="border:1px solid #E7EBEF;border-radius:6px;padding:12px;font-size:14px;color:#2A3340;background:#F9FBFB;resize:vertical;"></textarea></label>';
-    h += '<div style="display:flex;gap:10px;"><button class="ms-ghost" data-act="step" data-step="1" style="flex:1;border:1.5px solid #C9D2D9;background:#F3F6F7;color:#5B6672;font-size:14px;font-weight:800;padding:15px;border-radius:8px;cursor:pointer;min-height:52px;">戻る</button><button class="ms-teal" data-act="step" data-step="3" style="'+TEAL_BTN+'flex:2;font-size:15.5px;padding:15px;min-height:52px;">この日程で予約する</button></div>';
-    h += '<p style="margin:0;font-size:11px;color:#7B8694;">POST /api/bookings → <code style="font-variant-numeric:tabular-nums;color:#2F9E93;">{ memberId, slotId, topic }</code></p></section>';
-  }
-  if(state.bookingStep===3){
-    h += '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:24px 18px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;"><span style="font-size:15px;font-weight:800;letter-spacing:.04em;background:#EAFAF0;color:#1F8B4C;padding:8px 16px;border-radius:8px;">予約確定</span><h2 style="margin:0;font-size:17px;font-weight:700;">予約が完了しました</h2><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:11.5px;color:#7B8694;">確定日時</span><span style="font-variant-numeric:tabular-nums;font-size:15px;">'+esc(selLabel)+'</span></div><p style="margin:0;font-size:12.5px;color:#7B8694;">Google Meet のURLは前日までにメールとお知らせでご案内します。</p><button class="ms-outline" data-act="go" data-screen="home" style="'+OUTLINE_BTN+'background:#E7F5F3;font-size:14px;padding:14px 20px;min-height:48px;">マイページへ戻る</button></section>';
-  }
-  h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">イベント・サポート</h2>'+d.events.map(function(e){return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #F3F6F7;padding-top:12px;flex-wrap:wrap;"><div><div style="font-size:13.5px;font-weight:600;">'+esc(e.title)+'</div><div style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(e.meta))+'</div></div><button class="ms-outline" style="'+OUTLINE_BTN+'font-size:13px;padding:11px 16px;min-height:46px;">'+esc(e.action)+'</button></div>';}).join('')+'</section>';
+  h += '<section class="span2" style="'+SECTION+'">';
+  h += '<p style="margin:0;font-size:12.5px;color:#2A3340;line-height:1.85;">担当チームとの個別面談は、下のリンクからご予約いただけます。ご担当のチームが分からない場合は、契約者様専用LINEまでお問い合わせください。</p>';
+  h += DATA.counselingTeams.map(function(t){
+    return '<a href="'+esc(t.url)+'" target="_blank" rel="noopener" class="ms-teal" style="'+TEAL_BTN+'align-self:stretch;font-size:15px;padding:16px 20px;min-height:52px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">'+esc(t.name)+' →</a>';
+  }).join('');
+  h += '</section>';
   h += '</div>';
   return h;
 }
-
 function renderNotices(){
   var h = '<div class="appcontent">';
   h += DATA.notices.map(function(n){return '<button class="ms-notice" data-act="openNotice" data-id="'+esc(n.id)+'" style="text-align:left;border:1px solid #E7EBEF;background:#fff;border-radius:8px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:6px;"><div style="display:flex;align-items:center;gap:8px;"><time style="font-variant-numeric:tabular-nums;font-size:11.5px;color:#7B8694;">'+esc(jd(n.date))+'</time><span style="font-size:10.5px;font-weight:700;color:#2F9E93;">'+esc(n.tag)+'</span>'+(n.unread?'<span style="width:7px;height:7px;border-radius:50%;background:#EF7A48;display:inline-block;"></span>':'')+'</div><div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;"><div class="ms-link" style="font-size:14.5px;font-weight:700;">'+esc(n.title)+'</div><span style="flex-shrink:0;color:#9AA6B2;font-size:15px;">›</span></div><div style="font-size:12.5px;color:#7B8694;">'+esc(n.body.slice(0,46))+'…</div></button>';}).join('');
@@ -1407,9 +1384,10 @@ function renderEvents(){
   function card(ev){
     var c = TAGC[ev.tag] || TAGC['交流'];
     var locked = ev.kind==='yeOnly' && !ye;
-    /* collapsed once attended (初回オリエンテーション) */
-    if(ev.kind==='onboarding' && state.oriDone){
-      return '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:12px 16px;display:flex;flex-direction:column;gap:8px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.name)+'</span><button data-act="toggleOri" style="border:none;background:#EAFAF0;color:#1F8B4C;font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:100px;cursor:pointer;">✅ 参加済み</button></div>'+oriNote()+'</section>';
+    /* 会員サイトのアカウントは初回オリエンテーションにご参加いただいたあとに付与するため、
+       ログインできる時点でご参加は済んでいる。常に「参加済み」で畳んで表示する。 */
+    if(ev.kind==='onboarding'){
+      return '<section style="border:1px solid #E7EBEF;border-radius:8px;padding:12px 16px;display:flex;flex-direction:column;gap:8px;"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="font-size:14px;font-weight:700;color:#2A3340;">'+esc(ev.name)+'</span><span style="flex-shrink:0;background:#EAFAF0;color:#1F8B4C;font-size:12.5px;font-weight:800;padding:6px 12px;border-radius:100px;">✅ 参加済み</span></div>'+oriNote()+'</section>';
     }
     var b = '<section style="'+SECTION+'gap:10px;'+(locked?'opacity:.6;':'')+'">';
     b += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;"><div style="display:flex;flex-direction:column;gap:3px;"><span style="font-size:15.5px;font-weight:800;color:#2A3340;">'+esc(ev.name)+'</span>'+(ev.en?'<span style="font-size:10.5px;letter-spacing:.06em;color:#9AA6B2;">'+esc(ev.en)+'</span>':'')+'</div><span style="flex-shrink:0;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;background:'+c.bg+';color:'+c.fg+';">'+esc(ev.tag)+'</span></div>';
@@ -1426,7 +1404,6 @@ function renderEvents(){
       }
     }
     /* action */
-    if(ev.kind==='onboarding'){ b += oriNote()+joinBtn('参加を申し込む','toggleOri'); }
     else if(locked){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>'; }
     else if(ev.recurring){ b += linkBtn('予約する →', ev.link); }
     else if(ev.kind==='coaching'){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:8px;border:1px solid #E7EBEF;background:#F3F6F7;color:#9AA6B2;font-size:13px;font-weight:700;padding:11px 16px;border-radius:7px;min-height:44px;cursor:not-allowed;">日程を見る・お申し込み'+P2+'</div><div style="font-size:11.5px;color:#9AA6B2;line-height:1.6;">日程と申込先は、これまでどおりLINEとメールでご案内します。</div>'; }
@@ -1474,6 +1451,7 @@ function renderYe(){
     {ja:'レッスン予約サイト',sub:'オンライン英会話レッスンの予約',href:y.booking,icon:'M4 6h16v10H4zM9 20h6M12 16v4'},
     {ja:'スケジュール・教材サイト',sub:esc(y.level)+'クラスのレッスン日程と学習教材',href:(y.materialsByLevel||{})[y.level]||'',icon:'M7 4h10v16H7zM10 9h4M10 13h4'},
     {ja:'Learning Milestones',sub:'あなたの学習到達目標（受講生ごとに異なります）',href:y.milestones,icon:'M4 20V6l7 4 7-4v14M11 10v10'},
+    {ja:'毎月の課題',sub:'Google Classroomから提出',href:y.monthlyTask,icon:'M5 4h11l3 3v13H5zM9 13l2 2 4-4'},
     {ja:'履歴書・ワーホリ提出フォーム',sub:'Google Classroom から提出',href:y.resumeForm,icon:'M6 3h9l3 3v15H6zM9 12l2 2 4-4'}
   ];
   h += '<section style="'+SECTION+'"><h2 style="margin:0;font-size:15px;font-weight:700;">レッスン・教材</h2>'+links.map(linkRow).join('')+nextPhaseNote+'</section>';
@@ -1656,7 +1634,6 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'go':
       var scr=el.getAttribute('data-screen');
       state.screen=scr; state.devOpen=false;
-      if(scr==='booking') state.bookingStep=1;
       if(scr==='notices') state.noticeId=null;
       break;
     case 'todoGo': { var tid=el.getAttribute('data-id'); state.devOpen=false;
@@ -1665,12 +1642,9 @@ document.getElementById('frame').addEventListener('click', function(e){
     case 'openNotice': { var nid=el.getAttribute('data-id'); var n=DATA.notices.filter(function(x){return x.id===nid;})[0]; if(n) n.unread=false; state.screen='notice'; state.noticeId=nid; state.devOpen=false; break; }
     case 'uploadDoc': state.docOverride[el.getAttribute('data-id')]='reviewing'; break;
     case 'preview': state.undecidedPreview=el.getAttribute('data-val'); break;
-    case 'selectSlot': state.slotId=el.getAttribute('data-id'); break;
-    case 'step': state.bookingStep=Number(el.getAttribute('data-step')); break;
     case 'setCountry': state.country=el.getAttribute('data-code'); break;
     case 'setResCountry': state.resCountry=el.getAttribute('data-code')||''; break;
     case 'opt': state[el.getAttribute('data-key')]=el.getAttribute('data-value'); break;
-    case 'toggleOri': state.oriDone=!state.oriDone; break;
     case 'openDoc': state.screen='docdetail'; state.docId=el.getAttribute('data-id'); state.devOpen=false; break;
     case 'toggleFields': state.showFields=!state.showFields; break;
     case 'logout': state.screen='login'; state.devOpen=false; break;

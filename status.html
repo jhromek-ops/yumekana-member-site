@@ -288,7 +288,7 @@
         <h1 data-ja="部署横断プロジェクト管理：会員サイト開発" data-en="Cross-Divisional PM: Member Site Development">部署横断プロジェクト管理：会員サイト開発</h1>
         <p class="lead" data-ja="CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。" data-en="We're building a student-facing member site around the priority features aligned with the CRM, Admin, and QM teams. This page is a shared status view for executives and other stakeholders.">CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。</p>
       </div>
-      <div class="updated" data-ja="最終更新：2026年10月26日" data-en="Last updated: Oct 26, 2026">最終更新：2026年10月26日</div>
+      <div class="updated" data-ja="最終更新：2026年11月2日" data-en="Last updated: Nov 2, 2026">最終更新：2026年11月2日</div>
     </div>
 
     <section class="panel approval">
@@ -972,6 +972,23 @@
       <div class="obstacle" style="border-left-color:var(--ok);background:var(--ok-soft)">
         <div class="ob-head">
           <span class="ob-badge" style="background:var(--ok)" data-ja="決定済み" data-en="Decided">決定済み</span>
+          <b data-ja="2026年10月30日・11月2日：デバッグの進め方とローンチ後の運用" data-en="October 30 and November 2, 2026: how the debug period runs and how launch is handled">2026年10月30日・11月2日：デバッグの進め方とローンチ後の運用</b>
+        </div>
+        <ul>
+          <li data-ja="デバッグは11月2日に開始し、11月8日までに初回のテストと不具合の記入を終えます。再チェックを含む記入の締切は11月15日、修正は11月17日までです。11月18日に最終確認を行い、問題がなければ11月19日に公開します。" data-en="Testing starts on November 2, with the first pass and its bug reports finished by November 8. Entries, including re-checks, close on November 15 and fixes are due by November 17. A final check on November 18 clears the way for launch on November 19.">デバッグは11月2日に開始し、11月8日までに初回のテストと不具合の記入を終えます。再チェックを含む記入の締切は11月15日、修正は11月17日までです。11月18日に最終確認を行い、問題がなければ11月19日に公開します。</li>
+          <li data-ja="テストアカウント13件に対して、原則1人1アカウントで担当します。確認項目は重複を整理して1人あたり60件前後、想定は5〜6時間です。お客様の約7割がスマホのため、スマホを基本に確認します。" data-en="Each of the 13 test accounts has one tester. After removing duplicates each person checks about 60 items, an estimated five to six hours. Since roughly 70% of members use a phone, testing is done on mobile first.">テストアカウント13件に対して、原則1人1アカウントで担当します。確認項目は重複を整理して1人あたり60件前後、想定は5〜6時間です。お客様の約7割がスマホのため、スマホを基本に確認します。</li>
+          <li data-ja="デバッグ期間中は多要素認証を省略し、ID・パスワードを事前に発行して配布します。主要な機能の検証と修正を優先するためです。" data-en="Multi-factor authentication is skipped during the debug period and IDs and passwords are issued in advance, so that the main features can be checked and fixed first.">デバッグ期間中は多要素認証を省略し、ID・パスワードを事前に発行して配布します。主要な機能の検証と修正を優先するためです。</li>
+          <li data-ja="デバッグ対象の13件に限り、ZohoからSupabaseへの同期を1分間隔にします。Zoho側で値を変えて、会員サイトに反映されるかをその場で確認できます。" data-en="For the 13 test records only, the Zoho to Supabase sync runs every minute, so a tester can change a value in Zoho and see it reach the site straight away.">デバッグ対象の13件に限り、ZohoからSupabaseへの同期を1分間隔にします。Zoho側で値を変えて、会員サイトに反映されるかをその場で確認できます。</li>
+          <li data-ja="Phase 1の主な目的は、お客様がご自身の現在のステージと進捗を把握できることです。11月19日からCRM業務を全面的に置き換えることはせず、LINEでのリマインドと一斉連絡はこれまでどおり続けます。新規のお客様から段階的にご利用を広げていきます。" data-en="The main purpose of Phase 1 is to let members see where they stand. CRM work is not replaced wholesale on November 19: reminders and announcements over LINE continue as before, and use of the site is encouraged first among new members.">Phase 1の主な目的は、お客様がご自身の現在のステージと進捗を把握できることです。11月19日からCRM業務を全面的に置き換えることはせず、LINEでのリマインドと一斉連絡はこれまでどおり続けます。新規のお客様から段階的にご利用を広げていきます。</li>
+          <li data-ja="会員サイトのアカウントは、初回オリエンテーションにご参加いただいたあとに付与します。10月30日に持ち帰りとなっていた、どの時点でご案内するかという論点への回答です。" data-en="A member receives their account after attending the first orientation. This settles the question, left open on October 30, of when to introduce the site.">会員サイトのアカウントは、初回オリエンテーションにご参加いただいたあとに付与します。10月30日に持ち帰りとなっていた、どの時点でご案内するかという論点への回答です。</li>
+          <li data-ja="個別面談のご予約は、担当チームごとのeeasyのページへお送りします。会員サイト内で空き枠を選ぶ方式はやめました。" data-en="Counseling sessions are booked on the eeasy page for the member’s team. Picking a slot inside the member site has been dropped.">個別面談のご予約は、担当チームごとのeeasyのページへお送りします。会員サイト内で空き枠を選ぶ方式はやめました。</li>
+        </ul>
+        <p class="ob-solution"><b data-ja="結果：" data-en="Outcome: ">結果：</b><span data-ja="プロトタイプに反映済みです。アカウントの付与が初回オリエンの後になるため、ToDoから予約の導線を外し、イベントの初回オリエンテーションは常に「参加済み」で表示します。面談のご予約はeeasyへのリンク2本になりました。" data-en="Already applied to the prototype. Because the account arrives after the orientation, the booking link is gone from the ToDo and the orientation shows as attended on the events page. Counseling now offers two eeasy links.">プロトタイプに反映済みです。アカウントの付与が初回オリエンの後になるため、ToDoから予約の導線を外し、イベントの初回オリエンテーションは常に「参加済み」で表示します。面談のご予約はeeasyへのリンク2本になりました。</span></p>
+      </div>
+
+      <div class="obstacle" style="border-left-color:var(--ok);background:var(--ok-soft)">
+        <div class="ob-head">
+          <span class="ob-badge" style="background:var(--ok)" data-ja="決定済み" data-en="Decided">決定済み</span>
           <b data-ja="2026年10月26日：書類の提出期限をどの値から出すか" data-en="October 26, 2026: which field the document deadline comes from">2026年10月26日：書類の提出期限をどの値から出すか</b>
         </div>
         <ul>
@@ -1069,8 +1086,8 @@
         <p class="cs-body" data-ja="全体の約95%が完了しています。残っているのはSNSやお知らせのリンクが未確定なものが中心で、項目ごとの状況と未完了の理由を一覧にしたスプレッドシートを共有します。10月31日までに、Supabaseのアカウント作成と会員ID（Zoho ContactID）での紐付けをすべて完了する予定です。書類のご提出時期の表示は、新しい連携項目として追加します。" data-en="About 95% is done. What remains is mostly items whose links — social accounts, announcements — are not yet fixed; a spreadsheet listing each item and the reason it is outstanding is being shared. All Supabase accounts and their links to the member ID (Zoho ContactID) are due to be complete by October 31. The document submission dates will be added as a new mapped field.">全体の約95%が完了しています。残っているのはSNSやお知らせのリンクが未確定なものが中心で、項目ごとの状況と未完了の理由を一覧にしたスプレッドシートを共有します。10月31日までに、Supabaseのアカウント作成と会員ID（Zoho ContactID）での紐付けをすべて完了する予定です。書類のご提出時期の表示は、新しい連携項目として追加します。</p>
       </div>
       <div class="current-step">
-        <p class="cs-title" data-ja="デバッグ期間とテストアカウント（ひかるさん・伊藤さん）" data-en="Debug period and test accounts (Hikaru-san, Ito-san)">デバッグ期間とテストアカウント（ひかるさん・伊藤さん）</p>
-        <p class="cs-body" data-ja="テストアカウントは、カナダのEdoca対応分を加えて13件です。ひかるさんがZohoにテストレコードを作成し、伊藤さんがSupabaseのアカウントを作って紐付けます。受け渡しの期限は両者で調整します。デバッグ期間の進め方は10月30日のミーティングで決めます。" data-en="There are 13 test accounts, including the Edoca case for Canada. Hikaru-san creates the test records in Zoho and Ito-san creates the Supabase accounts and links them; the two will agree a hand-over date between them. How the debug period runs is decided at the October 30 meeting.">テストアカウントは、カナダのEdoca対応分を加えて13件です。ひかるさんがZohoにテストレコードを作成し、伊藤さんがSupabaseのアカウントを作って紐付けます。受け渡しの期限は両者で調整します。デバッグ期間の進め方は10月30日のミーティングで決めます。</p>
+        <p class="cs-title" data-ja="デバッグの実施（11月2日〜15日）" data-en="Running the debug period (November 2 to 15)">デバッグの実施（11月2日〜15日）</p>
+        <p class="cs-body" data-ja="テストアカウント13件に、CRM・Adminのメンバーを中心に1人1アカウントで割り当てました。ひかるさんがZohoのテストレコードとログイン情報を、伊藤さんがSupabaseのアカウントと紐付け、各テスターへのURLの配布を担当します。伊藤さんは手動テストから外れ、デバッグ中に出た不具合の修正にあたります。確認項目はアカウントごとに割り振り直し、重複を整理して1人あたり60件前後にしました。" data-en="The 13 test accounts have one tester each, drawn mainly from CRM and Admin. Hikaru-san provides the Zoho records and the login details, Ito-san the Supabase accounts, the links between them and the URL each tester receives. Ito-san steps out of manual testing to fix what the others find. The checklist was re-cut per account, bringing each person down to about 60 items.">テストアカウント13件に、CRM・Adminのメンバーを中心に1人1アカウントで割り当てました。ひかるさんがZohoのテストレコードとログイン情報を、伊藤さんがSupabaseのアカウントと紐付け、各テスターへのURLの配布を担当します。伊藤さんは手動テストから外れ、デバッグ中に出た不具合の修正にあたります。確認項目はアカウントごとに割り振り直し、重複を整理して1人あたり60件前後にしました。</p>
       </div>
       <div class="current-step">
         <p class="cs-title" data-ja="残るボトルネックは2つ（2026年10月23日時点）" data-en="Two bottlenecks remain (as of October 23, 2026)">残るボトルネックは2つ（2026年10月23日時点）</p>
