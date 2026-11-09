@@ -263,6 +263,12 @@
   .lk-item{border-left:3px solid var(--line);padding:8px 0 8px 12px;margin-bottom:7px}
   .lk-n{font-size:12.5px;font-weight:700;color:var(--ink);display:block}
   .lk-d{font-size:11.5px;color:var(--sub);line-height:1.7;display:block;margin-top:2px}
+  /* システム構成図 */
+  .arch-scroll{overflow-x:auto;margin:4px 0 20px}
+  .arch{width:100%;min-width:700px;height:auto;display:block}
+  .arch .bx{font-size:13px;font-weight:800;fill:var(--ink);text-anchor:middle}
+  .arch .bs{font-size:10.5px;fill:var(--sub);text-anchor:middle}
+  .arch .ar-l{font-size:10.5px;fill:var(--sub);text-anchor:middle;font-style:italic}
 </style>
 </head>
 <body>
@@ -288,7 +294,7 @@
         <h1 data-ja="部署横断プロジェクト管理：会員サイト開発" data-en="Cross-Divisional PM: Member Site Development">部署横断プロジェクト管理：会員サイト開発</h1>
         <p class="lead" data-ja="CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。" data-en="We're building a student-facing member site around the priority features aligned with the CRM, Admin, and QM teams. This page is a shared status view for executives and other stakeholders.">CRM・Admin・QMの各部署とすり合わせた優先機能をもとに、学生向け会員サイトを開発しています。このページは経営陣・関係者向けの進捗共有用です。</p>
       </div>
-      <div class="updated" data-ja="最終更新：2026年11月2日" data-en="Last updated: Nov 2, 2026">最終更新：2026年11月2日</div>
+      <div class="updated" data-ja="最終更新：2026年11月9日" data-en="Last updated: Nov 9, 2026">最終更新：2026年11月9日</div>
     </div>
 
     <section class="panel approval">
@@ -783,6 +789,77 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sectit" data-ja="システム構成と担当" data-en="System Architecture &amp; Ownership">システム構成と担当</h2>
+      <p class="lead" data-ja="人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。" data-en="So that the project survives people changing, this records what sits where and who looks after it. Zoho CRM is the single source of truth; data reaches the member site through Supabase. The site reads only Supabase and never Zoho directly. Document uploads are the one path that runs the other way.">人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。</p>
+    <div class="arch-scroll">
+    <svg class="arch" viewBox="0 0 890 348" role="img" aria-labelledby="archttl">
+      <title id="archttl" data-ja="会員サイトのデータの流れ" data-en="How data reaches the member site">会員サイトのデータの流れ</title>
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0L10 5L0 10z" fill="#7B8694"/>
+        </marker>
+      </defs>
+      <rect x="20" y="50" width="170" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <rect x="245" y="50" width="150" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <rect x="450" y="50" width="150" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <rect x="655" y="50" width="200" height="62" fill="#E7F5F3" stroke="#39B3A6" stroke-width="1.6" rx="8"/>
+      <rect x="450" y="170" width="150" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <rect x="655" y="170" width="200" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <rect x="20" y="252" width="170" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
+      <path d="M190 81H240" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M395 81H445" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M600 81H650" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M525 170V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M755 170V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M855 81H870V320H105V313" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <path d="M105 252V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
+      <text x="105" y="76" class="bx" data-ja="Zoho CRM" data-en="Zoho CRM">Zoho CRM</text>
+      <text x="105" y="95" class="bs" data-ja="契約・ビザ・学校・書類" data-en="Contracts, visa, school, documents">契約・ビザ・学校・書類</text>
+      <text x="320" y="76" class="bx" data-ja="n8n" data-en="n8n">n8n</text>
+      <text x="320" y="95" class="bs" data-ja="同期" data-en="Sync">同期</text>
+      <text x="525" y="76" class="bx" data-ja="Supabase" data-en="Supabase">Supabase</text>
+      <text x="525" y="95" class="bs" data-ja="会員データ・認証" data-en="Member data, auth">会員データ・認証</text>
+      <text x="755" y="76" class="bx" data-ja="会員サイト" data-en="Member site">会員サイト</text>
+      <text x="755" y="95" class="bs" data-ja="member.yume-kana.com（Azure）" data-en="member.yume-kana.com (Azure)">member.yume-kana.com（Azure）</text>
+      <text x="525" y="192" class="bx" data-ja="管理サイト" data-en="Admin site">管理サイト</text>
+      <text x="525" y="211" class="bs" data-ja="Vercel" data-en="Vercel">Vercel</text>
+      <text x="755" y="192" class="bx" data-ja="Google Drive ／ Notion" data-en="Google Drive / Notion">Google Drive ／ Notion</text>
+      <text x="755" y="211" class="bs" data-ja="書類・資料" data-en="Documents and materials">書類・資料</text>
+      <text x="105" y="274" class="bx" data-ja="Zoho Forms" data-en="Zoho Forms">Zoho Forms</text>
+      <text x="105" y="293" class="bs" data-ja="お客様の書類提出" data-en="Member document uploads">お客様の書類提出</text>
+      <text x="217" y="68" class="ar-l" data-ja="self client" data-en="self client">self client</text>
+      <text x="480" y="336" class="ar-l" data-ja="お客様の書類提出だけが逆方向" data-en="Document uploads are the only path back">お客様の書類提出だけが逆方向</text>
+    </svg>
+    </div>
+
+      <div class="lk-group">
+        <div class="lk-gt"><span class="lk-gname" data-ja="入力" data-en="Input">入力</span><span class="lk-badge lk-has" data-ja="運用中" data-en="In use">運用中</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="Zoho CRM" data-en="Zoho CRM">Zoho CRM</span><span class="lk-d" data-ja="連絡先・VISA申請・語学学校・商談・見込み客・書類。担当：神田光（運用はCRM・Admin）" data-en="Contacts, visa applications, schools, deals, leads and documents. Owner: Hikaru-san, operated by CRM and Admin">連絡先・VISA申請・語学学校・商談・見込み客・書類。担当：神田光（運用はCRM・Admin）</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="Zoho Forms" data-en="Zoho Forms">Zoho Forms</span><span class="lk-d" data-ja="お客様からの書類提出の受け口。担当：神田光" data-en="Where member documents arrive. Owner: Hikaru-san">お客様からの書類提出の受け口。担当：神田光</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="管理サイト（kanri.ryugaku.yume-kana.com）" data-en="Admin site (kanri.ryugaku.yume-kana.com)">管理サイト（kanri.ryugaku.yume-kana.com）</span><span class="lk-d" data-ja="Vercelに設置。社員情報・一括配信・配信シナリオ・リンクと資料の管理。担当：中村さん（開発中）" data-en="Hosted on Vercel. Staff records, bulk announcements, scheduled scenarios, and the links and materials shown on the site. Owner: Nakamura-san, in development">Vercelに設置。社員情報・一括配信・配信シナリオ・リンクと資料の管理。担当：中村さん（開発中）</span></div>
+      </div>
+      <div class="lk-group">
+        <div class="lk-gt"><span class="lk-gname" data-ja="同期" data-en="Sync">同期</span><span class="lk-badge lk-chk" data-ja="稼働状況を確認中" data-en="Status being confirmed">稼働状況を確認中</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="n8n（Zoho → Supabase）" data-en="n8n (Zoho to Supabase)">n8n（Zoho → Supabase）</span><span class="lk-d" data-ja="構築：伊藤さん／運用：マットさん／サーバー：奈須さん。2026年11月6日時点で本番のワークフローが公開されているかを確認中です" data-en="Built by Ito-san, operated by Matt-san, server by Nasu-san. As of November 6, 2026 we are still confirming whether the production workflow is published">構築：伊藤さん／運用：マットさん／サーバー：奈須さん。2026年11月6日時点で本番のワークフローが公開されているかを確認中です</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="self client（Zoho OAuth）" data-en="self client (Zoho OAuth)">self client（Zoho OAuth）</span><span class="lk-d" data-ja="担当：奈須さん。APIリクエストの内訳が奈須さんからしか見えないため、開示を依頼しています" data-en="Owner: Nasu-san. Only he can see what the API requests contain, so we have asked for that to be opened up">担当：奈須さん。APIリクエストの内訳が奈須さんからしか見えないため、開示を依頼しています</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="同期の方針（2026年11月6日の決定）" data-en="Sync policy (decided November 6, 2026)">同期の方針（2026年11月6日の決定）</span><span class="lk-d" data-ja="書類提出まわりは即時反映、それ以外は1日1回。即時反映にする項目はマッピング表から特定します" data-en="Anything to do with document submission updates immediately; everything else once a day. The immediate items are identified from the field mapping sheet">書類提出まわりは即時反映、それ以外は1日1回。即時反映にする項目はマッピング表から特定します</span></div>
+      </div>
+      <div class="lk-group">
+        <div class="lk-gt"><span class="lk-gname" data-ja="保管" data-en="Storage">保管</span><span class="lk-badge lk-has" data-ja="運用中" data-en="In use">運用中</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="Supabase" data-en="Supabase">Supabase</span><span class="lk-d" data-ja="会員データ・ログイン・多要素認証。会員ID（Zoho ContactID）で会員ごとにデータを分離。担当：伊藤さん／認証：マットさん" data-en="Member data, sign-in and multi-factor authentication. Records are separated per member by the member ID (Zoho ContactID). Owner: Ito-san, authentication by Matt-san">会員データ・ログイン・多要素認証。会員ID（Zoho ContactID）で会員ごとにデータを分離。担当：伊藤さん／認証：マットさん</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="Google Drive" data-en="Google Drive">Google Drive</span><span class="lk-d" data-ja="書類と資料。イギリスのパスポートはお客様ごとのフォルダで受け取ります。担当：神田光／資料のリンク：ヤン" data-en="Documents and materials. UK passports arrive in a folder of their own per member. Owner: Hikaru-san; material links by Jan">書類と資料。イギリスのパスポートはお客様ごとのフォルダで受け取ります。担当：神田光／資料のリンク：ヤン</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="Notion" data-en="Notion">Notion</span><span class="lk-d" data-ja="書類ファイルの一元化を進めています。担当：伊藤さん" data-en="Bringing the document files together in one place, in progress. Owner: Ito-san">書類ファイルの一元化を進めています。担当：伊藤さん</span></div>
+      </div>
+      <div class="lk-group">
+        <div class="lk-gt"><span class="lk-gname" data-ja="出力・ご案内" data-en="Output and communication">出力・ご案内</span><span class="lk-badge lk-new" data-ja="担当を決める必要があります" data-en="An owner still needs naming">担当を決める必要があります</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="会員サイト（member.yume-kana.com）" data-en="Member site (member.yume-kana.com)">会員サイト（member.yume-kana.com）</span><span class="lk-d" data-ja="Azureに設置。画面と仕様：ヤン／実装：伊藤さん。画面は prototype.html を原本として生成します" data-en="Hosted on Azure. Screens and specification by Jan, implementation by Ito-san. The screens are generated from prototype.html as the single source">Azureに設置。画面と仕様：ヤン／実装：伊藤さん。画面は prototype.html を原本として生成します</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="本番への公開（デプロイ）" data-en="Deploying to production">本番への公開（デプロイ）</span><span class="lk-d" data-ja="担当が未定です。現状は奈須さんが対応しており、DXチームから1名を選ぶ方針です。誰でもいつでも公開できる状態にはしません" data-en="No owner yet. Nasu-san handles it today and the plan is to name one person from the DX team. We will not leave production open for anyone to publish at any time">担当が未定です。現状は奈須さんが対応しており、DXチームから1名を選ぶ方針です。誰でもいつでも公開できる状態にはしません</span></div>
+        <div class="lk-item"><span class="lk-n" data-ja="LINE・メールでのご案内" data-en="LINE and email">LINE・メールでのご案内</span><span class="lk-d" data-ja="提出期限のリマインドと重要なお知らせ。ローンチ後も続けます。担当：CRM" data-en="Deadline reminders and important announcements, continuing after launch. Owner: CRM">提出期限のリマインドと重要なお知らせ。ローンチ後も続けます。担当：CRM</span></div>
+      </div>
+      <p class="apv-foot" data-ja="構成や担当が変わったら、変えた方がこのページも更新してください。「確認中」と書かれている項目は、裏が取れた時点で書き換えます。" data-en="If the architecture or an owner changes, whoever made the change updates this page too. Anything marked as being confirmed gets rewritten once we have the answer.">構成や担当が変わったら、変えた方がこのページも更新してください。「確認中」と書かれている項目は、裏が取れた時点で書き換えます。</p>
     </section>
 
     <section class="panel">
