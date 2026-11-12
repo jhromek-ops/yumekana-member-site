@@ -142,8 +142,6 @@
   .tool-name{font-weight:800;font-size:14px;margin:0 0 4px}
   .tool-desc{font-size:12.5px;color:var(--sub);margin:0}
   .tool-icon{width:40px;height:40px;border-radius:10px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0}
-  .tool-icon.notion{background:#000;border-color:#000}
-  .notion-mark{font-weight:800;font-size:19px;color:#fff;line-height:1;font-family:Georgia,serif}
 
   .next-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
   .next-list li{display:flex;gap:12px;font-size:13px}
@@ -263,12 +261,17 @@
   .lk-item{border-left:3px solid var(--line);padding:8px 0 8px 12px;margin-bottom:7px}
   .lk-n{font-size:12.5px;font-weight:700;color:var(--ink);display:block}
   .lk-d{font-size:11.5px;color:var(--sub);line-height:1.7;display:block;margin-top:2px}
-  /* システム構成図 */
-  .arch-scroll{overflow-x:auto;margin:4px 0 20px}
-  .arch{width:100%;min-width:700px;height:auto;display:block}
-  .arch .bx{font-size:13px;font-weight:800;fill:var(--ink);text-anchor:middle}
-  .arch .bs{font-size:10.5px;fill:var(--sub);text-anchor:middle}
-  .arch .ar-l{font-size:10.5px;fill:var(--sub);text-anchor:middle;font-style:italic}
+  /* システム構成図（1枚にまとめた図） */
+  .archfig{margin:4px 0 22px}
+  .archfig a{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    background:var(--bg);line-height:0}
+  .archfig a:hover{border-color:var(--teal)}
+  .archfig img{width:100%;height:auto;display:block}
+  .archfig figcaption{font-size:11.5px;color:var(--sub);margin-top:8px;display:flex;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;line-height:1.6}
+  .archfig .zoom{font-weight:700;color:var(--teal-dark);white-space:nowrap}
+  html[lang="en"] .only-ja{display:none}
+  html:not([lang="en"]) .only-en{display:none}
 </style>
 </head>
 <body>
@@ -794,46 +797,20 @@
     <section class="panel">
       <h2 class="sectit" data-ja="システム構成と担当" data-en="System Architecture &amp; Ownership">システム構成と担当</h2>
       <p class="lead" data-ja="人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。" data-en="So that the project survives people changing, this records what sits where and who looks after it. Zoho CRM is the single source of truth; data reaches the member site through Supabase. The site reads only Supabase and never Zoho directly. Document uploads are the one path that runs the other way.">人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。</p>
-    <div class="arch-scroll">
-    <svg class="arch" viewBox="0 0 890 348" role="img" aria-labelledby="archttl">
-      <title id="archttl" data-ja="会員サイトのデータの流れ" data-en="How data reaches the member site">会員サイトのデータの流れ</title>
-      <defs>
-        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0 0L10 5L0 10z" fill="#7B8694"/>
-        </marker>
-      </defs>
-      <rect x="20" y="50" width="170" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <rect x="245" y="50" width="150" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <rect x="450" y="50" width="150" height="62" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <rect x="655" y="50" width="200" height="62" fill="#E7F5F3" stroke="#39B3A6" stroke-width="1.6" rx="8"/>
-      <rect x="450" y="170" width="150" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <rect x="655" y="170" width="200" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <rect x="20" y="252" width="170" height="56" fill="#F9FBFB" stroke="#C9D2D9" stroke-width="1.3" rx="8"/>
-      <path d="M190 81H240" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M395 81H445" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M600 81H650" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M525 170V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M755 170V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M855 81H870V320H105V313" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <path d="M105 252V117" stroke="#7B8694" stroke-width="1.6" fill="none" marker-end="url(#ar)"/>
-      <text x="105" y="76" class="bx" data-ja="Zoho CRM" data-en="Zoho CRM">Zoho CRM</text>
-      <text x="105" y="95" class="bs" data-ja="契約・ビザ・学校・書類" data-en="Contracts, visa, school, documents">契約・ビザ・学校・書類</text>
-      <text x="320" y="76" class="bx" data-ja="n8n" data-en="n8n">n8n</text>
-      <text x="320" y="95" class="bs" data-ja="同期" data-en="Sync">同期</text>
-      <text x="525" y="76" class="bx" data-ja="Supabase" data-en="Supabase">Supabase</text>
-      <text x="525" y="95" class="bs" data-ja="会員データ・認証" data-en="Member data, auth">会員データ・認証</text>
-      <text x="755" y="76" class="bx" data-ja="会員サイト" data-en="Member site">会員サイト</text>
-      <text x="755" y="95" class="bs" data-ja="member.yume-kana.com（Azure）" data-en="member.yume-kana.com (Azure)">member.yume-kana.com（Azure）</text>
-      <text x="525" y="192" class="bx" data-ja="管理サイト" data-en="Admin site">管理サイト</text>
-      <text x="525" y="211" class="bs" data-ja="Vercel" data-en="Vercel">Vercel</text>
-      <text x="755" y="192" class="bx" data-ja="Google Drive ／ Notion" data-en="Google Drive / Notion">Google Drive ／ Notion</text>
-      <text x="755" y="211" class="bs" data-ja="書類・資料" data-en="Documents and materials">書類・資料</text>
-      <text x="105" y="274" class="bx" data-ja="Zoho Forms" data-en="Zoho Forms">Zoho Forms</text>
-      <text x="105" y="293" class="bs" data-ja="お客様の書類提出" data-en="Member document uploads">お客様の書類提出</text>
-      <text x="217" y="68" class="ar-l" data-ja="self client" data-en="self client">self client</text>
-      <text x="480" y="336" class="ar-l" data-ja="お客様の書類提出だけが逆方向" data-en="Document uploads are the only path back">お客様の書類提出だけが逆方向</text>
-    </svg>
-    </div>
+    <figure class="archfig">
+      <a class="only-ja" href="assets/system-architecture-ja.png" target="_blank" rel="noopener">
+        <img src="assets/system-architecture-ja.png" width="2100" height="3734" loading="lazy"
+             alt="会員サイトのシステム構成と担当一覧の全体図。データの流れ、構成要素と担当、同期処理の仕様、人ごとの担当、単一障害点、外部サービス、未決事項をまとめています。">
+      </a>
+      <a class="only-en" href="assets/system-architecture-en.png" target="_blank" rel="noopener">
+        <img src="assets/system-architecture-en.png" width="2100" height="3708" loading="lazy"
+             alt="One-page overview of the member site architecture and ownership: data flow, components and owners, sync behaviour, who does what, single points of failure, external services and open questions.">
+      </a>
+      <figcaption>
+        <span data-ja="1枚にまとめた図です。原本は 社内資料/システム構成と担当一覧.md にあります。" data-en="The whole picture on one page. The source document is 社内資料/システム構成と担当一覧.md.">1枚にまとめた図です。原本は 社内資料/システム構成と担当一覧.md にあります。</span>
+        <span class="zoom" data-ja="クリックで拡大（PNG）" data-en="Click to open full size (PNG)">クリックで拡大（PNG）</span>
+      </figcaption>
+    </figure>
 
       <div class="lk-group">
         <div class="lk-gt"><span class="lk-gname" data-ja="入力" data-en="Input">入力</span><span class="lk-badge lk-has" data-ja="運用中" data-en="In use">運用中</span></div>
@@ -851,7 +828,6 @@
         <div class="lk-gt"><span class="lk-gname" data-ja="保管" data-en="Storage">保管</span><span class="lk-badge lk-has" data-ja="運用中" data-en="In use">運用中</span></div>
         <div class="lk-item"><span class="lk-n" data-ja="Supabase" data-en="Supabase">Supabase</span><span class="lk-d" data-ja="会員データ・ログイン・多要素認証。会員ID（Zoho ContactID）で会員ごとにデータを分離。担当：伊藤さん／認証：マットさん" data-en="Member data, sign-in and multi-factor authentication. Records are separated per member by the member ID (Zoho ContactID). Owner: Ito-san, authentication by Matt-san">会員データ・ログイン・多要素認証。会員ID（Zoho ContactID）で会員ごとにデータを分離。担当：伊藤さん／認証：マットさん</span></div>
         <div class="lk-item"><span class="lk-n" data-ja="Google Drive" data-en="Google Drive">Google Drive</span><span class="lk-d" data-ja="書類と資料。イギリスのパスポートはお客様ごとのフォルダで受け取ります。担当：神田光／資料のリンク：ヤン" data-en="Documents and materials. UK passports arrive in a folder of their own per member. Owner: Hikaru-san; material links by Jan">書類と資料。イギリスのパスポートはお客様ごとのフォルダで受け取ります。担当：神田光／資料のリンク：ヤン</span></div>
-        <div class="lk-item"><span class="lk-n" data-ja="Notion" data-en="Notion">Notion</span><span class="lk-d" data-ja="書類ファイルの一元化を進めています。担当：伊藤さん" data-en="Bringing the document files together in one place, in progress. Owner: Ito-san">書類ファイルの一元化を進めています。担当：伊藤さん</span></div>
       </div>
       <div class="lk-group">
         <div class="lk-gt"><span class="lk-gname" data-ja="出力・ご案内" data-en="Output and communication">出力・ご案内</span><span class="lk-badge lk-new" data-ja="担当を決める必要があります" data-en="An owner still needs naming">担当を決める必要があります</span></div>
@@ -1027,15 +1003,6 @@
           <div>
             <p class="tool-name">Google Chat</p>
             <p class="tool-desc" data-ja="「会員サイト」スペースを、関係者間の主な連絡手段として使用します。" data-en="The “会員サイト” (Member Site) space is the main channel for day-to-day communication between everyone involved.">「会員サイト」スペースを、関係者間の主な連絡手段として使用します。</p>
-          </div>
-        </div>
-        <div class="tool-card">
-          <div class="tool-icon notion" aria-hidden="true">
-            <span class="notion-mark">N</span>
-          </div>
-          <div>
-            <p class="tool-name">Notion</p>
-            <p class="tool-desc" data-ja="会議の記録、タスクの割り振り、開発の進捗管理に使用します。" data-en="Used for meeting notes, task delegation, and tracking development progress.">会議の記録、タスクの割り振り、開発の進捗管理に使用します。</p>
           </div>
         </div>
       </div>
