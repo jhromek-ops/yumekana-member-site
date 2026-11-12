@@ -18,10 +18,8 @@ BOXES = [
     # x, y, w, h, kind, title, sub, owner
     (30, 76, 250, 82, "in", T("Zoho CRM", "Zoho CRM"),
      T("契約・ビザ・学校・書類（唯一の正）", "Contracts, visa, school, documents"), T("神田光", "Hikaru")),
-    (380, 76, 250, 82, "sync", T("n8n", "n8n"),
-     T("Zoho → Supabase 一方向同期", "One-way sync, Zoho to Supabase"), T("伊藤／マット", "Ito / Matt")),
     (730, 76, 250, 82, "store", T("Supabase", "Supabase"),
-     T("会員データ・ログイン・MFA", "Member data, sign-in, MFA"), T("伊藤／マット", "Ito / Matt")),
+     T("会員データ・ログイン・MFA", "Member data, sign-in, MFA"), T("伊藤／奈須さん", "Ito / Nasu-san")),
     (1080, 76, 290, 82, "out", T("会員サイト", "Member site"),
      T("member.yume-kana.com（Azure）", "member.yume-kana.com (Azure)"), T("ヤン／伊藤", "Jan / Ito")),
     (30, 196, 250, 82, "in", T("Zoho Forms", "Zoho Forms"),
@@ -35,8 +33,7 @@ BOXES = [
 ]
 
 ARROWS = [
-    ("M280 117H374", None, None),
-    ("M630 117H724", None, None),
+    ("M280 117H724", T("self client / OAuth で一方向に同期", "one-way sync over self client / OAuth"), (502, 108, "middle")),
     ("M980 117H1074", None, None),
     ("M155 196V162", T("書類提出", "uploads"), (168, 184, "start")),
     ("M280 237H724", T("ファイルの保管", "file storage"), (500, 228, "middle")),
@@ -47,7 +44,6 @@ ARROWS = [
 
 KIND = {
     "in":    ("#FDF3E7", "#E0913A", T("入力", "Input")),
-    "sync":  ("#FDEEE7", "#EF7A48", T("同期", "Sync")),
     "store": ("#EEF1F4", "#7B8694", T("保管", "Storage")),
     "out":   ("#E7F5F3", "#39B3A6", T("出力", "Output")),
 }
@@ -82,8 +78,8 @@ def diagram(L):
 FACTS = [
     T("<b>Zoho CRM が唯一の正。</b>契約・ビザ・学校・渡航日・書類の状態は、すべて Zoho の値を表示しています。",
       "<b>Zoho CRM is the single source of truth.</b> Contracts, visa, school, departure dates and document states all come from Zoho."),
-    T("<b>n8n が Zoho から Supabase へ一方向に同期。</b>会員サイトは Supabase だけを読み、Zoho を直接見ません。",
-      "<b>n8n syncs Zoho to Supabase, one way.</b> The member site reads only Supabase and never Zoho directly."),
+    T("<b>Zoho から Supabase へ一方向に同期します。</b>会員サイトは Supabase だけを読み、Zoho を直接見ません。",
+      "<b>Zoho syncs to Supabase, one way.</b> The member site reads only Supabase and never Zoho directly."),
     T("<b>逆方向はお客様の書類提出のみ。</b>Zoho Forms を経由して Zoho に入ります。",
       "<b>Only document uploads run the other way,</b> arriving in Zoho through Zoho Forms."),
     T("<b>UK のパスポートだけ例外</b>で、Google Drive のフォルダへ直接アップロードしていただきます。",
@@ -96,12 +92,12 @@ COMPONENTS = [
     (T("Zoho CRM", "Zoho CRM"), T("Zoho", "Zoho"), T("神田光", "Hikaru"), T("みっちー／レオ・エミリー", "Micchi / Leo, Emily"), "o"),
     (T("Zoho Forms（書類提出）", "Zoho Forms (uploads)"), T("Zoho", "Zoho"), T("神田光", "Hikaru"), T("—", "—"), "o"),
     (T("self client（Zoho OAuth）", "self client (Zoho OAuth)"), T("Zoho", "Zoho"), T("奈須さん", "Nasu-san"), T("—", "—"), "t"),
-    (T("n8n（同期ワークフロー）", "n8n (sync workflow)"), T("マットさんの n8n", "Matt's n8n"), T("伊藤光司", "Koji Ito"), T("マット（運用）／奈須さん（サーバー）", "Matt (ops) / Nasu-san (server)"), "t"),
-    (T("Supabase（DB・Auth・MFA）", "Supabase (DB, auth, MFA)"), T("Supabase", "Supabase"), T("伊藤光司", "Koji Ito"), T("マット（MFA）／奈須さん（セキュリティ）", "Matt (MFA) / Nasu-san (security)"), "o"),
+    (T("Supabase（DB・Auth・MFA）", "Supabase (DB, auth, MFA)"), T("Supabase", "Supabase"), T("伊藤さん", "Ito-san"), T("奈須さん", "Nasu-san"), "o"),
+    (T("パスワード（ログイン・多要素認証）", "Passwords (sign-in, MFA)"), T("Supabase", "Supabase"), T("マット", "Matt"), T("奈須さん", "Nasu-san"), "o"),
     (T("会員サイト", "Member site"), T("Azure", "Azure"), T("伊藤（実装）／ヤン（UI・仕様）", "Ito (build) / Jan (UI, spec)"), T("—", "—"), "o"),
     (T("管理サイト", "Admin site"), T("Vercel", "Vercel"), T("中村圭介", "Keisuke Nakamura"), T("—", "—"), "o"),
     (T("Google Drive（書類・資料）", "Google Drive (documents)"), T("Google", "Google"), T("神田光", "Hikaru"), T("ヤン（資料のリンク管理）", "Jan (material links)"), "o"),
-    (T("デプロイ（本番公開）", "Deploy to production"), T("—", "—"), T("未定", "Not decided"), T("奈須さん（現状）／マット（候補）", "Nasu-san today / Matt (candidate)"), "q"),
+    (T("デプロイ（本番公開）", "Deploy to production"), T("—", "—"), T("奈須さん", "Nasu-san"), T("マット", "Matt"), "o"),
     (T("リポジトリ（非公開）", "Repository (private)"), T("GitHub jstyle-yumekana/kaiin-saito", "GitHub jstyle-yumekana/kaiin-saito"), T("伊藤光司", "Koji Ito"), T("ヤン", "Jan"), "o"),
     (T("リポジトリ（プロトタイプ）", "Repository (prototype)"), T("GitHub Pages jhromek-ops/…", "GitHub Pages jhromek-ops/…"), T("ヤン", "Jan"), T("—", "—"), "o"),
 ]
@@ -125,12 +121,12 @@ PEOPLE = [
     (T("中村圭介", "Keisuke Nakamura"), T("役員", "Executive"),
      T("統括、意思決定、管理サイトの開発、権限設計", "Oversight, decisions, admin-site development, permissions design"), "x"),
     (T("神田光（ひかる）", "Hikaru Kanda"), T("DX", "DX"),
-     T("Zoho CRM全般、テストアカウント、項目マッピング、n8nへの取り込み",
-       "Zoho CRM, test accounts, field mapping, feeding n8n"), "t"),
+     T("Zoho CRM全般、テストアカウント、項目マッピング、Supabaseへの取り込み",
+       "Zoho CRM, test accounts, field mapping, feeding Supabase"), "t"),
     (T("伊藤光司", "Koji Ito"), T("外部（ai-botec）", "External (ai-botec)"),
      T("バックエンド、同期処理、会員サイトの実装、Supabase", "Backend, sync, member-site implementation, Supabase"), "x12"),
     (T("Matthew Askett（マット）", "Matthew Askett"), T("DX", "DX"),
-     T("パスワード・MFA、n8nの運用、脆弱性対応", "Passwords and MFA, running n8n, vulnerability work"), "t"),
+     T("パスワード・MFA、脆弱性対応", "Passwords and MFA, vulnerability work"), "t"),
     (T("奈須さん", "Nasu-san"), T("外部", "External"),
      T("サーバー環境、セキュリティの最終チェック、self client、デプロイ",
        "Server environment, final security review, self client, deploys"), "x"),
@@ -151,21 +147,14 @@ RISKS = [
      T("他の人からはIPアドレスしか見えません。10/30・31のAPI逼迫の原因が特定できない直接の理由です。",
        "Everyone else sees only an IP address. This is why the Oct 30–31 API spike could not be explained."),
      T("ログ開示を依頼済み（返信待ち）", "Log disclosure requested, awaiting reply"), "hi"),
-    (T("本番の同期設定を誰も確認できていない", "Nobody can confirm the production sync settings"),
-     T("マットさんのn8nにワークフローはあるが未公開のままです。",
-       "The workflow exists in Matt's n8n but has not been published."),
-     T("MCP接続後に現状を確認", "Check once the MCP connection is in place"), "hi"),
-    (T("本番デプロイの担当が未定", "No owner for production deploys"),
-     T("PRをマージしても、本番に反映する人が決まっていません。",
-       "Merging a PR does not tell anyone whose job it is to publish."),
-     T("期限を設けて決める", "Set a deadline and decide"), "mid"),
     (T("中村さんに意思決定が集中", "Decisions concentrate on Nakamura-san"),
      T("権限変更は中村さんのみ。管理サイトも単独開発です。",
        "Only he can change permissions, and he develops the admin site alone."),
      T("後からメンバー追加の想定あり", "Adding members later is foreseen"), "mid"),
     (T("奈須さんが外部で、サーバーとデプロイの要", "Nasu-san is external yet central to servers and deploys"),
-     T("返信待ちが数日単位になることがあります。", "Waiting for a reply can take days."),
-     T("社内に1名できる人を置く", "Put one in-house person in place"), "mid"),
+     T("本番公開の主担当です。返信待ちが数日単位になることがあります。",
+       "He is the owner of production deploys, and waiting for a reply can take days."),
+     T("副担当にマットさんを置いています", "Matt-san is named as the second"), "mid"),
 ]
 
 EXTERNAL = [
@@ -180,7 +169,6 @@ EXTERNAL = [
 ]
 
 OPEN = [
-    (T("本番デプロイの担当者を1名選定", "Name one owner for production deploys"), T("神田光", "Hikaru"), T("未設定", "Not set"), 1),
     (T("API上限100%到達時の挙動", "What happens at 100% of the API limit"), T("神田光 → Zoho", "Hikaru → Zoho"), T("11月9日", "Nov 9"), 0),
     (T("self client 通信内訳の開示", "Breakdown of self-client traffic"), T("伊藤 → 奈須さん", "Ito → Nasu-san"), T("返信待ち", "Awaiting reply"), 0),
     (T("書類は即時・他は1日1回の同期設計", "Sync design: documents now, the rest daily"), T("伊藤光司", "Koji Ito"), T("11月10日", "Nov 10"), 1),
@@ -218,10 +206,11 @@ STR = {
     "now": T("現状（2026年11月5日 伊藤さん確認）", "Today (confirmed by Ito-san, Nov 5, 2026)"),
     "next": T("これから（2026年11月6日の決定）", "From here (decided Nov 6, 2026)"),
     "api": T("APIリクエストの試算（上限に対する消費）", "Estimated API consumption against the limit"),
-    "syncwarn": T("本番のワークフローは公開されておらず、現在動いていない可能性があります（11月6日・マットさん）。"
-                  "「5分ごとに全会員を取得」という以前の共有は誤りです。",
-                  "The production workflow is unpublished and may not be running (Matt-san, Nov 6). "
-                  "The earlier note about fetching every member every five minutes was wrong."),
+    "syncwarn": T("「5分ごとに全会員を取得」という以前の共有は誤りです（11月5日・伊藤さん訂正）。"
+                  "変更検知は全項目を読みに行く方式のため、項目単位で間隔を変えられるかは検証中です。",
+                  "The earlier note about fetching every member every five minutes was wrong "
+                  "(corrected by Ito-san on Nov 5). Change detection reads every field, so whether the "
+                  "interval can be set per field is still being tested."),
     "uisrc": T("会員サイトのUIの出どころ", "Where the member-site UI comes from"),
     "uisrc_d": T("PR #7（11月6日マージ）以降、prototype.html が本番UIの唯一の原本です。"
                  "変更したら npm run build:ui を実行し、生成物も一緒にコミットしてください（CIの npm run check がずれを検出します）。",
@@ -429,8 +418,15 @@ def render(L, out_png):
             last = y
             break
     im = im.crop((0, 0, w, min(hgt, last + 56)))
-    im = im.quantize(colors=256, method=Image.Quantize.MAXCOVERAGE, dither=Image.Dither.NONE)
-    im.save(out_png, optimize=True)
+    # 256色に落としてファイルを小さくします。MEDIANCUT は背景などのベタ塗りを
+    # そのままの色で残します（MAXCOVERAGE は色がずれるので使わないでください）。
+    q = im.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    check = q.convert("RGB")
+    probes = [(20, 300), (im.width - 20, 300), (im.width // 2, im.height - 30)]
+    worst = max(max(abs(a - b) for a, b in zip(im.getpixel(xy), check.getpixel(xy))) for xy in probes)
+    if worst > 2:
+        sys.exit("色がずれました（最大 %d）。減色をやめて保存してください。" % worst)
+    q.save(out_png, optimize=True)
     print(out_png, im.size, round(os.path.getsize(out_png) / 1024), "KB")
 
 
