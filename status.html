@@ -217,20 +217,6 @@
   .stl-item.last .stl-date{color:var(--navy);background:#e7e9ee}
   .stl-fix{display:inline-block;margin-top:5px;font-size:11px;font-weight:800;color:var(--orange);background:var(--orange-soft);padding:3px 10px;border-radius:999px}
 
-  /* team */
-  .team-group{margin-bottom:22px}
-  .team-group:last-child{margin-bottom:0}
-  .team-group-title{font-size:11.5px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;margin:0 0 12px}
-  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-  .member-card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-  .member-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:16px;flex-shrink:0;color:#fff}
-  .member-avatar.core{background:var(--teal)}
-  .member-avatar.exec{background:var(--navy)}
-  .member-avatar.ext{background:var(--orange)}
-  .member-name{font-weight:800;font-size:13.5px;margin:0 0 2px}
-  .member-native{color:var(--sub);font-weight:600}
-  .member-role{font-size:12px;color:var(--sub);margin:0}
-
   footer{text-align:center;font-size:11.5px;color:var(--sub);padding:20px 0 40px}
   /* 承認用サマリー */
   .approval{border:2px solid var(--orange);background:linear-gradient(180deg,#fff9f5,#fff)}
@@ -717,93 +703,15 @@
     </section>
 
     <section class="panel">
-      <h2 class="sectit" data-ja="主要メンバー" data-en="Key Members">主要メンバー</h2>
-
-      <div class="team-group">
-        <p class="team-group-title" data-ja="コアチーム" data-en="Core Team">コアチーム</p>
-        <div class="team-grid">
-          <div class="member-card">
-            <div class="member-avatar core">ヤ</div>
-            <div>
-              <p class="member-name">ヤン <span class="member-native">Jan</span></p>
-              <p class="member-role" data-ja="プロジェクトマネージャー（QM）" data-en="Project Manager (QM)">プロジェクトマネージャー（QM）</p>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar core">み</div>
-            <div>
-              <p class="member-name">みっち <span class="member-native">Michi</span></p>
-              <p class="member-role" data-ja="プロジェクトアシスタントマネージャー・CRM部門" data-en="Project Assistant Manager, CRM">プロジェクトアシスタントマネージャー・CRM部門</p>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar core">ち</div>
-            <div>
-              <p class="member-name">ちち <span class="member-native">Chichi</span></p>
-              <p class="member-role" data-ja="プロジェクトアシスタントマネージャー・Admin部門" data-en="Project Assistant Manager, Admin">プロジェクトアシスタントマネージャー・Admin部門</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="team-group">
-        <p class="team-group-title" data-ja="役員" data-en="Executives">役員</p>
-        <div class="team-grid">
-          <div class="member-card">
-            <div class="member-avatar exec">翼</div>
-            <div>
-              <p class="member-name">翼飛さん <span class="member-native">Yifei-san</span></p>
-              <p class="member-role" data-ja="役員" data-en="Executive">役員</p>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar exec">中</div>
-            <div>
-              <p class="member-name">中村さん <span class="member-native">Nakamura-san</span></p>
-              <p class="member-role" data-ja="役員" data-en="Executive">役員</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="team-group">
-        <p class="team-group-title" data-ja="外部専門家・DX" data-en="External Experts & DX">外部専門家・DX</p>
-        <div class="team-grid">
-          <div class="member-card">
-            <div class="member-avatar ext">マ</div>
-            <div>
-              <p class="member-name">マット <span class="member-native">Matt</span></p>
-              <p class="member-role" data-ja="DX担当" data-en="DX Lead">DX担当</p>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar ext">伊</div>
-            <div>
-              <p class="member-name">伊藤 <span class="member-native">Koji</span></p>
-              <p class="member-role" data-ja="AIエキスパート（社外）" data-en="External AI Expert">AIエキスパート（社外）</p>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar ext">奈</div>
-            <div>
-              <p class="member-name">奈須さん <span class="member-native">Nasu-san</span></p>
-              <p class="member-role" data-ja="バックエンド開発・セキュリティ担当（社外）／アドバイザー・最終チェック・実装支援" data-en="External Backend Developer & Security Expert / Advisor, final review & hands-on coding">バックエンド開発・セキュリティ担当（社外）／アドバイザー・最終チェック・実装支援</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel">
       <h2 class="sectit" data-ja="システム構成と担当" data-en="System Architecture &amp; Ownership">システム構成と担当</h2>
       <p class="lead" data-ja="人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。" data-en="So that the project survives people changing, this records what sits where and who looks after it. Zoho CRM is the single source of truth; data reaches the member site through Supabase. The site reads only Supabase and never Zoho directly. Document uploads are the one path that runs the other way.">人が入れ替わっても引き継げるように、何がどこにあり、誰が見ているかを1か所にまとめます。Zoho CRMが唯一の正で、そこからSupabaseを経由して会員サイトに届きます。会員サイトはSupabaseだけを読み、Zohoを直接見ません。お客様の書類提出だけが逆方向です。</p>
     <figure class="archfig">
       <a class="only-ja" href="assets/system-architecture-ja.png" target="_blank" rel="noopener">
-        <img src="assets/system-architecture-ja.png" width="2100" height="3734" loading="lazy"
+        <img src="assets/system-architecture-ja.png" width="2100" height="3555" loading="lazy"
              alt="会員サイトのシステム構成と担当一覧の全体図。データの流れ、構成要素と担当、同期処理の仕様、人ごとの担当、単一障害点、外部サービス、未決事項をまとめています。">
       </a>
       <a class="only-en" href="assets/system-architecture-en.png" target="_blank" rel="noopener">
-        <img src="assets/system-architecture-en.png" width="2100" height="3708" loading="lazy"
+        <img src="assets/system-architecture-en.png" width="2100" height="3560" loading="lazy"
              alt="One-page overview of the member site architecture and ownership: data flow, components and owners, sync behaviour, who does what, single points of failure, external services and open questions.">
       </a>
       <figcaption>
