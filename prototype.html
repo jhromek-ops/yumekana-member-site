@@ -77,6 +77,9 @@ var DATA = {
   },
   "eventPrograms": [
     { "name":"初回オリエンテーション", "en":"Orientation", "tag":"必須", "kind":"onboarding", "group":"start", "desc":"ご契約後にまず1回だけ参加いただく、留学準備の全体説明会です。" },
+    { "name":"社長コーチング for WH Success", "en":"ワーホリの成功へ", "tag":"相談", "kind":"coaching", "group":"coaching", "window":"ご契約から、渡航の3か月前まで", "link":"https://select-type.com/rsv/?id=ePujghYTqys&c_id=457216", "desc":"ワーホリを成功させるための目標づくりと準備を、社長と1対1で進めるコーチングです。" },
+    { "name":"社長コーチング for All Clear", "en":"ワーホリ前・中の不安や悩みをすべて解決", "tag":"相談", "kind":"coaching", "group":"coaching", "window":"確定した渡航日の3か月前から、渡航中", "link":"https://select-type.com/rsv/?id=ePujghYTqys&c_id=460857", "desc":"渡航前から渡航中の不安や悩みを、社長と1対1でまとめて解消するコーチングです。" },
+    { "name":"社長コーチング for Career Up", "en":"ワーホリ後のキャリアアップ", "tag":"相談", "kind":"coaching", "group":"coaching", "window":"帰国の半年前から、帰国後", "link":"https://select-type.com/rsv/?id=ePujghYTqys&do_form1&c_id=460233&num=&pv_flg=0&w_flg=1&ssid_id=NQ5NS_9zb9--aU-okn6gTCDYgeHh4Sutytwh6Y_JihI&mode=1&resetSltSessFlg=1", "desc":"帰国後のキャリアアップを見据えて、次の一歩を社長と1対1で設計するコーチングです。" },
     { "name":"Coffee Talk", "en":"英語フリートーク", "tag":"英語", "kind":"yeOnly", "group":"english", "link":"https://classroom.google.com/", "desc":"英語で自由に話せる、毎日開催のフリートークセッションです。", "recurring":{ "when":"毎日（1日に複数回）", "note":"開催時間はスケジュールでご確認ください" } },
     { "name":"Tea Talk", "en":"日本語フリートーク", "tag":"日本語", "kind":"yeOnly", "group":"english", "link":"https://classroom.google.com/", "desc":"日本語で気軽に相談・雑談できるフリートークセッション。水・土・日に開催します。", "recurring":{ "when":"毎週 水・土・日", "time":"12:00〜12:30" } },
     { "name":"渡航前オリエンテーション", "en":"Pre-departure", "tag":"必須", "kind":"predeparture", "group":"end", "desc":"渡航直前の最終確認と、現地での諸手続きのご案内。渡航前に実施します。" }
@@ -1375,6 +1378,7 @@ function renderEvents(){
   }
   var GROUPS = [
     { key:'start',   title:'留学のはじめに', sub:'ご契約後にまず参加（必須・1回のみ）' },
+    { key:'coaching', title:'社長コーチング', sub:'社長との1対1コーチング（ご希望の方・ご予約制）' },
     { key:'social',  title:'交流イベント', sub:'どなたでも参加できます（英語不問）' },
     { key:'english', title:'夢カナEnglish イベント', sub:'夢カナEnglish 受講者限定' },
     { key:'end',     title:'渡航前に', sub:'渡航の直前に参加（必須）' }
@@ -1402,6 +1406,9 @@ function renderEvents(){
             +'<div style="font-size:11.5px;color:#9AA6B2;line-height:1.6;">日程と空き枠は、これまでどおりLINEとメールでご案内します。</div>');
         }).join('');
       }
+      else if(ev.window){ b += box(srow('ご利用の時期','<span style="font-size:13.5px;font-weight:700;color:#2A3340;text-align:right;">'+esc(ev.window)+'</span>')); }
+      /* 社長コーチングは外部の予約フォーム（select-type）へ直接ご案内する */
+      if(ev.kind==='coaching' && ev.link){ b += linkBtn('予約フォームへ →', ev.link); }
     }
     /* action */
     else if(locked){ b += '<div style="align-self:flex-start;display:flex;align-items:center;gap:7px;background:#EEF0FB;color:#4A56B8;font-size:12.5px;font-weight:700;padding:10px 14px;border-radius:7px;">🔒 夢カナEnglish 受講者限定</div>'; }
